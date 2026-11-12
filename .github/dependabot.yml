@@ -1,0 +1,39 @@
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    groups:
+      test-tooling:
+        applies-to: version-updates
+        patterns:
+          - "coverlet.collector"
+          - "Microsoft.NET.Test.Sdk"
+          - "xunit"
+          - "xunit.runner.visualstudio"
+          - "*.Analyzers"
+      security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+    ignore:
+      # FluentAssertions 8.x is commercial: the central range stays [6.5.1,8.0.0) and the v8 flavour pins 8.0.0.
+      - dependency-name: "FluentAssertions"
+        update-types:
+          - "version-update:semver-major"
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
+      # Packaged libraries reference the lowest version they support; a major bump raises every consumer's floor.
+      - dependency-name: "Shouldly"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "AwesomeAssertions*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "Newtonsoft.Json"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "System.*"
+        update-types: ["version-update:semver-major"]
+      # WebUtilities stays on 2.x for netstandard2.0; Mvc.Testing is pinned per target framework.
+      - dependency-name: "Microsoft.AspNetCore.*"
+        update-types: ["version-update:semver-major"]
