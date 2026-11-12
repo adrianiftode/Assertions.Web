@@ -8,7 +8,7 @@
   <ItemGroup>
     <PackageVersion Include="FluentAssertions" Version="[6.5.1,8.0.0)" />
     <PackageVersion Include="Shouldly" Version="[5.0.0-preview.2,)" />
-    <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="2.3.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="2.3.14" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="System.Text.Json" Version="8.0.5" />
     <PackageVersion Include="System.Text.Encodings.Web" Version="8.0.0" />
