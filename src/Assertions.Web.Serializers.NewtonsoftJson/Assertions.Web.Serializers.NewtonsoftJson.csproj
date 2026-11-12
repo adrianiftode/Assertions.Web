@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <!-- Released independently of the other packages in this repo. See eng/ReleasePackages.props. -->
-    <Version>3.0.0</Version>
+    <Version>3.0.1</Version>
     <PackageDescription>
       Newtonsoft.Json based serializer for FluentAssertions.Web, AwesomeAssertions.Web and Shouldly.Web
     </PackageDescription>
