@@ -129,21 +129,6 @@ public class ScopedSerializerTests
         }
     }
 
-    [Fact]
-    public void Given_an_explicit_serializer_and_a_scope_Then_the_explicit_serializer_wins()
-    {
-        using var response = new HttpResponseMessage { Content = new StringContent("{}") };
-        var explicitSerializer = new MarkerSerializer();
-
-        using (AssertionsWebConfig.UseSerializer(new SystemTextJsonSerializer()))
-        {
-            var (success, _, model) = response.TryReadModel(typeof(object), explicitSerializer);
-
-            success.Should().BeTrue();
-            model.Should().BeNull();
-        }
-    }
-
     private sealed class Person
     {
         public string? FirstName { get; set; }

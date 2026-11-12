@@ -120,9 +120,9 @@ public partial class HttpResponseMessageAssertions
                 Subject!.StatusCode, Subject);
 
 #if FAV8
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject, CurrentAssertionChain)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject, CurrentAssertionChain));
 #else
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject));
 #endif
     }
     #endregion
@@ -418,9 +418,9 @@ public partial class HttpResponseMessageAssertions
             .FailWith("Expected {context:response} to be {0}{reason}, but found {1}.{2}"
                 , HttpStatusCode.Created, Subject!.StatusCode, Subject);
 #if FAV8
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject, CurrentAssertionChain)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject, CurrentAssertionChain));
 #else
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject));
 #endif
     }
 
@@ -456,9 +456,9 @@ public partial class HttpResponseMessageAssertions
             .FailWith("Expected {context:response} to be {0}{reason}, but found {1}.{2}"
                 , HttpStatusCode.Accepted, Subject!.StatusCode, Subject);
 #if FAV8
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject, CurrentAssertionChain)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject, CurrentAssertionChain));
 #else
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject));
 #endif
     }
 
@@ -528,9 +528,9 @@ public partial class HttpResponseMessageAssertions
             .FailWith("Expected {context:response} to be {0}{reason}, but found {1}.{2}"
                 , HttpStatusCode.NoContent, Subject!.StatusCode, Subject);
 #if FAV8
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject, CurrentAssertionChain)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject, CurrentAssertionChain));
 #else
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject));
 #endif
     }
 
@@ -634,9 +634,9 @@ public partial class HttpResponseMessageAssertions
             .FailWith("Expected {context:response} to be {0}{reason}, but found {1}.{2}"
                 , "HttpStatusCode.MultipleChoices {value: 300}", Subject!.StatusCode, Subject);
 #if FAV8
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject, CurrentAssertionChain)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject, CurrentAssertionChain));
 #else
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject));
 #endif
     }
 
@@ -672,9 +672,9 @@ public partial class HttpResponseMessageAssertions
             .FailWith("Expected {context:response} to be {0}{reason}, but found {1}.{2}"
                 , $"{nameof(HttpStatusCode)}.{nameof(HttpStatusCode.Ambiguous)}", Subject!.StatusCode, Subject);
 #if FAV8
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject, CurrentAssertionChain)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject, CurrentAssertionChain));
 #else
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject));
 #endif
     }
 
@@ -710,9 +710,9 @@ public partial class HttpResponseMessageAssertions
             .FailWith("Expected {context:response} to be {0}{reason}, but found {1}.{2}"
                 , "HttpStatusCode.MovedPermanently {value: 301}", Subject!.StatusCode, Subject);
 #if FAV8
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject, CurrentAssertionChain)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject, CurrentAssertionChain));
 #else
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject));
 #endif
     }
 
@@ -748,9 +748,9 @@ public partial class HttpResponseMessageAssertions
             .FailWith("Expected {context:response} to be {0}{reason}, but found {1}.{2}"
                 , HttpStatusCode.Moved, Subject!.StatusCode, Subject);
 #if FAV8
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject, CurrentAssertionChain)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject, CurrentAssertionChain));
 #else
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject));
 #endif
     }
 
@@ -786,9 +786,9 @@ public partial class HttpResponseMessageAssertions
             .FailWith("Expected {context:response} to be {0}{reason}, but found {1}.{2}"
                 , "HttpStatusCode.Found {value: 302}", Subject!.StatusCode, Subject);
 #if FAV8
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject, CurrentAssertionChain)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject, CurrentAssertionChain));
 #else
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject));
 #endif
     }
 
@@ -824,9 +824,9 @@ public partial class HttpResponseMessageAssertions
             .FailWith("Expected {context:response} to be {0}{reason}, but found {1}.{2}"
                 , $"{nameof(HttpStatusCode)}.{nameof(HttpStatusCode.Redirect)}", Subject!.StatusCode, Subject);
 #if FAV8
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject, CurrentAssertionChain)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject, CurrentAssertionChain));
 #else
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject));
 #endif
     }
 
@@ -862,9 +862,9 @@ public partial class HttpResponseMessageAssertions
             .FailWith("Expected {context:response} to be {0}{reason}, but found {1}.{2}"
                 , "HttpStatusCode.SeeOther {value: 303}", Subject!.StatusCode, Subject);
 #if FAV8
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject, CurrentAssertionChain)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject, CurrentAssertionChain));
 #else
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject));
 #endif
     }
 
@@ -900,9 +900,9 @@ public partial class HttpResponseMessageAssertions
             .FailWith("Expected {context:response} to be {0}{reason}, but found {1}.{2}"
                 , $"{nameof(HttpStatusCode)}.{nameof(HttpStatusCode.RedirectMethod)}", Subject!.StatusCode, Subject);
 #if FAV8
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject, CurrentAssertionChain)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject, CurrentAssertionChain));
 #else
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject));
 #endif
     }
 
@@ -972,9 +972,9 @@ public partial class HttpResponseMessageAssertions
             .FailWith("Expected {context:response} to be {0}{reason}, but found {1}.{2}"
                 , HttpStatusCode.UseProxy, Subject!.StatusCode, Subject);
 #if FAV8
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject, CurrentAssertionChain)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject, CurrentAssertionChain));
 #else
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject));
 #endif
     }
 
@@ -1044,9 +1044,9 @@ public partial class HttpResponseMessageAssertions
             .FailWith("Expected {context:response} to be {0}{reason}, but found {1}.{2}"
                 , $"{nameof(HttpStatusCode)}.{nameof(HttpStatusCode.TemporaryRedirect)}", Subject!.StatusCode, Subject);
 #if FAV8
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject, CurrentAssertionChain)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject, CurrentAssertionChain));
 #else
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject));
 #endif
     }
 
@@ -1082,9 +1082,9 @@ public partial class HttpResponseMessageAssertions
             .FailWith("Expected {context:response} to be {0}{reason}, but found {1}.{2}"
                 , "HttpStatusCode.RedirectKeepVerb {value: 307}", Subject!.StatusCode, Subject);
 #if FAV8
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject, CurrentAssertionChain)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject, CurrentAssertionChain));
 #else
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject));
 #endif
     }
 
@@ -1120,9 +1120,9 @@ public partial class HttpResponseMessageAssertions
             .FailWith("Expected {context:response} to be {0}{reason}, but found {1}.{2}"
                 , "HttpStatusCode.PermanentRedirect {value: 308}", Subject!.StatusCode, Subject);
 #if FAV8
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject, CurrentAssertionChain)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject, CurrentAssertionChain));
 #else
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject));
 #endif
     }
 
@@ -1158,9 +1158,9 @@ public partial class HttpResponseMessageAssertions
             .FailWith("Expected {context:response} to be {0}{reason}, but found {1}.{2}"
                 , HttpStatusCode.BadRequest, Subject!.StatusCode, Subject);
 #if FAV8
-        return new AndConstraint<BadRequestAssertions>(InheritSerializer(new BadRequestAssertions(Subject, CurrentAssertionChain)));
+        return new AndConstraint<BadRequestAssertions>(new BadRequestAssertions(Subject, CurrentAssertionChain));
 #else
-        return new AndConstraint<BadRequestAssertions>(InheritSerializer(new BadRequestAssertions(Subject)));
+        return new AndConstraint<BadRequestAssertions>(new BadRequestAssertions(Subject));
 #endif
     }
 
@@ -1468,9 +1468,9 @@ public partial class HttpResponseMessageAssertions
             .FailWith("Expected {context:response} to be {0}{reason}, but found {1}.{2}"
                 , HttpStatusCode.Conflict, Subject!.StatusCode, Subject);
 #if FAV8
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject, CurrentAssertionChain)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject, CurrentAssertionChain));
 #else
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject));
 #endif
     }
 
@@ -1506,9 +1506,9 @@ public partial class HttpResponseMessageAssertions
             .FailWith("Expected {context:response} to be {0}{reason}, but found {1}.{2}"
                 , HttpStatusCode.Gone, Subject!.StatusCode, Subject);
 #if FAV8
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject, CurrentAssertionChain)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject, CurrentAssertionChain));
 #else
-        return new AndConstraint<LocationAssertions>(InheritSerializer(new LocationAssertions(Subject)));
+        return new AndConstraint<LocationAssertions>(new LocationAssertions(Subject));
 #endif
     }
 

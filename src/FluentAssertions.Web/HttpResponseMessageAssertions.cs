@@ -41,14 +41,6 @@ public partial class HttpResponseMessageAssertions : ReferenceTypeAssertions<Htt
     /// </summary>
     protected override string Identifier => $"{nameof(HttpResponseMessage)}";
 
-    private ISerializer? _serializer;
-
-    internal TAssertions InheritSerializer<TAssertions>(TAssertions assertions) where TAssertions : HttpResponseMessageAssertions
-    {
-        assertions._serializer = _serializer;
-        return assertions;
-    }
-
     private protected string? GetContent()
         => Subject!.ReadContentAsString();
 
@@ -61,7 +53,7 @@ public partial class HttpResponseMessageAssertions : ReferenceTypeAssertions<Htt
 
     private protected (bool success, string? errorMessage) TryGetSubjectModel(out object? model, Type modelType)
     {
-        var (success, errorMessage, readModel) = Subject!.TryReadModel(modelType, _serializer);
+        var (success, errorMessage, readModel) = Subject!.TryReadModel(modelType);
         model = readModel;
         return (success, errorMessage);
     }

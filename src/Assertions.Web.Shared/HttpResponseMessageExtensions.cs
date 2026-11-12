@@ -61,16 +61,15 @@ internal static class HttpResponseMessageExtensions
     /// </summary>
     /// <param name="response">The response whose content is read.</param>
     /// <param name="modelType">The type to deserialize the content into.</param>
-    /// <param name="serializer">The serializer to use; when <c>null</c>, <see cref="AssertionsWebConfig.Serializer"/>.</param>
     /// <returns>
     /// <c>(true, null, model)</c> when the content could be read,
     /// or <c>(false, errorMessage, null)</c> when deserialization failed.
     /// </returns>
-    public static (bool success, string? errorMessage, object? model) TryReadModel(this HttpResponseMessage response, Type modelType, ISerializer? serializer = null)
+    public static (bool success, string? errorMessage, object? model) TryReadModel(this HttpResponseMessage response, Type modelType)
     {
-        var effectiveSerializer = serializer ?? AssertionsWebConfig.Serializer;
+        var serializer = AssertionsWebConfig.Serializer;
 
-        Func<Task<object?>> readModel = () => response.Content.ReadAsAsync(modelType, effectiveSerializer);
+        Func<Task<object?>> readModel = () => response.Content.ReadAsAsync(modelType, serializer);
         try
         {
             var model = readModel.ExecuteInDefaultSynchronizationContext().GetAwaiter().GetResult();

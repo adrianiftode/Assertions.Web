@@ -20,19 +20,19 @@ The repository is home to a family of assertion frameworks on top of the shared 
 
 ## The assertion libraries
 
-| Package | For | Assertion style |
-|---|---|---|
-| [**FluentAssertions.Web**](#fluentassertionsweb) | FluentAssertions < 8.0.0 | `response.Should().Be200Ok()` |
+| Package                                               | For                                    | Assertion style               |
+| ----------------------------------------------------- | -------------------------------------- | ----------------------------- |
+| [**FluentAssertions.Web**](#fluentassertionsweb)      | FluentAssertions < 8.0.0               | `response.Should().Be200Ok()` |
 | [**FluentAssertions.Web.v8**](#fluentassertionswebv8) | FluentAssertions >= 8.0.0 (commercial) | `response.Should().Be200Ok()` |
-| [**AwesomeAssertions.Web**](#awesomeassertionsweb) | AwesomeAssertions | `response.Should().Be200Ok()` |
-| [**Shouldly.Web**](#shouldlyweb) | Shouldly 5 (prerelease) | `response.ShouldBe200Ok()` |
+| [**AwesomeAssertions.Web**](#awesomeassertionsweb)    | AwesomeAssertions                      | `response.Should().Be200Ok()` |
+| [**Shouldly.Web**](#shouldlyweb)                      | Shouldly 5 (prerelease)                | `response.ShouldBe200Ok()`    |
 
 Every flavour targets `netstandard2.0`, packs its own copy of the `Assertions.Web` contract and renders failure output with the shared `HttpMessageFormatter`. The packages differ only in the assertion framework they extend; the assertions themselves are the same set, exposed through each framework's native syntax.
 
 Two secondary packages complete the ecosystem, without being assertion libraries themselves:
 
-- **Assertions.Web.Serializers.NewtonsoftJson** is *optional*: every assertion library already ships with `System.Text.Json` deserialization built in, and this package is only needed to switch the default serializer to Newtonsoft.Json — see [Optional Global Configuration](#optional-global-configuration).
-- **HttpMessageFormatter** is the *shared* rendering engine behind all four assertion libraries. It has no assertions and no dependency on any assertion framework, so it can format HTTP messages in any other context too — see [HttpResponse Formatter](#httpresponse-formatter).
+- **Assertions.Web.Serializers.NewtonsoftJson** is _optional_: every assertion library already ships with `System.Text.Json` deserialization built in, and this package is only needed to switch the default serializer to Newtonsoft.Json — see [Optional Global Configuration](#optional-global-configuration).
+- **HttpMessageFormatter** is the _shared_ rendering engine behind all four assertion libraries. It has no assertions and no dependency on any assertion framework, so it can format HTTP messages in any other context too — see [HttpResponse Formatter](#httpresponse-formatter).
 
 ## Quick starts
 
@@ -173,7 +173,7 @@ Content-Length: 50
 --- End of stack trace from previous location ---
 ```
 
-The same text is shown in the *Test Detail Summary* of Visual Studio and Rider, and ends up in the CI logs, so the failure can usually be assessed without even running the test locally:
+The same text is shown in the _Test Detail Summary_ of Visual Studio and Rider, and ends up in the CI logs, so the failure can usually be assessed without even running the test locally:
 
 ![FailedTest1](https://github.com/adrianiftode/Assertions.Web/blob/master/docs/images/FailedTest1.png?raw=true)
 
@@ -194,12 +194,14 @@ Thus this library solves two problems:
 Once the response is ready you'll want to assert it. With first level properties like `StatusCode` is somehow easy, especially with FluentAssertions/AwesomeAssertions, but often we need more, like to deserialize the content into an object of a certain type and then to Assert it. Or to simply assert something about the response content itself. Soon duplication code occurs and the urge to reduce it is just the next logical step.
 
 ##### Debugging failed tests interrupts the programmer's flow state
- When a test is failing, the following actions are taken most of the time:
-- attach the debugger to the line containing ```var response = await client..```
-- debug the failing test
-- add an Watch for ``` response.Content.ReadAsStringAsync().Result ``` and see the actual response content
 
-**And this can be avoided**, if the *Test Detail Summary* contains the request and the response information, providing a similar experience as with an HTTP interceptor like Fiddler. See [When a test fails, you see the whole conversation](#when-a-test-fails-you-see-the-whole-conversation) for the exact output.
+When a test is failing, the following actions are taken most of the time:
+
+- attach the debugger to the line containing `var response = await client..`
+- debug the failing test
+- add an Watch for `response.Content.ReadAsStringAsync().Result` and see the actual response content
+
+**And this can be avoided**, if the _Test Detail Summary_ contains the request and the response information, providing a similar experience as with an HTTP interceptor like Fiddler. See [When a test fails, you see the whole conversation](#when-a-test-fails-you-see-the-whole-conversation) for the exact output.
 
 ## Migrating to 3.0
 
@@ -730,7 +732,6 @@ public async Task Post_ReturnsOkAndWithContent()
 }
 ```
 
-
 <details>
 <summary><code>dotnet test</code> output when this assertion fails <em>(here: the API persisted a different <code>content</code>)</em></summary>
 
@@ -775,6 +776,7 @@ Content-Length: 50
 </details>
 
 - Asserting that the response is 200 OK and the content is like an array of specific objects
+
 ```csharp
 [Fact]
 public async Task Get_Returns_Ok_With_CommentsList()
@@ -1171,17 +1173,17 @@ Many more examples can be found in the [Shouldly.Web.Tests](https://github.com/a
 
 The tables below list every assertion of the FluentAssertions and AwesomeAssertions flavours. Each group is followed by a short example and, where it helps, by the `dotnet test` output you get when the assertion does not hold, so it is clear what is actually being reported. The Shouldly flavour exposes the same assertions under the flat naming described in [Shouldly.Web API](#shouldlyweb-api), and the [Shouldly.Web](#shouldlyweb) section shows how the names map.
 
-|  *HttpResponseMessageAssertions* | Contains a number of methods to assert that an HttpResponseMessage is in the expected state related to the HTTP content. |
-| --- | --- |
-| **Should().BeEmpty()** | Asserts that HTTP response content is empty. |
-| **Should().BeAs&lt;TModel&gt;()** | Asserts that HTTP response content can be an equivalent representation of the expected model. |
-| **Should().HaveHeader()** | Asserts that an HTTP response has a named header. |
-| **Should().NotHaveHeader()** | Asserts that an HTTP response does not have a named header. |
-| **Should().HaveHttpStatusCode()** | Asserts that an HTTP response has an HTTP status with the specified code. |
-| **Should().NotHaveHttpStatusCode()** | Asserts that an HTTP response does not have an HTTP status with the specified code. |
-| **Should().MatchInContent()** | Asserts that HTTP response has content that matches a wildcard pattern. |
-| **Should().Satisfy&lt;TModel&gt;()** | Asserts that the HTTP response content, once deserialized to `TModel`, satisfies an assertion. |
-| **Should().Satisfy()** | Asserts that the `HttpResponseMessage` itself satisfies an assertion. |
+| _HttpResponseMessageAssertions_      | Contains a number of methods to assert that an HttpResponseMessage is in the expected state related to the HTTP content. |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| **Should().BeEmpty()**               | Asserts that HTTP response content is empty.                                                                             |
+| **Should().BeAs&lt;TModel&gt;()**    | Asserts that HTTP response content can be an equivalent representation of the expected model.                            |
+| **Should().HaveHeader()**            | Asserts that an HTTP response has a named header.                                                                        |
+| **Should().NotHaveHeader()**         | Asserts that an HTTP response does not have a named header.                                                              |
+| **Should().HaveHttpStatusCode()**    | Asserts that an HTTP response has an HTTP status with the specified code.                                                |
+| **Should().NotHaveHttpStatusCode()** | Asserts that an HTTP response does not have an HTTP status with the specified code.                                      |
+| **Should().MatchInContent()**        | Asserts that HTTP response has content that matches a wildcard pattern.                                                  |
+| **Should().Satisfy&lt;TModel&gt;()** | Asserts that the HTTP response content, once deserialized to `TModel`, satisfies an assertion.                           |
+| **Should().Satisfy()**               | Asserts that the `HttpResponseMessage` itself satisfies an assertion.                                                    |
 
 ```csharp
 response.Should().BeAs(new { Author = "John", Content = "Hey, you..." });
@@ -1224,13 +1226,13 @@ Content-Length: 50
 
 </details>
 
-|  *Should().HaveHeader().And.* | Contains a number of methods to assert that an HttpResponseMessage is in the expected state related to HTTP headers. |
-| --- | --- |
-| **BeEmpty()** | Asserts that an existing HTTP header in an HTTP response has no values. |
-| **NotBeEmpty()** | Asserts that an existing HTTP header in an HTTP response has any values. |
-| **BeValue()** |Asserts that an existing HTTP header in an HTTP response has an expected value. |
-| **BeValues()** | Asserts that an existing HTTP header in an HTTP response has an expected list of header values. |
-| **Match()** | Asserts that an existing HTTP header in an HTTP response contains at least a value that matches a wildcard pattern. |
+| _Should().HaveHeader().And._ | Contains a number of methods to assert that an HttpResponseMessage is in the expected state related to HTTP headers. |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **BeEmpty()**                | Asserts that an existing HTTP header in an HTTP response has no values.                                              |
+| **NotBeEmpty()**             | Asserts that an existing HTTP header in an HTTP response has any values.                                             |
+| **BeValue()**                | Asserts that an existing HTTP header in an HTTP response has an expected value.                                      |
+| **BeValues()**               | Asserts that an existing HTTP header in an HTTP response has an expected list of header values.                      |
+| **Match()**                  | Asserts that an existing HTTP header in an HTTP response contains at least a value that matches a wildcard pattern.  |
 
 ```csharp
 response.Should().HaveHeader("X-Correlation-ID").And.NotBeEmpty();
@@ -1266,12 +1268,12 @@ GET http://localhost/api/comments/1 HTTP 1.1
 
 </details>
 
-|  *Should().Be400BadRequest().And.* | Contains a number of methods to assert that an HttpResponseMessage is in the expected state related to HTTP Bad Request response |
-| --- | --- |
-| **HaveError()** | Asserts that a Bad Request HTTP response content contains an error message identifiable by an expected field name and a wildcard error text. |
-| **OnlyHaveError()** | Asserts that a Bad Request HTTP response content contains only a single error message identifiable by an expected field name and a wildcard error text. |
-| **NotHaveError()** | Asserts that a Bad Request HTTP response content does not contain an error message identifiable by an expected field name and a wildcard error text. |
-| **HaveErrorMessage()** | Asserts that a Bad Request HTTP response content contains an error message identifiable by an wildcard error text. |
+| _Should().Be400BadRequest().And._ | Contains a number of methods to assert that an HttpResponseMessage is in the expected state related to HTTP Bad Request response                        |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **HaveError()**                   | Asserts that a Bad Request HTTP response content contains an error message identifiable by an expected field name and a wildcard error text.            |
+| **OnlyHaveError()**               | Asserts that a Bad Request HTTP response content contains only a single error message identifiable by an expected field name and a wildcard error text. |
+| **NotHaveError()**                | Asserts that a Bad Request HTTP response content does not contain an error message identifiable by an expected field name and a wildcard error text.    |
+| **HaveErrorMessage()**            | Asserts that a Bad Request HTTP response content contains an error message identifiable by an wildcard error text.                                      |
 
 ```csharp
 response.Should().Be400BadRequest()
@@ -1317,23 +1319,23 @@ Content-Length: 30
 
 </details>
 
-|  *HaveLocation* Header related assertions. | |
-| --- | --- |
-| Should().Be201Created().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 201 status code has a location header. |
-| Should().Be300Ambiguous().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 300 status code has a location header. |
-| Should().Be300MultipleChoices().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 300 status code has a location header. |
-| Should().Be301Moved().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 301 status code has a location header. |
-| Should().Be301MovedPermanently().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 301 status code has a location header. |
-| Should().Be302Found().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 302 status code has a location header. |
-| Should().Be302Redirect().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 302 status code has a location header. |
-| Should().Be303RedirectMethod().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 303 status code has a location header. |
-| Should().Be303SeeOther().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 303 status code has a location header. |
-| Should().Be304NotModified().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 304 status code has a location header. |
-| Should().Be305UseProxy().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 305 status code has a location header. |
-| Should().Be307RedirectKeepVerb().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 307 status code has a location header. |
-| Should().Be307TemporaryRedirect().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 307 status code has a location header. |
-| Should().Be308PermanentRedirect().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 308 status code has a location header. |
-| Should().Be3XXRedirection().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP redirection response has a location header. |
+| _HaveLocation_ Header related assertions.                              |                                                                           |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| Should().Be201Created().And.**HaveLocation()**.And.BeValue()           | Asserts that an HTTP response with 201 status code has a location header. |
+| Should().Be300Ambiguous().And.**HaveLocation()**.And.BeValue()         | Asserts that an HTTP response with 300 status code has a location header. |
+| Should().Be300MultipleChoices().And.**HaveLocation()**.And.BeValue()   | Asserts that an HTTP response with 300 status code has a location header. |
+| Should().Be301Moved().And.**HaveLocation()**.And.BeValue()             | Asserts that an HTTP response with 301 status code has a location header. |
+| Should().Be301MovedPermanently().And.**HaveLocation()**.And.BeValue()  | Asserts that an HTTP response with 301 status code has a location header. |
+| Should().Be302Found().And.**HaveLocation()**.And.BeValue()             | Asserts that an HTTP response with 302 status code has a location header. |
+| Should().Be302Redirect().And.**HaveLocation()**.And.BeValue()          | Asserts that an HTTP response with 302 status code has a location header. |
+| Should().Be303RedirectMethod().And.**HaveLocation()**.And.BeValue()    | Asserts that an HTTP response with 303 status code has a location header. |
+| Should().Be303SeeOther().And.**HaveLocation()**.And.BeValue()          | Asserts that an HTTP response with 303 status code has a location header. |
+| Should().Be304NotModified().And.**HaveLocation()**.And.BeValue()       | Asserts that an HTTP response with 304 status code has a location header. |
+| Should().Be305UseProxy().And.**HaveLocation()**.And.BeValue()          | Asserts that an HTTP response with 305 status code has a location header. |
+| Should().Be307RedirectKeepVerb().And.**HaveLocation()**.And.BeValue()  | Asserts that an HTTP response with 307 status code has a location header. |
+| Should().Be307TemporaryRedirect().And.**HaveLocation()**.And.BeValue() | Asserts that an HTTP response with 307 status code has a location header. |
+| Should().Be308PermanentRedirect().And.**HaveLocation()**.And.BeValue() | Asserts that an HTTP response with 308 status code has a location header. |
+| Should().Be3XXRedirection().And.**HaveLocation()**.And.BeValue()       | Asserts that an HTTP redirection response has a location header.          |
 
 ```csharp
 response.Should().Be201Created()
@@ -1381,64 +1383,64 @@ Content-Length: 19
 
 </details>
 
-|  *Fine grained status assertions.* | |
-| --- | --- |
-| **Should().Be1XXInformational()** |  Asserts that an HTTP response has an HTTP status code representing an informational response. |
-| **Should().Be2XXSuccessful()** | Asserts that an HTTP response has a successful HTTP status code. |
-| **Should().Be3XXRedirection()** | Asserts that an HTTP response has an HTTP status code representing a redirection response. |
-| **Should().Be4XXClientError()** | Asserts that an HTTP response has an HTTP status code representing a client error. |
-| **Should().Be5XXServerError()** | Asserts that an HTTP response has an HTTP status code representing a server error. |
-| **Should().Be100Continue()** | Asserts that an HTTP response has the HTTP status 100 Continue |
-| **Should().Be101SwitchingProtocols()** | Asserts that an HTTP response has the HTTP status 101 Switching Protocols |
-| **Should().Be200Ok()** | Asserts that an HTTP response has the HTTP status 200 Ok |
-| **Should().Be201Created()** | Asserts that an HTTP response has the HTTP status 201 Created |
-| **Should().Be202Accepted()** | Asserts that an HTTP response has the HTTP status 202 Accepted |
-| **Should().Be203NonAuthoritativeInformation()** | Asserts that an HTTP response has the HTTP status 203 Non Authoritative Information |
-| **Should().Be204NoContent()** | Asserts that an HTTP response has the HTTP status 204 No Content |
-| **Should().Be205ResetContent()** | Asserts that an HTTP response has the HTTP status 205 Reset Content |
-| **Should().Be206PartialContent()** | Asserts that an HTTP response has the HTTP status 206 Partial Content |
-| **Should().Be300Ambiguous()** | Asserts that an HTTP response has the HTTP status 300 Ambiguous |
-| **Should().Be300MultipleChoices()** | Asserts that an HTTP response has the HTTP status 300 Multiple Choices |
-| **Should().Be301Moved()** | Asserts that an HTTP response has the HTTP status 301 Moved |
-| **Should().Be301MovedPermanently()** | Asserts that an HTTP response has the HTTP status 301 Moved Permanently |
-| **Should().Be302Found()** | Asserts that an HTTP response has the HTTP status 302 Found |
-| **Should().Be302Redirect()** | Asserts that an HTTP response has the HTTP status 302 Redirect |
-| **Should().Be303RedirectMethod()** | Asserts that an HTTP response has the HTTP status 303 Redirect Method |
-| **Should().Be303SeeOther()** | Asserts that an HTTP response has the HTTP status 303 See Other |
-| **Should().Be304NotModified()** | Asserts that an HTTP response has the HTTP status 304 Not Modified |
-| **Should().Be305UseProxy()** | Asserts that an HTTP response has the HTTP status 305 Use Proxy |
-| **Should().Be306Unused()** | Asserts that an HTTP response has the HTTP status 306 Unused |
-| **Should().Be307RedirectKeepVerb()** | Asserts that an HTTP response has the HTTP status 307 Redirect Keep Verb |
-| **Should().Be307TemporaryRedirect()** | Asserts that an HTTP response has the HTTP status 307 Temporary Redirect |
-| **Should().Be308PermanentRedirect()** | Asserts that an HTTP response has the HTTP status 308 Permanent Redirect |
-| **Should().Be400BadRequest()** | Asserts that an HTTP response has the HTTP status 400 BadRequest |
-| **Should().Be401Unauthorized()** | Asserts that an HTTP response has the HTTP status 401 Unauthorized |
-| **Should().Be402PaymentRequired()** | Asserts that an HTTP response has the HTTP status 402 Payment Required |
-| **Should().Be403Forbidden()** | Asserts that an HTTP response has the HTTP status 403 Forbidden |
-| **Should().Be404NotFound()** | Asserts that an HTTP response has the HTTP status 404 Not Found |
-| **Should().Be405MethodNotAllowed()** | Asserts that an HTTP response has the HTTP status 405 Method Not Allowed |
-| **Should().Be406NotAcceptable()** | Asserts that an HTTP response has the HTTP status 406 Not Acceptable |
-| **Should().Be407ProxyAuthenticationRequired()** | Asserts that an HTTP response has the HTTP status 407 Proxy Authentication Required |
-| **Should().Be408RequestTimeout()** | Asserts that an HTTP response has the HTTP status 408 Request Timeout |
-| **Should().Be409Conflict()** | Asserts that an HTTP response has the HTTP status 409 Conflict |
-| **Should().Be410Gone()** | Asserts that an HTTP response has the HTTP status 410 Gone |
-| **Should().Be411LengthRequired()** | Asserts that an HTTP response has the HTTP status 411 Length Required |
-| **Should().Be412PreconditionFailed()** | Asserts that an HTTP response has the HTTP status 412 Precondition Failed |
-| **Should().Be413RequestEntityTooLarge()** | Asserts that an HTTP response has the HTTP status 413 Request Entity Too Large |
-| **Should().Be414RequestUriTooLong()** | Asserts that an HTTP response has the HTTP status 414 Request Uri Too Long |
-| **Should().Be415UnsupportedMediaType()** | Asserts that an HTTP response has the HTTP status 415 Unsupported Media Type |
-| **Should().Be416RequestedRangeNotSatisfiable()** | Asserts that an HTTP response has the HTTP status 416 Requested Range Not Satisfiable |
-| **Should().Be417ExpectationFailed()** | Asserts that an HTTP response has the HTTP status 417 Expectation Failed |
-| **Should().Be418ImATeapot()** | Asserts that an HTTP response has the HTTP status 418 I'm A Teapot |
-| **Should().Be422UnprocessableEntity()** | Asserts that an HTTP response has the HTTP status 422 Unprocessable Entity |
-| **Should().Be426UpgradeRequired()** | Asserts that an HTTP response has the HTTP status 426 UpgradeRequired |
-| **Should().Be429TooManyRequests()** | Asserts that an HTTP response has the HTTP status 429 Too Many Requests |
-| **Should().Be500InternalServerError()** | Asserts that an HTTP response has the HTTP status 500 Internal Server Error |
-| **Should().Be501NotImplemented()** | Asserts that an HTTP response has the HTTP status 501 Not Implemented |
-| **Should().Be502BadGateway()** | Asserts that an HTTP response has the HTTP status 502 Bad Gateway |
-| **Should().Be503ServiceUnavailable()** | Asserts that an HTTP response has the HTTP status 503 Service Unavailable |
-| **Should().Be504GatewayTimeout()** | Asserts that an HTTP response has the HTTP status 504 Gateway Timeout |
-| **Should().Be505HttpVersionNotSupported()** | Asserts that an HTTP response has the HTTP status 505 Http Version Not Supported |
+| _Fine grained status assertions._                |                                                                                               |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| **Should().Be1XXInformational()**                | Asserts that an HTTP response has an HTTP status code representing an informational response. |
+| **Should().Be2XXSuccessful()**                   | Asserts that an HTTP response has a successful HTTP status code.                              |
+| **Should().Be3XXRedirection()**                  | Asserts that an HTTP response has an HTTP status code representing a redirection response.    |
+| **Should().Be4XXClientError()**                  | Asserts that an HTTP response has an HTTP status code representing a client error.            |
+| **Should().Be5XXServerError()**                  | Asserts that an HTTP response has an HTTP status code representing a server error.            |
+| **Should().Be100Continue()**                     | Asserts that an HTTP response has the HTTP status 100 Continue                                |
+| **Should().Be101SwitchingProtocols()**           | Asserts that an HTTP response has the HTTP status 101 Switching Protocols                     |
+| **Should().Be200Ok()**                           | Asserts that an HTTP response has the HTTP status 200 Ok                                      |
+| **Should().Be201Created()**                      | Asserts that an HTTP response has the HTTP status 201 Created                                 |
+| **Should().Be202Accepted()**                     | Asserts that an HTTP response has the HTTP status 202 Accepted                                |
+| **Should().Be203NonAuthoritativeInformation()**  | Asserts that an HTTP response has the HTTP status 203 Non Authoritative Information           |
+| **Should().Be204NoContent()**                    | Asserts that an HTTP response has the HTTP status 204 No Content                              |
+| **Should().Be205ResetContent()**                 | Asserts that an HTTP response has the HTTP status 205 Reset Content                           |
+| **Should().Be206PartialContent()**               | Asserts that an HTTP response has the HTTP status 206 Partial Content                         |
+| **Should().Be300Ambiguous()**                    | Asserts that an HTTP response has the HTTP status 300 Ambiguous                               |
+| **Should().Be300MultipleChoices()**              | Asserts that an HTTP response has the HTTP status 300 Multiple Choices                        |
+| **Should().Be301Moved()**                        | Asserts that an HTTP response has the HTTP status 301 Moved                                   |
+| **Should().Be301MovedPermanently()**             | Asserts that an HTTP response has the HTTP status 301 Moved Permanently                       |
+| **Should().Be302Found()**                        | Asserts that an HTTP response has the HTTP status 302 Found                                   |
+| **Should().Be302Redirect()**                     | Asserts that an HTTP response has the HTTP status 302 Redirect                                |
+| **Should().Be303RedirectMethod()**               | Asserts that an HTTP response has the HTTP status 303 Redirect Method                         |
+| **Should().Be303SeeOther()**                     | Asserts that an HTTP response has the HTTP status 303 See Other                               |
+| **Should().Be304NotModified()**                  | Asserts that an HTTP response has the HTTP status 304 Not Modified                            |
+| **Should().Be305UseProxy()**                     | Asserts that an HTTP response has the HTTP status 305 Use Proxy                               |
+| **Should().Be306Unused()**                       | Asserts that an HTTP response has the HTTP status 306 Unused                                  |
+| **Should().Be307RedirectKeepVerb()**             | Asserts that an HTTP response has the HTTP status 307 Redirect Keep Verb                      |
+| **Should().Be307TemporaryRedirect()**            | Asserts that an HTTP response has the HTTP status 307 Temporary Redirect                      |
+| **Should().Be308PermanentRedirect()**            | Asserts that an HTTP response has the HTTP status 308 Permanent Redirect                      |
+| **Should().Be400BadRequest()**                   | Asserts that an HTTP response has the HTTP status 400 BadRequest                              |
+| **Should().Be401Unauthorized()**                 | Asserts that an HTTP response has the HTTP status 401 Unauthorized                            |
+| **Should().Be402PaymentRequired()**              | Asserts that an HTTP response has the HTTP status 402 Payment Required                        |
+| **Should().Be403Forbidden()**                    | Asserts that an HTTP response has the HTTP status 403 Forbidden                               |
+| **Should().Be404NotFound()**                     | Asserts that an HTTP response has the HTTP status 404 Not Found                               |
+| **Should().Be405MethodNotAllowed()**             | Asserts that an HTTP response has the HTTP status 405 Method Not Allowed                      |
+| **Should().Be406NotAcceptable()**                | Asserts that an HTTP response has the HTTP status 406 Not Acceptable                          |
+| **Should().Be407ProxyAuthenticationRequired()**  | Asserts that an HTTP response has the HTTP status 407 Proxy Authentication Required           |
+| **Should().Be408RequestTimeout()**               | Asserts that an HTTP response has the HTTP status 408 Request Timeout                         |
+| **Should().Be409Conflict()**                     | Asserts that an HTTP response has the HTTP status 409 Conflict                                |
+| **Should().Be410Gone()**                         | Asserts that an HTTP response has the HTTP status 410 Gone                                    |
+| **Should().Be411LengthRequired()**               | Asserts that an HTTP response has the HTTP status 411 Length Required                         |
+| **Should().Be412PreconditionFailed()**           | Asserts that an HTTP response has the HTTP status 412 Precondition Failed                     |
+| **Should().Be413RequestEntityTooLarge()**        | Asserts that an HTTP response has the HTTP status 413 Request Entity Too Large                |
+| **Should().Be414RequestUriTooLong()**            | Asserts that an HTTP response has the HTTP status 414 Request Uri Too Long                    |
+| **Should().Be415UnsupportedMediaType()**         | Asserts that an HTTP response has the HTTP status 415 Unsupported Media Type                  |
+| **Should().Be416RequestedRangeNotSatisfiable()** | Asserts that an HTTP response has the HTTP status 416 Requested Range Not Satisfiable         |
+| **Should().Be417ExpectationFailed()**            | Asserts that an HTTP response has the HTTP status 417 Expectation Failed                      |
+| **Should().Be418ImATeapot()**                    | Asserts that an HTTP response has the HTTP status 418 I'm A Teapot                            |
+| **Should().Be422UnprocessableEntity()**          | Asserts that an HTTP response has the HTTP status 422 Unprocessable Entity                    |
+| **Should().Be426UpgradeRequired()**              | Asserts that an HTTP response has the HTTP status 426 UpgradeRequired                         |
+| **Should().Be429TooManyRequests()**              | Asserts that an HTTP response has the HTTP status 429 Too Many Requests                       |
+| **Should().Be500InternalServerError()**          | Asserts that an HTTP response has the HTTP status 500 Internal Server Error                   |
+| **Should().Be501NotImplemented()**               | Asserts that an HTTP response has the HTTP status 501 Not Implemented                         |
+| **Should().Be502BadGateway()**                   | Asserts that an HTTP response has the HTTP status 502 Bad Gateway                             |
+| **Should().Be503ServiceUnavailable()**           | Asserts that an HTTP response has the HTTP status 503 Service Unavailable                     |
+| **Should().Be504GatewayTimeout()**               | Asserts that an HTTP response has the HTTP status 504 Gateway Timeout                         |
+| **Should().Be505HttpVersionNotSupported()**      | Asserts that an HTTP response has the HTTP status 505 Http Version Not Supported              |
 
 ```csharp
 response.Should().Be2XXSuccessful();
@@ -1452,17 +1454,17 @@ A failure here looks exactly like the status code outputs shown above: the expec
 
 The same groups as above, with the flat Shouldly naming: the `Should()`/`And` chain is replaced by standalone calls on the response, and every optional custom message is the first optional argument. The failure output follows the [Shouldly layout](#shouldlyweb): `should be`/`but was`, an optional custom message under `Additional Info`, then the same HTTP conversation dump.
 
-|  *Response and content assertions.* | |
-| --- | --- |
-| **ShouldBeEmpty()** | Asserts that HTTP response content is empty. |
-| **ShouldBeAs&lt;TModel&gt;()** | Asserts that HTTP response content can be an equivalent representation of the expected model. |
-| **ShouldHaveHeader()** | Asserts that an HTTP response has a named header. |
-| **ShouldNotHaveHeader()** | Asserts that an HTTP response does not have a named header. |
-| **ShouldHaveHttpStatusCode()** | Asserts that an HTTP response has an HTTP status with the specified code. |
-| **ShouldNotHaveHttpStatusCode()** | Asserts that an HTTP response does not have an HTTP status with the specified code. |
-| **ShouldMatchInContent()** | Asserts that HTTP response has content that matches a wildcard pattern. |
-| **ShouldSatisfy&lt;TModel&gt;()** | Asserts that the HTTP response content, once deserialized to `TModel`, satisfies one or more assertions; passing them as a collection reports every failing assertion. |
-| **ShouldSatisfy()** | Asserts that the `HttpResponseMessage` itself satisfies one or more assertions; passing them as a collection reports every failing assertion. |
+| _Response and content assertions._ |                                                                                                                                                                        |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **ShouldBeEmpty()**                | Asserts that HTTP response content is empty.                                                                                                                           |
+| **ShouldBeAs&lt;TModel&gt;()**     | Asserts that HTTP response content can be an equivalent representation of the expected model.                                                                          |
+| **ShouldHaveHeader()**             | Asserts that an HTTP response has a named header.                                                                                                                      |
+| **ShouldNotHaveHeader()**          | Asserts that an HTTP response does not have a named header.                                                                                                            |
+| **ShouldHaveHttpStatusCode()**     | Asserts that an HTTP response has an HTTP status with the specified code.                                                                                              |
+| **ShouldNotHaveHttpStatusCode()**  | Asserts that an HTTP response does not have an HTTP status with the specified code.                                                                                    |
+| **ShouldMatchInContent()**         | Asserts that HTTP response has content that matches a wildcard pattern.                                                                                                |
+| **ShouldSatisfy&lt;TModel&gt;()**  | Asserts that the HTTP response content, once deserialized to `TModel`, satisfies one or more assertions; passing them as a collection reports every failing assertion. |
+| **ShouldSatisfy()**                | Asserts that the `HttpResponseMessage` itself satisfies one or more assertions; passing them as a collection reports every failing assertion.                          |
 
 ```csharp
 response.ShouldBeAs(new { Author = "John", Content = "Hey, you..." });
@@ -1476,13 +1478,13 @@ response.ShouldSatisfy([
     r => r.Headers.AcceptRanges.ShouldContain("byte")]);
 ```
 
-|  *Header value assertions.* | |
-| --- | --- |
-| **ShouldHaveHeaderWithValue()** | Asserts that an existing HTTP header in an HTTP response has exactly one value equivalent to the expected one. |
-| **ShouldHaveHeaderWithValues()** | Asserts that an existing HTTP header in an HTTP response has an expected list of header values. |
-| **ShouldHaveHeaderMatching()** | Asserts that an existing HTTP header in an HTTP response contains at least a value that matches a wildcard pattern. |
-| **ShouldHaveEmptyHeader()** | Asserts that an existing HTTP header in an HTTP response has no values. |
-| **ShouldHaveNonEmptyHeader()** | Asserts that an existing HTTP header in an HTTP response has any values. |
+| _Header value assertions._       |                                                                                                                     |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **ShouldHaveHeaderWithValue()**  | Asserts that an existing HTTP header in an HTTP response has exactly one value equivalent to the expected one.      |
+| **ShouldHaveHeaderWithValues()** | Asserts that an existing HTTP header in an HTTP response has an expected list of header values.                     |
+| **ShouldHaveHeaderMatching()**   | Asserts that an existing HTTP header in an HTTP response contains at least a value that matches a wildcard pattern. |
+| **ShouldHaveEmptyHeader()**      | Asserts that an existing HTTP header in an HTTP response has no values.                                             |
+| **ShouldHaveNonEmptyHeader()**   | Asserts that an existing HTTP header in an HTTP response has any values.                                            |
 
 ```csharp
 response.ShouldHaveHeader("X-Correlation-ID");
@@ -1494,12 +1496,12 @@ response.ShouldHaveEmptyHeader("x-optional");
 response.ShouldHaveNonEmptyHeader("x-vendor");
 ```
 
-|  *Bad Request error assertions.* | |
-| --- | --- |
-| **ShouldHaveError()** | Asserts that a Bad Request HTTP response content contains an error message identifiable by an expected field name and a wildcard error text. |
-| **ShouldOnlyHaveError()** | Asserts that a Bad Request HTTP response content contains only a single error message identifiable by an expected field name and a wildcard error text. |
-| **ShouldNotHaveError()** | Asserts that a Bad Request HTTP response content does not contain an error message identifiable by an expected field name and a wildcard error text. |
-| **ShouldHaveErrorMessage()** | Asserts that a Bad Request HTTP response content contains an error message identifiable by an wildcard error text. |
+| _Bad Request error assertions._ |                                                                                                                                                         |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **ShouldHaveError()**           | Asserts that a Bad Request HTTP response content contains an error message identifiable by an expected field name and a wildcard error text.            |
+| **ShouldOnlyHaveError()**       | Asserts that a Bad Request HTTP response content contains only a single error message identifiable by an expected field name and a wildcard error text. |
+| **ShouldNotHaveError()**        | Asserts that a Bad Request HTTP response content does not contain an error message identifiable by an expected field name and a wildcard error text.    |
+| **ShouldHaveErrorMessage()**    | Asserts that a Bad Request HTTP response content contains an error message identifiable by an wildcard error text.                                      |
 
 ```csharp
 response.ShouldBe400BadRequest();
@@ -1508,13 +1510,13 @@ response.ShouldNotHaveError("Content");
 response.ShouldHaveErrorMessage("*one or more validation errors*");
 ```
 
-|  *Location header assertions.* | |
-| --- | --- |
-| **ShouldHaveLocation()** | Asserts that an HTTP response has a Location header. |
-| **ShouldNotHaveLocation()** | Asserts that an HTTP response does not have a Location header. |
-| **ShouldHaveLocationWithValue()** | Asserts that the Location header of an HTTP response has exactly one value equivalent to the expected one. |
-| **ShouldHaveLocationWithValues()** | Asserts that the Location header of an HTTP response has an expected list of header values. |
-| **ShouldHaveLocationMatching()** | Asserts that the Location header of an HTTP response contains at least a value that matches a wildcard pattern. |
+| _Location header assertions._      |                                                                                                                 |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **ShouldHaveLocation()**           | Asserts that an HTTP response has a Location header.                                                            |
+| **ShouldNotHaveLocation()**        | Asserts that an HTTP response does not have a Location header.                                                  |
+| **ShouldHaveLocationWithValue()**  | Asserts that the Location header of an HTTP response has exactly one value equivalent to the expected one.      |
+| **ShouldHaveLocationWithValues()** | Asserts that the Location header of an HTTP response has an expected list of header values.                     |
+| **ShouldHaveLocationMatching()**   | Asserts that the Location header of an HTTP response contains at least a value that matches a wildcard pattern. |
 
 ```csharp
 response.ShouldBe201Created();
@@ -1525,64 +1527,64 @@ response.ShouldHaveLocationMatching("*/api/Comments/1");
 response.ShouldNotHaveLocation();
 ```
 
-|  *Fine grained status assertions.* | |
-| --- | --- |
-| **ShouldBe1XXInformational()** |  Asserts that an HTTP response has an HTTP status code representing an informational response. |
-| **ShouldBe2XXSuccessful()** | Asserts that an HTTP response has a successful HTTP status code. |
-| **ShouldBe3XXRedirection()** | Asserts that an HTTP response has an HTTP status code representing a redirection response. |
-| **ShouldBe4XXClientError()** | Asserts that an HTTP response has an HTTP status code representing a client error. |
-| **ShouldBe5XXServerError()** | Asserts that an HTTP response has an HTTP status code representing a server error. |
-| **ShouldBe100Continue()** | Asserts that an HTTP response has the HTTP status 100 Continue |
-| **ShouldBe101SwitchingProtocols()** | Asserts that an HTTP response has the HTTP status 101 Switching Protocols |
-| **ShouldBe200Ok()** | Asserts that an HTTP response has the HTTP status 200 Ok |
-| **ShouldBe201Created()** | Asserts that an HTTP response has the HTTP status 201 Created |
-| **ShouldBe202Accepted()** | Asserts that an HTTP response has the HTTP status 202 Accepted |
-| **ShouldBe203NonAuthoritativeInformation()** | Asserts that an HTTP response has the HTTP status 203 Non Authoritative Information |
-| **ShouldBe204NoContent()** | Asserts that an HTTP response has the HTTP status 204 No Content |
-| **ShouldBe205ResetContent()** | Asserts that an HTTP response has the HTTP status 205 Reset Content |
-| **ShouldBe206PartialContent()** | Asserts that an HTTP response has the HTTP status 206 Partial Content |
-| **ShouldBe300Ambiguous()** | Asserts that an HTTP response has the HTTP status 300 Ambiguous |
-| **ShouldBe300MultipleChoices()** | Asserts that an HTTP response has the HTTP status 300 Multiple Choices |
-| **ShouldBe301Moved()** | Asserts that an HTTP response has the HTTP status 301 Moved |
-| **ShouldBe301MovedPermanently()** | Asserts that an HTTP response has the HTTP status 301 Moved Permanently |
-| **ShouldBe302Found()** | Asserts that an HTTP response has the HTTP status 302 Found |
-| **ShouldBe302Redirect()** | Asserts that an HTTP response has the HTTP status 302 Redirect |
-| **ShouldBe303RedirectMethod()** | Asserts that an HTTP response has the HTTP status 303 Redirect Method |
-| **ShouldBe303SeeOther()** | Asserts that an HTTP response has the HTTP status 303 See Other |
-| **ShouldBe304NotModified()** | Asserts that an HTTP response has the HTTP status 304 Not Modified |
-| **ShouldBe305UseProxy()** | Asserts that an HTTP response has the HTTP status 305 Use Proxy |
-| **ShouldBe306Unused()** | Asserts that an HTTP response has the HTTP status 306 Unused |
-| **ShouldBe307RedirectKeepVerb()** | Asserts that an HTTP response has the HTTP status 307 Redirect Keep Verb |
-| **ShouldBe307TemporaryRedirect()** | Asserts that an HTTP response has the HTTP status 307 Temporary Redirect |
-| **ShouldBe308PermanentRedirect()** | Asserts that an HTTP response has the HTTP status 308 Permanent Redirect |
-| **ShouldBe400BadRequest()** | Asserts that an HTTP response has the HTTP status 400 BadRequest |
-| **ShouldBe401Unauthorized()** | Asserts that an HTTP response has the HTTP status 401 Unauthorized |
-| **ShouldBe402PaymentRequired()** | Asserts that an HTTP response has the HTTP status 402 Payment Required |
-| **ShouldBe403Forbidden()** | Asserts that an HTTP response has the HTTP status 403 Forbidden |
-| **ShouldBe404NotFound()** | Asserts that an HTTP response has the HTTP status 404 Not Found |
-| **ShouldBe405MethodNotAllowed()** | Asserts that an HTTP response has the HTTP status 405 Method Not Allowed |
-| **ShouldBe406NotAcceptable()** | Asserts that an HTTP response has the HTTP status 406 Not Acceptable |
-| **ShouldBe407ProxyAuthenticationRequired()** | Asserts that an HTTP response has the HTTP status 407 Proxy Authentication Required |
-| **ShouldBe408RequestTimeout()** | Asserts that an HTTP response has the HTTP status 408 Request Timeout |
-| **ShouldBe409Conflict()** | Asserts that an HTTP response has the HTTP status 409 Conflict |
-| **ShouldBe410Gone()** | Asserts that an HTTP response has the HTTP status 410 Gone |
-| **ShouldBe411LengthRequired()** | Asserts that an HTTP response has the HTTP status 411 Length Required |
-| **ShouldBe412PreconditionFailed()** | Asserts that an HTTP response has the HTTP status 412 Precondition Failed |
-| **ShouldBe413RequestEntityTooLarge()** | Asserts that an HTTP response has the HTTP status 413 Request Entity Too Large |
-| **ShouldBe414RequestUriTooLong()** | Asserts that an HTTP response has the HTTP status 414 Request Uri Too Long |
-| **ShouldBe415UnsupportedMediaType()** | Asserts that an HTTP response has the HTTP status 415 Unsupported Media Type |
-| **ShouldBe416RequestedRangeNotSatisfiable()** | Asserts that an HTTP response has the HTTP status 416 Requested Range Not Satisfiable |
-| **ShouldBe417ExpectationFailed()** | Asserts that an HTTP response has the HTTP status 417 Expectation Failed |
-| **ShouldBe418ImATeapot()** | Asserts that an HTTP response has the HTTP status 418 I'm A Teapot |
-| **ShouldBe422UnprocessableEntity()** | Asserts that an HTTP response has the HTTP status 422 Unprocessable Entity |
-| **ShouldBe426UpgradeRequired()** | Asserts that an HTTP response has the HTTP status 426 UpgradeRequired |
-| **ShouldBe429TooManyRequests()** | Asserts that an HTTP response has the HTTP status 429 Too Many Requests |
-| **ShouldBe500InternalServerError()** | Asserts that an HTTP response has the HTTP status 500 Internal Server Error |
-| **ShouldBe501NotImplemented()** | Asserts that an HTTP response has the HTTP status 501 Not Implemented |
-| **ShouldBe502BadGateway()** | Asserts that an HTTP response has the HTTP status 502 Bad Gateway |
-| **ShouldBe503ServiceUnavailable()** | Asserts that an HTTP response has the HTTP status 503 Service Unavailable |
-| **ShouldBe504GatewayTimeout()** | Asserts that an HTTP response has the HTTP status 504 Gateway Timeout |
-| **ShouldBe505HttpVersionNotSupported()** | Asserts that an HTTP response has the HTTP status 505 Http Version Not Supported |
+| _Fine grained status assertions._             |                                                                                               |
+| --------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| **ShouldBe1XXInformational()**                | Asserts that an HTTP response has an HTTP status code representing an informational response. |
+| **ShouldBe2XXSuccessful()**                   | Asserts that an HTTP response has a successful HTTP status code.                              |
+| **ShouldBe3XXRedirection()**                  | Asserts that an HTTP response has an HTTP status code representing a redirection response.    |
+| **ShouldBe4XXClientError()**                  | Asserts that an HTTP response has an HTTP status code representing a client error.            |
+| **ShouldBe5XXServerError()**                  | Asserts that an HTTP response has an HTTP status code representing a server error.            |
+| **ShouldBe100Continue()**                     | Asserts that an HTTP response has the HTTP status 100 Continue                                |
+| **ShouldBe101SwitchingProtocols()**           | Asserts that an HTTP response has the HTTP status 101 Switching Protocols                     |
+| **ShouldBe200Ok()**                           | Asserts that an HTTP response has the HTTP status 200 Ok                                      |
+| **ShouldBe201Created()**                      | Asserts that an HTTP response has the HTTP status 201 Created                                 |
+| **ShouldBe202Accepted()**                     | Asserts that an HTTP response has the HTTP status 202 Accepted                                |
+| **ShouldBe203NonAuthoritativeInformation()**  | Asserts that an HTTP response has the HTTP status 203 Non Authoritative Information           |
+| **ShouldBe204NoContent()**                    | Asserts that an HTTP response has the HTTP status 204 No Content                              |
+| **ShouldBe205ResetContent()**                 | Asserts that an HTTP response has the HTTP status 205 Reset Content                           |
+| **ShouldBe206PartialContent()**               | Asserts that an HTTP response has the HTTP status 206 Partial Content                         |
+| **ShouldBe300Ambiguous()**                    | Asserts that an HTTP response has the HTTP status 300 Ambiguous                               |
+| **ShouldBe300MultipleChoices()**              | Asserts that an HTTP response has the HTTP status 300 Multiple Choices                        |
+| **ShouldBe301Moved()**                        | Asserts that an HTTP response has the HTTP status 301 Moved                                   |
+| **ShouldBe301MovedPermanently()**             | Asserts that an HTTP response has the HTTP status 301 Moved Permanently                       |
+| **ShouldBe302Found()**                        | Asserts that an HTTP response has the HTTP status 302 Found                                   |
+| **ShouldBe302Redirect()**                     | Asserts that an HTTP response has the HTTP status 302 Redirect                                |
+| **ShouldBe303RedirectMethod()**               | Asserts that an HTTP response has the HTTP status 303 Redirect Method                         |
+| **ShouldBe303SeeOther()**                     | Asserts that an HTTP response has the HTTP status 303 See Other                               |
+| **ShouldBe304NotModified()**                  | Asserts that an HTTP response has the HTTP status 304 Not Modified                            |
+| **ShouldBe305UseProxy()**                     | Asserts that an HTTP response has the HTTP status 305 Use Proxy                               |
+| **ShouldBe306Unused()**                       | Asserts that an HTTP response has the HTTP status 306 Unused                                  |
+| **ShouldBe307RedirectKeepVerb()**             | Asserts that an HTTP response has the HTTP status 307 Redirect Keep Verb                      |
+| **ShouldBe307TemporaryRedirect()**            | Asserts that an HTTP response has the HTTP status 307 Temporary Redirect                      |
+| **ShouldBe308PermanentRedirect()**            | Asserts that an HTTP response has the HTTP status 308 Permanent Redirect                      |
+| **ShouldBe400BadRequest()**                   | Asserts that an HTTP response has the HTTP status 400 BadRequest                              |
+| **ShouldBe401Unauthorized()**                 | Asserts that an HTTP response has the HTTP status 401 Unauthorized                            |
+| **ShouldBe402PaymentRequired()**              | Asserts that an HTTP response has the HTTP status 402 Payment Required                        |
+| **ShouldBe403Forbidden()**                    | Asserts that an HTTP response has the HTTP status 403 Forbidden                               |
+| **ShouldBe404NotFound()**                     | Asserts that an HTTP response has the HTTP status 404 Not Found                               |
+| **ShouldBe405MethodNotAllowed()**             | Asserts that an HTTP response has the HTTP status 405 Method Not Allowed                      |
+| **ShouldBe406NotAcceptable()**                | Asserts that an HTTP response has the HTTP status 406 Not Acceptable                          |
+| **ShouldBe407ProxyAuthenticationRequired()**  | Asserts that an HTTP response has the HTTP status 407 Proxy Authentication Required           |
+| **ShouldBe408RequestTimeout()**               | Asserts that an HTTP response has the HTTP status 408 Request Timeout                         |
+| **ShouldBe409Conflict()**                     | Asserts that an HTTP response has the HTTP status 409 Conflict                                |
+| **ShouldBe410Gone()**                         | Asserts that an HTTP response has the HTTP status 410 Gone                                    |
+| **ShouldBe411LengthRequired()**               | Asserts that an HTTP response has the HTTP status 411 Length Required                         |
+| **ShouldBe412PreconditionFailed()**           | Asserts that an HTTP response has the HTTP status 412 Precondition Failed                     |
+| **ShouldBe413RequestEntityTooLarge()**        | Asserts that an HTTP response has the HTTP status 413 Request Entity Too Large                |
+| **ShouldBe414RequestUriTooLong()**            | Asserts that an HTTP response has the HTTP status 414 Request Uri Too Long                    |
+| **ShouldBe415UnsupportedMediaType()**         | Asserts that an HTTP response has the HTTP status 415 Unsupported Media Type                  |
+| **ShouldBe416RequestedRangeNotSatisfiable()** | Asserts that an HTTP response has the HTTP status 416 Requested Range Not Satisfiable         |
+| **ShouldBe417ExpectationFailed()**            | Asserts that an HTTP response has the HTTP status 417 Expectation Failed                      |
+| **ShouldBe418ImATeapot()**                    | Asserts that an HTTP response has the HTTP status 418 I'm A Teapot                            |
+| **ShouldBe422UnprocessableEntity()**          | Asserts that an HTTP response has the HTTP status 422 Unprocessable Entity                    |
+| **ShouldBe426UpgradeRequired()**              | Asserts that an HTTP response has the HTTP status 426 UpgradeRequired                         |
+| **ShouldBe429TooManyRequests()**              | Asserts that an HTTP response has the HTTP status 429 Too Many Requests                       |
+| **ShouldBe500InternalServerError()**          | Asserts that an HTTP response has the HTTP status 500 Internal Server Error                   |
+| **ShouldBe501NotImplemented()**               | Asserts that an HTTP response has the HTTP status 501 Not Implemented                         |
+| **ShouldBe502BadGateway()**                   | Asserts that an HTTP response has the HTTP status 502 Bad Gateway                             |
+| **ShouldBe503ServiceUnavailable()**           | Asserts that an HTTP response has the HTTP status 503 Service Unavailable                     |
+| **ShouldBe504GatewayTimeout()**               | Asserts that an HTTP response has the HTTP status 504 Gateway Timeout                         |
+| **ShouldBe505HttpVersionNotSupported()**      | Asserts that an HTTP response has the HTTP status 505 Http Version Not Supported              |
 
 ```csharp
 response.ShouldBe2XXSuccessful();
@@ -1596,22 +1598,20 @@ A failure here looks exactly like the status code outputs shown above: the expec
 
 #### FluentAssertions.Web vs FluentAssertions.Mvc vs FluentAssertions.Http
 
-**FluentAssertions.Web** does not extend the assertions for the ASP.NET Core *Controllers*, if you are looking for that, then consider [FluentAssertions.Mvc](https://github.com/fluentassertions/fluentassertions.mvc).
+**FluentAssertions.Web** does not extend the assertions for the ASP.NET Core _Controllers_, if you are looking for that, then consider [FluentAssertions.Mvc](https://github.com/fluentassertions/fluentassertions.mvc).
 
 When FluentAssertions.Web was created, [FluentAssertions.Http](https://github.com/balanikas/FluentAssertions.Http) also existed at the time, solving the same problem when considering the asserting language.
 Besides the extra assertions added by FluentAssertions.Web, an important effort is put by this library on what happens when a test fails.
 
 #### The HttpResponsesMessage assertions from FluentAssertions vs. FluentAssertions.Web
 
-In the [6.4.0](https://fluentassertions.com/releases/#640) release FluentAssertions introduced a set of related assertions: *BeSuccessful, BeRedirection, HaveClientError, HaveServerError, HaveError, HaveStatusCode, NotHaveStatusCode*.
+In the [6.4.0](https://fluentassertions.com/releases/#640) release FluentAssertions introduced a set of related assertions: _BeSuccessful, BeRedirection, HaveClientError, HaveServerError, HaveError, HaveStatusCode, NotHaveStatusCode_.
 
 This library can still be used with FluentAssertions and it did not become obsoleted, not only because of the rich set of assertions, but also for the comprehensive output messages that are displayed when the test fails, feature that is not present in the main library, but in FluentAssertions.Web one.
 
 ### FluentAssertions.Web.v8
 
-Starting 8.0.0, FA is not an FOSS anymore. **FluentAssertions.Web** will maintain both FOSS (< 8.0.0) and the Commercial versions of FA (>= 8.0.0), so they will be deployed as separate Nuget packages:
-    - **FluentAssertions.Web** will continue to dependend on the FOSS versions
-    - **FluentAssertions.Web.v8** will dependend on the Commercial versions
+Starting 8.0.0, FA is not an FOSS anymore. **FluentAssertions.Web** will maintain both FOSS (< 8.0.0) and the Commercial versions of FA (>= 8.0.0), so they will be deployed as separate Nuget packages: - **FluentAssertions.Web** will continue to dependend on the FOSS versions - **FluentAssertions.Web.v8** will dependend on the Commercial versions
 
 ### AwesomeAssertions.Web
 
@@ -1637,26 +1637,26 @@ response.ShouldMatchInContent("*\"author\"*");
 
 The named assertions map to the FluentAssertions/AwesomeAssertions ones described in the [Full API](#full-api) section, and are listed in full, following the same structure, in [Shouldly.Web API](#shouldlyweb-api). Worked examples are in [Shouldly.Web Examples](#shouldlyweb-examples):
 
-> **Note on multiple failures:** To report *all* failing assertions, pass each one as a separate condition (a collection expression, array or `IEnumerable` of `Action`s), exactly as FluentAssertions' `Should().Satisfy(...)` reports every statement of a multi-statement lambda: each failing condition gets its own `Error 1`, `Error 2`, … block. A single assertion lambda runs as one condition and stops at its first failure. The [shared specs](https://github.com/adrianiftode/Assertions.Web/tree/master/test/FluentAssertions.Web.Tests) show both forms.
+> **Note on multiple failures:** To report _all_ failing assertions, pass each one as a separate condition (a collection expression, array or `IEnumerable` of `Action`s), exactly as FluentAssertions' `Should().Satisfy(...)` reports every statement of a multi-statement lambda: each failing condition gets its own `Error 1`, `Error 2`, … block. A single assertion lambda runs as one condition and stops at its first failure. The [shared specs](https://github.com/adrianiftode/Assertions.Web/tree/master/test/FluentAssertions.Web.Tests) show both forms.
 
-| FluentAssertions.Web | Shouldly.Web |
-|---|---|
-| `Should().Be200Ok()` | `ShouldBe200Ok()` |
-| `Should().BeAs<T>()` | `ShouldBeAs<T>()` |
-| `Should().BeEmpty()` | `ShouldBeEmpty()` |
-| `Should().HaveHeader()` / `NotHaveHeader()` | `ShouldHaveHeader()` / `ShouldNotHaveHeader()` |
-| `Should().HaveHeader().And.BeValue()` | `ShouldHaveHeaderWithValue()` |
-| `Should().HaveHeader().And.BeValues()` | `ShouldHaveHeaderWithValues()` |
-| `Should().HaveHeader().And.Match()` | `ShouldHaveHeaderMatching()` |
-| `Should().HaveHeader().And.BeEmpty()` / `NotBeEmpty()` | `ShouldHaveEmptyHeader()` / `ShouldHaveNonEmptyHeader()` |
-| `Should().Satisfy<T>()` / `Should().Satisfy()` | `ShouldSatisfy<T>()` / `ShouldSatisfy()` |
-| `Should().MatchInContent()` | `ShouldMatchInContent()` |
-| `Should().HaveHttpStatusCode()` / `NotHaveHttpStatusCode()` | `ShouldHaveHttpStatusCode()` / `ShouldNotHaveHttpStatusCode()` |
-| `Should().HaveLocation()` etc. | `ShouldHaveLocation()`, `ShouldHaveLocationWithValue()`, `ShouldHaveLocationWithValues()`, `ShouldHaveLocationMatching()`, `ShouldNotHaveLocation()` |
-| `Should().Be400BadRequest().And.HaveError()` | `ShouldHaveError()` |
-| `Should().Be400BadRequest().And.OnlyHaveError()` | `ShouldOnlyHaveError()` |
-| `Should().Be400BadRequest().And.NotHaveError()` | `ShouldNotHaveError()` |
-| `Should().Be400BadRequest().And.HaveErrorMessage()` | `ShouldHaveErrorMessage()` |
+| FluentAssertions.Web                                        | Shouldly.Web                                                                                                                                         |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Should().Be200Ok()`                                        | `ShouldBe200Ok()`                                                                                                                                    |
+| `Should().BeAs<T>()`                                        | `ShouldBeAs<T>()`                                                                                                                                    |
+| `Should().BeEmpty()`                                        | `ShouldBeEmpty()`                                                                                                                                    |
+| `Should().HaveHeader()` / `NotHaveHeader()`                 | `ShouldHaveHeader()` / `ShouldNotHaveHeader()`                                                                                                       |
+| `Should().HaveHeader().And.BeValue()`                       | `ShouldHaveHeaderWithValue()`                                                                                                                        |
+| `Should().HaveHeader().And.BeValues()`                      | `ShouldHaveHeaderWithValues()`                                                                                                                       |
+| `Should().HaveHeader().And.Match()`                         | `ShouldHaveHeaderMatching()`                                                                                                                         |
+| `Should().HaveHeader().And.BeEmpty()` / `NotBeEmpty()`      | `ShouldHaveEmptyHeader()` / `ShouldHaveNonEmptyHeader()`                                                                                             |
+| `Should().Satisfy<T>()` / `Should().Satisfy()`              | `ShouldSatisfy<T>()` / `ShouldSatisfy()`                                                                                                             |
+| `Should().MatchInContent()`                                 | `ShouldMatchInContent()`                                                                                                                             |
+| `Should().HaveHttpStatusCode()` / `NotHaveHttpStatusCode()` | `ShouldHaveHttpStatusCode()` / `ShouldNotHaveHttpStatusCode()`                                                                                       |
+| `Should().HaveLocation()` etc.                              | `ShouldHaveLocation()`, `ShouldHaveLocationWithValue()`, `ShouldHaveLocationWithValues()`, `ShouldHaveLocationMatching()`, `ShouldNotHaveLocation()` |
+| `Should().Be400BadRequest().And.HaveError()`                | `ShouldHaveError()`                                                                                                                                  |
+| `Should().Be400BadRequest().And.OnlyHaveError()`            | `ShouldOnlyHaveError()`                                                                                                                              |
+| `Should().Be400BadRequest().And.NotHaveError()`             | `ShouldNotHaveError()`                                                                                                                               |
+| `Should().Be400BadRequest().And.HaveErrorMessage()`         | `ShouldHaveErrorMessage()`                                                                                                                           |
 
 The failure messages follow the Shouldly layout, so the expected/actual values are rendered as `should be`/`but was`, followed by the same HTTP conversation dump. When a custom message is passed it is reported under `Additional Info`:
 
@@ -1711,7 +1711,6 @@ dotnet add package Assertions.Web.Serializers.NewtonsoftJson
 
 [![NuGet](https://img.shields.io/nuget/v/Assertions.Web.Serializers.NewtonsoftJson.svg?label=Assertions.Web.Serializers.NewtonsoftJson)](https://www.nuget.org/packages/Assertions.Web.Serializers.NewtonsoftJson)
 
-
 To set the default serializer to **Newtonsoft.Json** one, use the following configuration:
 
 ```csharp
@@ -1726,32 +1725,23 @@ NewtonsoftJsonSerializerConfig.Options.Converters.Add(new YesNoBooleanJsonConver
 
 ##### Choosing the serializer without touching the global state
 
-The serializers can be given their own options, so that a single test, or a single API host, does not need to mutate the global configuration:
+`AssertionsWebConfig.UseSerializer` overrides the serializer for the current async flow until the returned scope is disposed, in every flavour. Scopes nest and do not leak to other tests running in parallel. The serializers can be given their own options for that purpose:
 
 ```csharp
 var apiOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web) { Converters = { new MyConverter() } };
-var newtonsoft = new NewtonsoftJsonSerializer(new JsonSerializerSettings { Converters = { new YesNoBooleanJsonConverter() } });
-```
 
-The parameterless constructors keep reading the global `SystemTextJsonSerializerConfig.Options` and `NewtonsoftJsonSerializerConfig.Options`.
-
-**Per assertion chain** (FluentAssertions.Web, FluentAssertions.Web.v8 and AwesomeAssertions.Web): `UsingSerializer` applies to every assertion chained after it, including the ones reached through `.And` such as `Be400BadRequest().And.Satisfy<T>(...)`.
-
-```csharp
-response.Should().UsingSerializer(apiOptions).Satisfy<Person>(person => person.FirstName.Should().Be("Ada"));
-response.Should().UsingSerializer(newtonsoft).Be200Ok().And.BeAs(new { first_name = "Ada" });
-```
-
-**Per scope** (every flavour, Shouldly.Web included): `AssertionsWebConfig.UseSerializer` overrides the serializer for the current async flow until the returned scope is disposed. Scopes nest and do not leak to other tests running in parallel.
-
-```csharp
 using (AssertionsWebConfig.UseSerializer(new SystemTextJsonSerializer(apiOptions)))
 {
-    response.ShouldSatisfy<Person>(person => person.FirstName.ShouldBe("Ada"));
+    response.Should().Satisfy<Person>(person => person.FirstName.Should().Be("Ada"));
+}
+
+using (AssertionsWebConfig.UseSerializer(new NewtonsoftJsonSerializer(new JsonSerializerSettings { Converters = { new YesNoBooleanJsonConverter() } })))
+{
+    response.ShouldBeAs(new { Approved = true });
 }
 ```
 
-The serializer is resolved in this order: `UsingSerializer`, then the active `UseSerializer` scope, then the global `AssertionsWebConfig.Serializer`. Inside a scope, reading `AssertionsWebConfig.Serializer` returns the scoped serializer, while setting it still changes the global one.
+The parameterless constructors keep reading the global `SystemTextJsonSerializerConfig.Options` and `NewtonsoftJsonSerializerConfig.Options`. Inside a scope, reading `AssertionsWebConfig.Serializer` returns the scoped serializer, while setting it still changes the global one.
 
 #### Response Formatting
 
@@ -1778,29 +1768,30 @@ var formatted = response.Format(new HttpResponseFormatterOptions
 The internal HTTP Request/Response formatter used by the assertion packages is published as the **shared** **HttpMessageFormatter** package. It is not an assertion library: it carries no dependency on any assertion framework, so beyond powering the failure output of the assertion packages it can be reused in any other context where HTTP requests and responses need to be rendered for inspection and debugging.
 
 Basic usage:
- - start from an HTTPResponseMessage instance
- - reference the HttpMessageFormatter package from Nuget
- - import the extension method _using HttpMessageFormatter;_
- - call the *Format* method on the HttpResponseMessage instance
 
- ```csharp
+- start from an HTTPResponseMessage instance
+- reference the HttpMessageFormatter package from Nuget
+- import the extension method _using HttpMessageFormatter;_
+- call the _Format_ method on the HttpResponseMessage instance
+
+```csharp
 using HttpMessageFormatter;
 
 public class HttpResponseFormatterExtensionsTests
 {
-    [Fact]
-    public void GivenUnspecifiedResponse_ShouldFormatBasicResponse()
-    {
-        // Arrange
-        using var subject = new HttpResponseMessage();
+   [Fact]
+   public void GivenUnspecifiedResponse_ShouldFormatBasicResponse()
+   {
+       // Arrange
+       using var subject = new HttpResponseMessage();
 
-        // Act
-        var formatted = subject.Format();
+       // Act
+       var formatted = subject.Format();
 
-        // Assert
-        Assert.Contains("The HTTP response was:", formatted);
-        Assert.Contains("HTTP/1.1 200 OK", formatted);
-    }
+       // Assert
+       Assert.Contains("The HTTP response was:", formatted);
+       Assert.Contains("HTTP/1.1 200 OK", formatted);
+   }
 }
 
 ```
