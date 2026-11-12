@@ -288,9 +288,9 @@ public partial class HttpResponseMessageAssertions
                 expectedHeader,
                 Subject);
 #if FAV8
-        return new AndConstraint<HeadersAssertions>(new HeadersAssertions(Subject, expectedHeader, CurrentAssertionChain));
+        return new AndConstraint<HeadersAssertions>(InheritSerializer(new HeadersAssertions(Subject, expectedHeader, CurrentAssertionChain)));
 #else
-        return new AndConstraint<HeadersAssertions>(new HeadersAssertions(Subject, expectedHeader));
+        return new AndConstraint<HeadersAssertions>(InheritSerializer(new HeadersAssertions(Subject, expectedHeader)));
 #endif
     }
 

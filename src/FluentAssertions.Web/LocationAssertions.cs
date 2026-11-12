@@ -45,9 +45,9 @@ public class LocationAssertions : HeadersAssertions
                       "the Location HTTP header, but no such header was found in the actual response{reason}.{0}",
                 Subject);
 #if FAV8
-        return new AndConstraint<HeadersAssertions>(new HeadersAssertions(Subject, Header, CurrentAssertionChain));
+        return new AndConstraint<HeadersAssertions>(InheritSerializer(new HeadersAssertions(Subject, Header, CurrentAssertionChain)));
 #else
-        return new AndConstraint<HeadersAssertions>(new HeadersAssertions(Subject, Header));
+        return new AndConstraint<HeadersAssertions>(InheritSerializer(new HeadersAssertions(Subject, Header)));
 #endif
     }
 

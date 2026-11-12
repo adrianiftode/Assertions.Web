@@ -1724,6 +1724,35 @@ The related `Newtonsoft.Json.JsonSerializerSettings` used to configure the Newto
 NewtonsoftJsonSerializerConfig.Options.Converters.Add(new YesNoBooleanJsonConverter());
 ```
 
+##### Choosing the serializer without touching the global state
+
+The serializers can be given their own options, so that a single test, or a single API host, does not need to mutate the global configuration:
+
+```csharp
+var apiOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web) { Converters = { new MyConverter() } };
+var newtonsoft = new NewtonsoftJsonSerializer(new JsonSerializerSettings { Converters = { new YesNoBooleanJsonConverter() } });
+```
+
+The parameterless constructors keep reading the global `SystemTextJsonSerializerConfig.Options` and `NewtonsoftJsonSerializerConfig.Options`.
+
+**Per assertion chain** (FluentAssertions.Web, FluentAssertions.Web.v8 and AwesomeAssertions.Web): `UsingSerializer` applies to every assertion chained after it, including the ones reached through `.And` such as `Be400BadRequest().And.Satisfy<T>(...)`.
+
+```csharp
+response.Should().UsingSerializer(apiOptions).Satisfy<Person>(person => person.FirstName.Should().Be("Ada"));
+response.Should().UsingSerializer(newtonsoft).Be200Ok().And.BeAs(new { first_name = "Ada" });
+```
+
+**Per scope** (every flavour, Shouldly.Web included): `AssertionsWebConfig.UseSerializer` overrides the serializer for the current async flow until the returned scope is disposed. Scopes nest and do not leak to other tests running in parallel.
+
+```csharp
+using (AssertionsWebConfig.UseSerializer(new SystemTextJsonSerializer(apiOptions)))
+{
+    response.ShouldSatisfy<Person>(person => person.FirstName.ShouldBe("Ada"));
+}
+```
+
+The serializer is resolved in this order: `UsingSerializer`, then the active `UseSerializer` scope, then the global `AssertionsWebConfig.Serializer`. Inside a scope, reading `AssertionsWebConfig.Serializer` returns the scoped serializer, while setting it still changes the global one.
+
 #### Response Formatting
 
 The assertion failure messages include a readable rendering of the HTTP response (see [When a test fails, you see the whole conversation](#when-a-test-fails-you-see-the-whole-conversation) for an example). By default, only the first `10 * 128 * 1024` bytes of the response content are printed, the rest being replaced by a warning message. To change this limit globally, set the `ResponseFormatterOptions`:
