@@ -261,7 +261,7 @@ deploy:
     # Dedicated key scoped to the Assertions.Web* package ids, so this feed's key
     # cannot publish the FluentAssertions.* or AwesomeAssertions.* flavours.
     api_key:
-      secure: il9lT20hp/X5OZ8xpft7iz6v/v9twmkaByWx6BDuA52mgBEcEzxHuX+E1STRfS/W
+      secure: ILZ0tB1DxRpvHebAZHCp3ZqAWtzbScYp3kpDQuBgo2zgpEE6a+jEWnp+OwFS/sIU
     skip_symbols: true
     artifact: AssertionsWebPackages
     on:
@@ -272,7 +272,7 @@ deploy:
 
   - provider: NuGet
     api_key:
-      secure: 6rs63nhNUqswGZO+5fPTAErKVSWuK015FkhlxPHuodj5F2i8ii+Im156iTCi7p6I
+      secure: x15z1lh5kJtz360akn41HjruHFG0ewNQRhBmhmxPRc7saZ3obmo7m6gdJ5qbrGtW
     skip_symbols: true
     artifact: FluentAssertionsPackages
     on:
@@ -283,7 +283,7 @@ deploy:
 
   - provider: NuGet
     api_key:
-      secure: 6rs63nhNUqswGZO+5fPTAErKVSWuK015FkhlxPHuodj5F2i8ii+Im156iTCi7p6I
+      secure: x15z1lh5kJtz360akn41HjruHFG0ewNQRhBmhmxPRc7saZ3obmo7m6gdJ5qbrGtW
     skip_symbols: true
     artifact: FluentAssertionsV8Packages
     on:
@@ -294,7 +294,7 @@ deploy:
 
   - provider: NuGet
     api_key:
-      secure: JK6J6voMfJm2FYMh52c2qv4CbRAQoz/lUZmPHqw93jy+bfiM4iTBmiusXAqlMsbV
+      secure: hsrlvyX7xwYsQtrZt3gpP5sK88bBtXg+mlJMBz2PZCtFrhWGQ9e8Qd29KTbDGfKf
     skip_symbols: true
     artifact: HttpMessageFormatterPackage
     on:
@@ -304,7 +304,7 @@ deploy:
 
   - provider: NuGet
     api_key:
-      secure: gaPfZkebBqHImrgOgug/EV8v/LrAR93n8SjxTdi+wWPmuOE5/O8m13XZ5+vSApmH
+      secure: UdmZJaypJ0HJhj3pG1zGihbQF/xMHJvxQkQL4iX9TfTqLu3YAljWy8QPY7YpiuYy
     skip_symbols: true
     artifact: AwesomeAssertionsPackages
     on:
@@ -314,7 +314,7 @@ deploy:
 
   - provider: NuGet
     api_key:
-      secure: tOCTpsWpsK7vE2lMFPoo8lv5KM7cGI1Es1+B4xEGTU0gYZjDmvaUAQr6fvSns5kQ
+      secure: 1hVdUKkqz1DCt4150nwmELU9SKCv6fVDsXJaE7KXuyawZc2FOWiMwtI+u5IUw/Vz
     skip_symbols: true
     artifact: ShouldlyPackages
     on:

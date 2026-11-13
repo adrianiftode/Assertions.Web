@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <!-- Released independently of the other packages in this repo. See eng/ReleasePackages.props. -->
-    <Version>1.0.0-preview.2</Version>
+    <Version>1.0.0-preview.3</Version>
     <PackageDescription>
       A Shouldly extension over the HttpResponseMessage object. It provides HTTP-specific assertions whose
       failure messages include the HTTP request and response. Prerelease until Shouldly 5.0.0 is stable;

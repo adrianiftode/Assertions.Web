@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <!-- Released independently of the other packages in this repo. See eng/ReleasePackages.props. -->
-    <Version>2.0.6</Version>
+    <Version>2.0.7</Version>
     <TargetFramework></TargetFramework>
     <TargetFrameworks>netstandard2.0;net8.0;net10.0</TargetFrameworks>
     <PackageDescription>
