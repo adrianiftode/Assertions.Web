@@ -272,7 +272,7 @@ deploy:
 
   - provider: NuGet
     api_key:
-      secure: x15z1lh5kJtz360akn41HjruHFG0ewNQRhBmhmxPRc7saZ3obmo7m6gdJ5qbrGtW
+      secure: TI2aIz+36rjhl1w77/QPj6XQE/fUD0CE4WbzuC19QvBru1hUVbBgsi3M+AeAwviq
     skip_symbols: true
     artifact: FluentAssertionsPackages
     on:
@@ -283,7 +283,7 @@ deploy:
 
   - provider: NuGet
     api_key:
-      secure: x15z1lh5kJtz360akn41HjruHFG0ewNQRhBmhmxPRc7saZ3obmo7m6gdJ5qbrGtW
+      secure: TI2aIz+36rjhl1w77/QPj6XQE/fUD0CE4WbzuC19QvBru1hUVbBgsi3M+AeAwviq
     skip_symbols: true
     artifact: FluentAssertionsV8Packages
     on:
@@ -294,7 +294,7 @@ deploy:
 
   - provider: NuGet
     api_key:
-      secure: hsrlvyX7xwYsQtrZt3gpP5sK88bBtXg+mlJMBz2PZCtFrhWGQ9e8Qd29KTbDGfKf
+      secure: tPSdrEduoIgvnwl7vOQs24isHiEDq+sl/aAEK0fkNZuSHY2I/HLLn8qKeOrg5tMl
     skip_symbols: true
     artifact: HttpMessageFormatterPackage
     on:
@@ -304,7 +304,7 @@ deploy:
 
   - provider: NuGet
     api_key:
-      secure: UdmZJaypJ0HJhj3pG1zGihbQF/xMHJvxQkQL4iX9TfTqLu3YAljWy8QPY7YpiuYy
+      secure: sljGvf+D/LFJzJRfrUrCEdz1mqBb03ErBJZ3rFzjFnl1J+2EDec9T16+VUckZ4xp
     skip_symbols: true
     artifact: AwesomeAssertionsPackages
     on:
