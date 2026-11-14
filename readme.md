@@ -1724,6 +1724,28 @@ The related `Newtonsoft.Json.JsonSerializerSettings` used to configure the Newto
 NewtonsoftJsonSerializerConfig.Options.Converters.Add(new YesNoBooleanJsonConverter());
 ```
 
+##### Choosing the serializer without touching the global state
+
+`AssertionsWebConfig.UseSerializer` overrides the serializer for the current async flow until the returned scope is disposed, in every flavour. Scopes nest and do not leak to other tests running in parallel. The serializers can be given their own options for that purpose:
+
+```csharp
+var apiOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web) { Converters = { new MyConverter() } };
+
+using (AssertionsWebConfig.UseSerializer(new SystemTextJsonSerializer(apiOptions)))
+{
+    response.Should().Satisfy<Person>(person => person.FirstName.Should().Be("Ada"));
+}
+
+using (AssertionsWebConfig.UseSerializer(new NewtonsoftJsonSerializer(new JsonSerializerSettings { Converters = { new YesNoBooleanJsonConverter() } })))
+{
+    response.ShouldBeAs(new { Approved = true });
+}
+```
+
+The parameterless constructors keep reading the global `SystemTextJsonSerializerConfig.Options` and `NewtonsoftJsonSerializerConfig.Options`. Inside a scope, reading `AssertionsWebConfig.Serializer` returns the scoped serializer, while setting it still changes the global one.
+
+> **Warning:** the assertions rely on the default deserialization settings. For System.Text.Json these are case-insensitive property names, enums and numbers read from strings, trailing commas, and an empty string read as `null` for nullable value types. Options or settings that change them can make an assertion behave unexpectedly, for example leave a property `null` instead of failing. To keep the defaults, start from a copy: `new JsonSerializerOptions(SystemTextJsonSerializerConfig.Options) { ... }`.
+
 #### Response Formatting
 
 The assertion failure messages include a readable rendering of the HTTP response (see [When a test fails, you see the whole conversation](#when-a-test-fails-you-see-the-whole-conversation) for an example). By default, only the first `10 * 128 * 1024` bytes of the response content are printed, the rest being replaced by a warning message. To change this limit globally, set the `ResponseFormatterOptions`:

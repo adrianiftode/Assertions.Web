@@ -6,12 +6,36 @@ namespace Assertions.Web;
 /// </summary>
 public class NewtonsoftJsonSerializer : ISerializer
 {
+    private readonly JsonSerializerSettings? _settings;
+
+    /// <summary>
+    /// Initializes a new instance that reads the global <see cref="NewtonsoftJsonSerializerConfig.Options"/> on every call.
+    /// </summary>
+    public NewtonsoftJsonSerializer()
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance that deserializes with the given <paramref name="settings"/>, ignoring the global ones.
+    /// </summary>
+    /// <remarks>
+    /// The assertions rely on the deserialization behaviour of <see cref="NewtonsoftJsonSerializerConfig.Options"/>.
+    /// Settings that change it, such as a contract resolver or converters, can make an assertion behave unexpectedly,
+    /// for example leave a property <c>null</c> instead of failing.
+    /// </remarks>
+    /// <param name="settings">The settings used to deserialize a JSON into a C# object.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="settings"/> is <c>null</c>.</exception>
+    public NewtonsoftJsonSerializer(JsonSerializerSettings settings)
+    {
+        _settings = settings ?? throw new ArgumentNullException(nameof(settings), "Cannot use <null> serializer settings.");
+    }
+
     /// <inheritdoc/>
     public Task<object?> Deserialize(Stream content, Type modelType)
     {
         try
         {
-            var serializer = JsonSerializer.Create(NewtonsoftJsonSerializerConfig.Options);
+            var serializer = JsonSerializer.Create(_settings ?? NewtonsoftJsonSerializerConfig.Options);
 
             using var sr = new StreamReader(content, Encoding.UTF8, true, 1024, leaveOpen: true);
             using var reader = new JsonTextReader(sr);
