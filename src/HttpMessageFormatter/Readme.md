@@ -39,3 +39,27 @@ var formatted = subject.Format(new HttpResponseFormatterOptions
     MaximumReadableBytes = 4 * 1024
 });
 ```
+
+### Customizing The Formatted Output
+
+`HttpResponseFormatterOptions` also exposes two optional delegates that give full control over the
+formatted output of both the response and the originating request:
+
+- `ResponseFormatter` (`Func<HttpResponseMessage, string>`) — when configured, it replaces the
+  built-in formatting entirely. It receives the complete `HttpResponseMessage` (the originating
+  request is available through its `RequestMessage` property) and returns the text to be printed.
+  When it is set, the built-in pipeline, including the content processors and the
+  `MaximumReadableBytes` limit, is bypassed.
+- `PostFormat` (`Func<string, string>`) — when configured, it transforms the final formatted output,
+  whether it was produced by the built-in formatting or by `ResponseFormatter`. It can be used, for
+  example, to make escaped newlines in stack traces readable or to redact sensitive values.
+
+```csharp
+var formatted = subject.Format(new HttpResponseFormatterOptions
+{
+    PostFormat = formattedOutput => formattedOutput.Replace("\\r\\n", Environment.NewLine)
+});
+```
+
+Both delegates are optional; when neither is set, the formatting is unchanged. If a delegate throws,
+the exception is reported into the formatted output, similar to any other formatting error.
