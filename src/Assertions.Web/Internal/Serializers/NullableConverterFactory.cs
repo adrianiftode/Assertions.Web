@@ -3,22 +3,6 @@ using System.Text.Json.Serialization;
 
 namespace Assertions.Web.Internal.Serializers;
 
-internal class SystemTextJsonSerializer : ISerializer
-{
-    public async Task<object?> Deserialize(Stream content, Type modelType)
-    {
-        try
-        {
-            var result = await JsonSerializer.DeserializeAsync(content, modelType, SystemTextJsonSerializerConfig.Options);
-            return result;
-        }
-        catch (JsonException ex)
-        {
-            throw new DeserializationException($"Exception while deserializing the model with {nameof(SystemTextJsonSerializer)}", ex);
-        }
-    }
-}
-
 //https://stackoverflow.com/a/65025191/782754
 internal class NullableConverterFactory : JsonConverterFactory
 {
