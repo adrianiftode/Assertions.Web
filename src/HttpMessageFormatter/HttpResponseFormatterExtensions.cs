@@ -21,7 +21,9 @@ public static class HttpResponseFormatterExtensions
     /// Formats an HTTP response message into a readable string representation using the given <paramref name="options"/>.
     /// </summary>
     /// <param name="response">The HTTP response message to format.</param>
-    /// <param name="options">The options controlling the formatting, like the maximum number of content characters to print.
+    /// <param name="options">The options controlling the formatting, like the maximum number of content characters to print
+    /// or the <see cref="HttpResponseFormatterOptions.ResponseFormatter"/> and <see cref="HttpResponseFormatterOptions.PostFormat"/>
+    /// delegates customizing the formatted output.
     /// When <see langword="null"/>, the default options are used.</param>
     /// <returns>A formatted string representation of the HTTP response.</returns>
     public static string Format(this HttpResponseMessage response, HttpResponseFormatterOptions? options)
@@ -39,23 +41,66 @@ public static class HttpResponseFormatterExtensions
 
     private static async Task AppendHttpResponseMessage(StringBuilder messageBuilder, HttpResponseMessage response, HttpResponseFormatterOptions? options)
     {
+        var outputStart = messageBuilder.Length;
+
+        if (options?.ResponseFormatter is { } responseFormatter)
+        {
+            try
+            {
+                messageBuilder.Append(responseFormatter(response));
+            }
+            catch (Exception e)
+            {
+                messageBuilder.AppendLine();
+                messageBuilder.AppendLine($"An exception occurred while trying to format the HTTP response: {e}");
+            }
+        }
+        else
+        {
+            try
+            {
+                await AppendResponse(messageBuilder, response, options);
+            }
+            catch (Exception e)
+            {
+                messageBuilder.AppendLine();
+                messageBuilder.AppendLine($"An exception occurred while trying to output the some of the response details: {e}");
+            }
+            try
+            {
+                await AppendRequest(messageBuilder, response, options);
+            }
+            catch (Exception e)
+            {
+                messageBuilder.AppendLine();
+                messageBuilder.AppendLine($"An exception occurred while trying to output some of the request details: {e}");
+            }
+        }
+
+        ApplyPostFormat(messageBuilder, outputStart, options);
+    }
+
+    private static void ApplyPostFormat(StringBuilder messageBuilder, int outputStart, HttpResponseFormatterOptions? options)
+    {
+        if (options?.PostFormat is not { } postFormat || messageBuilder.Length == outputStart)
+        {
+            return;
+        }
+
+        var formatted = messageBuilder.ToString(outputStart, messageBuilder.Length - outputStart);
         try
         {
-            await AppendResponse(messageBuilder, response, options);
+            var transformed = postFormat(formatted);
+            if (transformed != null)
+            {
+                messageBuilder.Length = outputStart;
+                messageBuilder.Append(transformed);
+            }
         }
         catch (Exception e)
         {
             messageBuilder.AppendLine();
-            messageBuilder.AppendLine($"An exception occurred while trying to output the some of the response details: {e}");
-        }
-        try
-        {
-            await AppendRequest(messageBuilder, response, options);
-        }
-        catch (Exception e)
-        {
-            messageBuilder.AppendLine();
-            messageBuilder.AppendLine($"An exception occurred while trying to output some of the request details: {e}");
+            messageBuilder.AppendLine($"An exception occurred while trying to post-format the response details: {e}");
         }
     }
 

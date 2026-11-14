@@ -1766,6 +1766,38 @@ var formatted = response.Format(new HttpResponseFormatterOptions
 });
 ```
 
+Besides the content limit, `HttpResponseFormatterOptions` exposes two optional delegates that give full control over the formatted output of both the HTTP response and the originating HTTP request:
+
+- `ResponseFormatter` (`Func<HttpResponseMessage, string>`) — when configured, it replaces the built-in formatting entirely. It receives the complete `HttpResponseMessage` (the originating request is available through its `RequestMessage` property) and returns the text printed into the failure message. When it is set, the built-in pipeline, including the content processors and the `MaximumReadableBytes` limit, is bypassed.
+- `PostFormat` (`Func<string, string>`) — when configured, it transforms the final formatted output, whether it was produced by the built-in formatting or by `ResponseFormatter`. It can be used, for example, to make escaped newlines in stack traces readable, to redact sensitive values like cookies or API keys, or to normalize volatile values like correlation ids.
+
+```csharp
+AssertionsWebConfig.ResponseFormatterOptions = new HttpResponseFormatterOptions
+{
+    PostFormat = formatted => formatted.Replace("\\r\\n", Environment.NewLine)
+};
+```
+
+Another typical use is removing the `Authorization` header of the originating request from the output, so no credentials are ever printed in the failure message. The headers are rendered one per line, so the line can be dropped based on its prefix (this needs `using System.Text.RegularExpressions;`):
+
+```csharp
+AssertionsWebConfig.ResponseFormatterOptions = new HttpResponseFormatterOptions
+{
+    PostFormat = formatted => Regex.Replace(formatted, "^Authorization: .*(\r?\n|$)", string.Empty, RegexOptions.Multiline)
+};
+```
+
+New lines can also be removed from the printed response and request details, so the whole dump is printed on a single line, after the `The HTTP response was:` header. This is useful on CI, where log parsers like the ones of GitHub Actions or Azure DevOps can mangle multi-line output:
+
+```csharp
+AssertionsWebConfig.ResponseFormatterOptions = new HttpResponseFormatterOptions
+{
+    PostFormat = formatted => formatted.Replace("\r\n", " ").Replace('\n', ' ')
+};
+```
+
+Both delegates are optional; when neither is set, the formatting is unchanged. If a delegate throws, the exception is reported into the formatted output, similar to any other formatting error, so a failing customization cannot break the assertion message itself.
+
 ### HttpResponse Formatter
 
 The internal HTTP Request/Response formatter used by the assertion packages is published as the **shared** **HttpMessageFormatter** package. It is not an assertion library: it carries no dependency on any assertion framework, so beyond powering the failure output of the assertion packages it can be reused in any other context where HTTP requests and responses need to be rendered for inspection and debugging.
