@@ -197,4 +197,23 @@ public class HttpResponseFormatterExtensionsTests
         // Assert
         Assert.Contains("some content", formatted);
     }
+
+    [Fact]
+    public void GivenConfiguredResponseFormatter_WhenItReturnsAnEmptyString_ThenPostFormatIsStillInvoked()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage();
+        var options = new HttpResponseFormatterOptions
+        {
+            ResponseFormatter = _ => string.Empty,
+            PostFormat = formatted => $"{formatted}POST-FORMATTED FOOTER"
+        };
+
+        // Act
+        var formatted = subject.Format(options);
+
+        // Assert
+        Assert.DoesNotContain("HTTP/1.1 200 OK", formatted);
+        Assert.Contains("POST-FORMATTED FOOTER", formatted);
+    }
 }

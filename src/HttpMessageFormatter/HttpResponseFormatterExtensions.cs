@@ -82,7 +82,7 @@ public static class HttpResponseFormatterExtensions
 
     private static void ApplyPostFormat(StringBuilder messageBuilder, int outputStart, HttpResponseFormatterOptions? options)
     {
-        if (options?.PostFormat is not { } postFormat || messageBuilder.Length == outputStart)
+        if (options?.PostFormat is not { } postFormat)
         {
             return;
         }

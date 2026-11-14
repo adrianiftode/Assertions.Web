@@ -45,11 +45,13 @@ public class HttpResponseFormatterOptions
 
     /// <summary>
     /// When configured, transforms the final formatted output of the HTTP response and the originating HTTP
-    /// request, no matter if it was produced by the built-in formatting or by <see cref="ResponseFormatter"/>.
+    /// request, no matter if it was produced by the built-in formatting or by <see cref="ResponseFormatter"/>,
+    /// and no matter if that output is empty.
     /// It can be used, for example, to make escaped newlines readable, to redact sensitive values or
     /// to normalize volatile ones.
-    /// If the delegate throws or returns <see langword="null"/>, the untransformed output is kept and the
-    /// exception is reported into the formatted output, similar to any other formatting error.
+    /// If the delegate throws, the untransformed output is kept and the exception is reported into the
+    /// formatted output, similar to any other formatting error.
+    /// If it returns <see langword="null"/>, the output is left unchanged.
     /// </summary>
     public Func<string, string>? PostFormat { get; set; }
 }
