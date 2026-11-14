@@ -1798,6 +1798,22 @@ AssertionsWebConfig.ResponseFormatterOptions = new HttpResponseFormatterOptions
 
 Both delegates are optional; when neither is set, the formatting is unchanged. If a delegate throws, the exception is reported into the formatted output, similar to any other formatting error, so a failing customization cannot break the assertion message itself.
 
+##### Changing the response formatting without touching the global state
+
+Like for the serializer, `AssertionsWebConfig.UseResponseFormatterOptions` overrides the response formatter options for the current async flow until the returned scope is disposed, in every flavour. Scopes nest and do not leak to other tests running in parallel:
+
+```csharp
+using (AssertionsWebConfig.UseResponseFormatterOptions(new HttpResponseFormatterOptions
+{
+    PostFormat = formatted => Regex.Replace(formatted, "^Authorization: .*(\r?\n|$)", string.Empty, RegexOptions.Multiline)
+}))
+{
+    response.Should().Satisfy<Person>(person => person.FirstName.Should().Be("Ada"));
+}
+```
+
+Inside a scope, reading `AssertionsWebConfig.ResponseFormatterOptions` returns the scoped options, while setting it still changes the global one.
+
 ### HttpResponse Formatter
 
 The internal HTTP Request/Response formatter used by the assertion packages is published as the **shared** **HttpMessageFormatter** package. It is not an assertion library: it carries no dependency on any assertion framework, so beyond powering the failure output of the assertion packages it can be reused in any other context where HTTP requests and responses need to be rendered for inspection and debugging.

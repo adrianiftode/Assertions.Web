@@ -12,6 +12,7 @@ public static class AssertionsWebConfig
     private static ISerializer? _serializer;
     private static readonly AsyncLocal<ISerializer?> ScopedSerializer = new();
     private static HttpResponseFormatterOptions? _responseFormatterOptions;
+    private static readonly AsyncLocal<HttpResponseFormatterOptions?> ScopedResponseFormatterOptions = new();
 
     static AssertionsWebConfig()
     {
@@ -62,13 +63,45 @@ public static class AssertionsWebConfig
     /// The options used when formatting an HTTP response message into a readable string,
     /// for example in the assertion failure messages.
     /// They control, for instance, how many characters of the content are printed before the content
-    /// is considered too large. These options do not change the assertions themselves, only the way
-    /// the HTTP messages are formatted.
+    /// is considered too large, or the <see cref="HttpResponseFormatterOptions.ResponseFormatter"/> and
+    /// <see cref="HttpResponseFormatterOptions.PostFormat"/> delegates customizing the formatted output.
+    /// These options do not change the assertions themselves, only the way the HTTP messages are formatted.
+    /// Reading it inside a <see cref="UseResponseFormatterOptions"/> scope returns the scoped options;
+    /// setting it always changes the global one.
     /// </summary>
     public static HttpResponseFormatterOptions ResponseFormatterOptions
     {
-        get => _responseFormatterOptions ?? throw new InvalidOperationException("ResponseFormatterOptions cannot be null");
+        get => ScopedResponseFormatterOptions.Value ?? _responseFormatterOptions ?? throw new InvalidOperationException("ResponseFormatterOptions cannot be null");
 
         set => _responseFormatterOptions = value ?? throw new ArgumentNullException(nameof(value), "ResponseFormatterOptions cannot be null.");
+    }
+
+    /// <summary>
+    /// Makes <paramref name="responseFormatterOptions"/> the response formatter options of the current async flow
+    /// until the returned scope is disposed, without changing the global <see cref="ResponseFormatterOptions"/>.
+    /// Scopes nest: disposing restores the previously scoped options.
+    /// </summary>
+    /// <param name="responseFormatterOptions">The options to use inside the scope.</param>
+    /// <returns>A scope that restores the previous options when disposed.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="responseFormatterOptions"/> is <c>null</c>.</exception>
+    public static IDisposable UseResponseFormatterOptions(HttpResponseFormatterOptions responseFormatterOptions)
+    {
+        if (responseFormatterOptions is null)
+        {
+            throw new ArgumentNullException(nameof(responseFormatterOptions), "Cannot use a <null> response formatter options.");
+        }
+
+        var previous = ScopedResponseFormatterOptions.Value;
+        ScopedResponseFormatterOptions.Value = responseFormatterOptions;
+        return new ResponseFormatterOptionsScope(previous);
+    }
+
+    private sealed class ResponseFormatterOptionsScope : IDisposable
+    {
+        private readonly HttpResponseFormatterOptions? _previous;
+
+        public ResponseFormatterOptionsScope(HttpResponseFormatterOptions? previous) => _previous = previous;
+
+        public void Dispose() => ScopedResponseFormatterOptions.Value = _previous;
     }
 }

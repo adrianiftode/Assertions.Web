@@ -128,6 +128,18 @@ AssertionsWebConfig.ResponseFormatterOptions = new HttpResponseFormatterOptions
 
 Both delegates are optional; when neither is set, the formatting is unchanged. If a delegate throws, the exception is reported into the formatted output, similar to any other formatting error.
 
+Like for the serializer, `AssertionsWebConfig.UseResponseFormatterOptions` overrides the response formatter options for the current async flow until the returned scope is disposed, in every flavour. Scopes nest and do not leak to other tests running in parallel. Inside a scope, reading `AssertionsWebConfig.ResponseFormatterOptions` returns the scoped options, while setting it still changes the global one:
+
+```csharp
+using (AssertionsWebConfig.UseResponseFormatterOptions(new HttpResponseFormatterOptions
+{
+    PostFormat = formatted => Regex.Replace(formatted, "^Authorization: .*(\r?\n|$)", string.Empty, RegexOptions.Multiline)
+}))
+{
+    response.Should().Satisfy<Person>(person => person.FirstName.Should().Be("Ada"));
+}
+```
+
 ## The full API
 
 The complete listing of every assertion, with the `dotnet test` failure output for each group, lives in the [repository readme](https://github.com/adrianiftode/Assertions.Web/blob/master/readme.md):
