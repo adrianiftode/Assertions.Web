@@ -17,6 +17,12 @@ public class SystemTextJsonSerializer : ISerializer
     /// <summary>
     /// Initializes a new instance that deserializes with the given <paramref name="options"/>, ignoring the global ones.
     /// </summary>
+    /// <remarks>
+    /// The assertions rely on the defaults of <see cref="SystemTextJsonSerializerConfig.Options"/>: case-insensitive property names,
+    /// enums and numbers read from strings, trailing commas, and an empty string read as <c>null</c> for nullable value types.
+    /// Options without them can make an assertion behave unexpectedly, for example leave a property <c>null</c> instead of failing;
+    /// to keep them, start from a copy: <c>new JsonSerializerOptions(SystemTextJsonSerializerConfig.Options)</c>.
+    /// </remarks>
     /// <param name="options">The options used to deserialize a JSON into a C# object.</param>
     /// <exception cref="ArgumentNullException"><paramref name="options"/> is <c>null</c>.</exception>
     public SystemTextJsonSerializer(JsonSerializerOptions options)

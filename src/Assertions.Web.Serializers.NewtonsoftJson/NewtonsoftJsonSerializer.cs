@@ -18,6 +18,11 @@ public class NewtonsoftJsonSerializer : ISerializer
     /// <summary>
     /// Initializes a new instance that deserializes with the given <paramref name="settings"/>, ignoring the global ones.
     /// </summary>
+    /// <remarks>
+    /// The assertions rely on the deserialization behaviour of <see cref="NewtonsoftJsonSerializerConfig.Options"/>.
+    /// Settings that change it, such as a contract resolver or converters, can make an assertion behave unexpectedly,
+    /// for example leave a property <c>null</c> instead of failing.
+    /// </remarks>
     /// <param name="settings">The settings used to deserialize a JSON into a C# object.</param>
     /// <exception cref="ArgumentNullException"><paramref name="settings"/> is <c>null</c>.</exception>
     public NewtonsoftJsonSerializer(JsonSerializerSettings settings)

@@ -1,5 +1,6 @@
 namespace Assertions.Web.Tests;
 
+[Collection("Assertions Web Config Tests")]
 public class SystemTextJsonSerializerTests
 {
     private sealed class Person

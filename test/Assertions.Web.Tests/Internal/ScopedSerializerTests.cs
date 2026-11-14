@@ -1,5 +1,6 @@
 namespace Assertions.Web.Tests.Internal;
 
+[Collection("Assertions Web Config Tests")]
 public class ScopedSerializerTests
 {
     private sealed class MarkerSerializer : ISerializer
