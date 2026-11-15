@@ -306,7 +306,7 @@ No ASP.NET Core dependency in `src/FluentAssertions.Web` (only `Microsoft.AspNet
 
 ## 8. Tests
 
-**Framework:** xUnit v2 (`xunit` 2.9.2) + `Microsoft.NET.Test.Sdk`, `coverlet.collector`. TFMs `net9.0;net10.0`
+**Framework:** xUnit v2 (`xunit` 2.9.2) + `Microsoft.NET.Test.Sdk`, `coverlet.collector`. TFMs `net10.0;net11.0`
 (`test/Directory.Build.props`). Assertion tool: FluentAssertions itself (+ `FluentAssertions.Analyzers`).
 **[Established]**
 
@@ -453,7 +453,7 @@ packable csproj. `HttpMessageFormatter` is the exception — a real, public pack
 ```powershell
 dotnet restore
 dotnet build FluentAssertions.Web.sln -c Release # must be warning-clean; CS8600/2/3 are errors
-dotnet test # runs ALL flavours × net9.0 + net10.0
+dotnet test # runs ALL flavours × net10.0 + net11.0
 ```
 
 Targeted runs while iterating:

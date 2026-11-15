@@ -44,7 +44,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentAssertions.Web.Serial
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentAssertions.Web.FluentAssertionsWebConfig.Tests", "test\FluentAssertions.Web.FluentAssertionsWebConfig.Tests\FluentAssertions.Web.FluentAssertionsWebConfig.Tests.csproj", "{538479CE-5922-4FF9-A09D-80C9E91FFFF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Api.Net90", "samples\Sample.Api.Net90\Sample.Api.Net90.csproj", "{73E11379-908A-4BA0-9365-AE800A88C39B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Api.Net11", "samples\Sample.Api.Net11\Sample.Api.Net11.csproj", "{3B1EC45E-0068-4F9F-AA3D-EA5656D214EF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentAssertions.Web.v8", "src\FluentAssertions.Web.v8\FluentAssertions.Web.v8.csproj", "{3872DF64-5DA9-4983-90D8-2802A0A26CFE}"
 EndProject
@@ -120,10 +120,10 @@ Global
 		{538479CE-5922-4FF9-A09D-80C9E91FFFF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{538479CE-5922-4FF9-A09D-80C9E91FFFF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{538479CE-5922-4FF9-A09D-80C9E91FFFF1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{73E11379-908A-4BA0-9365-AE800A88C39B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{73E11379-908A-4BA0-9365-AE800A88C39B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{73E11379-908A-4BA0-9365-AE800A88C39B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{73E11379-908A-4BA0-9365-AE800A88C39B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B1EC45E-0068-4F9F-AA3D-EA5656D214EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B1EC45E-0068-4F9F-AA3D-EA5656D214EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B1EC45E-0068-4F9F-AA3D-EA5656D214EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B1EC45E-0068-4F9F-AA3D-EA5656D214EF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3872DF64-5DA9-4983-90D8-2802A0A26CFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3872DF64-5DA9-4983-90D8-2802A0A26CFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3872DF64-5DA9-4983-90D8-2802A0A26CFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -217,7 +217,7 @@ Global
 		{1BDE8312-1789-40EA-86B2-83784E560740} = {14FDD52D-B83A-445B-BD2F-04B3E7B8033C}
 		{F2C0B6F2-4ACE-4688-8F96-9EB1D5718B60} = {BFF7517A-C9EA-458D-829E-28A10F8D61BF}
 		{538479CE-5922-4FF9-A09D-80C9E91FFFF1} = {BFF7517A-C9EA-458D-829E-28A10F8D61BF}
-		{73E11379-908A-4BA0-9365-AE800A88C39B} = {B6E9FBF3-AC48-48B0-9CBB-CA260F59CCD9}
+		{3B1EC45E-0068-4F9F-AA3D-EA5656D214EF} = {B6E9FBF3-AC48-48B0-9CBB-CA260F59CCD9}
 		{3872DF64-5DA9-4983-90D8-2802A0A26CFE} = {14FDD52D-B83A-445B-BD2F-04B3E7B8033C}
 		{EBB6D06F-B87F-4BDA-8F1B-A6E88C96C2E1} = {BFF7517A-C9EA-458D-829E-28A10F8D61BF}
 		{056E517C-F644-4B8A-9494-09276E6E3C6B} = {BFF7517A-C9EA-458D-829E-28A10F8D61BF}
@@ -243,7 +243,7 @@ Global
 		SolutionGuid = {81F41C75-2F8A-4E70-BA17-38146C4BB6E6}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Samples\Sample.Api.Shared\Sample.Api.Shared.projitems*{73e11379-908a-4ba0-9365-ae800a88c39b}*SharedItemsImports = 5
+		Samples\Sample.Api.Shared\Sample.Api.Shared.projitems*{3b1ec45e-0068-4f9f-aa3d-ea5656d214ef}*SharedItemsImports = 5
 		Samples\Sample.Api.Shared\Sample.Api.Shared.projitems*{75a232d6-0df3-4743-6f55-3e7f748abeea}*SharedItemsImports = 5
 		Samples\Sample.Api.Shared\Sample.Api.Shared.projitems*{815c141d-4504-42b1-a6f7-672c2476a474}*SharedItemsImports = 13
 	EndGlobalSection
