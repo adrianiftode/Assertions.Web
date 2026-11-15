@@ -41,14 +41,6 @@ public static class BadRequestAssertionsExtensions
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
     /// <returns>The same <see cref="BadRequestAssertions"/> group.</returns>
-    /// <example>
-    /// <code>
-    /// response.Should()
-    ///     .Be400BadRequest()
-    ///     .And.HaveError("Email", "*required*")
-    ///     .And.NotHaveError("Age");
-    /// </code>
-    /// </example>
     /// <seealso cref="OnlyHaveError"/>
     /// <seealso cref="NotHaveError"/>
     /// <seealso cref="HaveErrorMessage"/>
