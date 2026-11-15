@@ -1156,13 +1156,6 @@ public partial class HttpResponseMessageAssertions
     /// A <see cref="BadRequestAssertions"/> for the response, so validation-error assertions such as
     /// <c>HaveError</c> can be chained from <c>And</c>.
     /// </returns>
-    /// <example>
-    /// <code>
-    /// response.Should()
-    ///     .Be400BadRequest()
-    ///     .And.HaveError("Email", "*required*");
-    /// </code>
-    /// </example>
     /// <seealso cref="BadRequestAssertions"/>
     [CustomAssertion]
     public AndConstraint<BadRequestAssertions> Be400BadRequest(string because = "", params object[] becauseArgs)
