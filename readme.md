@@ -18,21 +18,27 @@ The repository is home to a family of assertion frameworks on top of the shared 
 
 [![NuGet HttpMessageFormatter](https://img.shields.io/nuget/v/HttpMessageFormatter.svg?label=HttpMessageFormatter)](https://www.nuget.org/packages/HttpMessageFormatter/)
 
-## The assertion libraries
+## Package reference
 
-| Package | For | Assertion style |
-|---|---|---|
-| [**FluentAssertions.Web**](#fluentassertionsweb) | FluentAssertions < 8.0.0 | `response.Should().Be200Ok()` |
-| [**FluentAssertions.Web.v8**](#fluentassertionswebv8) | FluentAssertions >= 8.0.0 (commercial) | `response.Should().Be200Ok()` |
-| [**AwesomeAssertions.Web**](#awesomeassertionsweb) | AwesomeAssertions | `response.Should().Be200Ok()` |
-| [**Shouldly.Web**](#shouldlyweb) | Shouldly 5 (prerelease) | `response.ShouldBe200Ok()` |
+The repository and product are called **Assertions.Web**, but there is no standalone `Assertions.Web` package to install. `Assertions.Web` is the shared contract that is packed into every assertion package. Install the package named after the assertion framework your tests already use; no integration is the default. The assertion-framework packages are listed alphabetically.
 
-Every flavour targets `netstandard2.0`, packs its own copy of the `Assertions.Web` contract and renders failure output with the shared `HttpMessageFormatter`. The packages differ only in the assertion framework they extend; the assertions themselves are the same set, exposed through each framework's native syntax.
+| Assertion framework | NuGet package ID | Install | Documentation |
+|---|---|---|---|
+| AwesomeAssertions | [`AwesomeAssertions.Web`](https://www.nuget.org/packages/AwesomeAssertions.Web) | `dotnet add package AwesomeAssertions.Web` | [Quick start](#quick-start-awesomeassertionsweb) · [Usage](#awesomeassertionsweb) |
+| FluentAssertions < 8.0.0 | [`FluentAssertions.Web`](https://www.nuget.org/packages/FluentAssertions.Web) | `dotnet add package FluentAssertions.Web` | [Quick start](#quick-start-fluentassertionsweb) · [Usage](#fluentassertionsweb) |
+| FluentAssertions >= 8.0.0 (commercial) | [`FluentAssertions.Web.v8`](https://www.nuget.org/packages/FluentAssertions.Web.v8) | `dotnet add package FluentAssertions.Web.v8` | [Quick start](#quick-start-fluentassertionswebv8) · [Usage](#fluentassertionswebv8) |
+| Shouldly >= 5.0.0-preview.2 | [`Shouldly.Web`](https://www.nuget.org/packages/Shouldly.Web) | `dotnet add package Shouldly.Web --prerelease` | [Quick start](#quick-start-shouldlyweb) · [Usage](#shouldlyweb) |
+
+> `Shouldly.Web` is currently a prerelease, so `--prerelease` is required until Shouldly 5.0.0 is stable.
 
 Two secondary packages complete the ecosystem, without being assertion libraries themselves:
 
-- **Assertions.Web.Serializers.NewtonsoftJson** is *optional*: every assertion library already ships with `System.Text.Json` deserialization built in, and this package is only needed to switch the default serializer to Newtonsoft.Json — see [Optional Global Configuration](#optional-global-configuration).
-- **HttpMessageFormatter** is the *shared* rendering engine behind all four assertion libraries. It has no assertions and no dependency on any assertion framework, so it can format HTTP messages in any other context too — see [HttpResponse Formatter](#httpresponse-formatter).
+| Package | Install | When to use |
+|---|---|---|
+| [`Assertions.Web.Serializers.NewtonsoftJson`](https://www.nuget.org/packages/Assertions.Web.Serializers.NewtonsoftJson) | `dotnet add package Assertions.Web.Serializers.NewtonsoftJson` | *Optional*: every assertion library already ships with `System.Text.Json` deserialization built in; use this package only to switch the default serializer to Newtonsoft.Json — see [Optional Global Configuration](#optional-global-configuration). |
+| [`HttpMessageFormatter`](https://www.nuget.org/packages/HttpMessageFormatter) | `dotnet add package HttpMessageFormatter` | The *shared* rendering engine behind all four assertion libraries. It has no assertions and no dependency on any assertion framework, so it can format HTTP messages in any other context too — see [HttpResponse Formatter](#httpresponse-formatter). |
+
+Every assertion package targets `netstandard2.0`, packs its own copy of the `Assertions.Web` contract and renders failure output with the shared `HttpMessageFormatter`. The packages differ only in the assertion framework they extend; the assertions themselves are the same set, exposed through each framework's native syntax. Additional assertion-framework integrations can be added as new packages without changing the structure of this reference.
 
 ## Quick starts
 
@@ -79,7 +85,7 @@ response.ShouldMatchInContent("*\"author\"*");
 > Prerelease: Shouldly.Web is in preview until Shouldly 5.0.0 is stable, and requires Shouldly >= 5.0.0-preview.2 (`EquivalencyOptions`).
 
 ```shell
-dotnet add package Shouldly.Web
+dotnet add package Shouldly.Web --prerelease
 ```
 
 ### Quick start: Newtonsoft serializer

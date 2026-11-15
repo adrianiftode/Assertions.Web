@@ -8,6 +8,8 @@ The shared HTTP assertion contract behind the **Assertions.Web** family of packa
 
 It provides assertions specific to HTTP responses and outputs rich error messages when the tests fail, so less time with debugging is spent. The assertion packages differ only in the framework they extend — FluentAssertions, AwesomeAssertions or Shouldly — and expose the same assertions through each framework's native syntax.
 
+> There is no standalone `Assertions.Web` package to install: it is the shared contract packed into each assertion package. See the repository readme's [Package reference](https://github.com/adrianiftode/Assertions.Web/blob/master/readme.md#package-reference) for the exact NuGet package ID and `dotnet add package` command of every integration.
+
 ## Assertions at a glance
 
 FluentAssertions and AwesomeAssertions syntax:

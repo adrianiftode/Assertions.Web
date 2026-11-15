@@ -7,7 +7,7 @@ A [Shouldly](https://shouldly.io/) extension over the `HttpResponseMessage` obje
 ## Install
 
 ```shell
-dotnet add package Shouldly.Web
+dotnet add package Shouldly.Web --prerelease
 ```
 
 ## Example

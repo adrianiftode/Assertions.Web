@@ -10,6 +10,7 @@ to one package does not force a new version of the others.
 | `FluentAssertions.Web.v8` | `src/FluentAssertions.Web.v8` | `HttpMessageFormatter` |
 | `AwesomeAssertions.Web` | `src/AwesomeAssertions.Web` | `HttpMessageFormatter` |
 | `Assertions.Web.Serializers.NewtonsoftJson` | `src/Assertions.Web.Serializers.NewtonsoftJson` | — |
+| `Shouldly.Web` | `src/Shouldly.Web` | `HttpMessageFormatter` |
 
 ## How to release
 
@@ -80,16 +81,16 @@ You changed something in `src/HttpMessageFormatter`, it is not breaking, and you
 already bumped `<Version>` to `2.0.5` in
 `src/HttpMessageFormatter/HttpMessageFormatter.csproj`.
 
-You also have to bump the three assertion packages. This is the step that is easy
+You also have to bump the four assertion packages. This is the step that is easy
 to miss, and the build will stop you if you skip it.
 
 ### Why the bump is not optional
 
 `HttpMessageFormatter` is a real NuGet dependency of `FluentAssertions.Web`,
-`FluentAssertions.Web.v8` and `AwesomeAssertions.Web`. When NuGet packs an
-assertion package it writes the referenced project's version into the nuspec as a
-floor. With `HttpMessageFormatter` at `2.0.5` the three assertion packages each
-produce:
+`FluentAssertions.Web.v8`, `AwesomeAssertions.Web` and `Shouldly.Web`. When NuGet
+packs an assertion package it writes the referenced project's version into the
+nuspec as a floor. With `HttpMessageFormatter` at `2.0.5` the four assertion
+packages each produce:
 
 ```xml
 <dependency id="HttpMessageFormatter" version="2.0.5" exclude="Build,Analyzers" />
@@ -101,19 +102,21 @@ still pinned to the floor from the previous release, the new formatter would nev
 reach anyone who installs them: their nuspec would keep asking for `2.0.4`, and
 NuGet would resolve down to it.
 
-So the rule is: **when you bump `HttpMessageFormatter`, bump its three dependents in
+So the rule is: **when you bump `HttpMessageFormatter`, bump its four dependents in
 the same commit.** CI pulls them into the release automatically via the `DependsOn`
 entries in `eng/ReleasePackages.props`, but their `<Version>` is your job.
 
 ### The steps
 
-1. Bump the three dependents to `2.0.5` as well:
+1. Bump the four dependents as well (`Shouldly.Web` keeps its own prerelease
+   sequence):
 
    ```
    src/HttpMessageFormatter/HttpMessageFormatter.csproj              2.0.4 -> 2.0.5
    src/FluentAssertions.Web/FluentAssertions.Web.csproj              2.0.4 -> 2.0.5
    src/FluentAssertions.Web.v8/FluentAssertions.Web.v8.csproj       2.0.4 -> 2.0.5
    src/AwesomeAssertions.Web/AwesomeAssertions.Web.csproj           2.0.4 -> 2.0.5
+   src/Shouldly.Web/Shouldly.Web.csproj                             1.0.0-preview.5 -> 1.0.0-preview.6
    ```
 
    The serializer package stays at `2.0.4`. It does not depend on
@@ -133,13 +136,15 @@ entries in `eng/ReleasePackages.props`, but their `<Version>` is your job.
    ./build/Get-ReleasePackages.ps1
    ```
 
-   You want to see exactly four `PUBLISH` lines, all at `2.0.5`:
+   You want to see exactly five `PUBLISH` lines, one per package at its new
+   version:
 
    ```
    PUBLISH HttpMessageFormatter 2.0.5
    PUBLISH FluentAssertions.Web 2.0.5
    PUBLISH FluentAssertions.Web.v8 2.0.5
    PUBLISH AwesomeAssertions.Web 2.0.5
+   PUBLISH Shouldly.Web 1.0.0-preview.6
    ```
 
    If a serializer shows up here, something else changed since the last tag; check
@@ -147,11 +152,11 @@ entries in `eng/ReleasePackages.props`, but their `<Version>` is your job.
    on nuget.org`, that package still carries its old version, which is the mistake
    this whole section is about.
 
-4. Commit. Keep the source change and the four version bumps in one commit, since
+4. Commit. Keep the source change and the five version bumps in one commit, since
    the tag is what triggers the release:
 
    ```powershell
-   git add src/HttpMessageFormatter src/FluentAssertions.Web src/FluentAssertions.Web.v8 src/AwesomeAssertions.Web
+   git add src/HttpMessageFormatter src/FluentAssertions.Web src/FluentAssertions.Web.v8 src/AwesomeAssertions.Web src/Shouldly.Web
    git commit -m "Fix formatter handling of empty bodies"
    ```
 
@@ -163,10 +168,11 @@ entries in `eng/ReleasePackages.props`, but their `<Version>` is your job.
    git push origin 2.0.5
    ```
 
-6. Watch the AppVeyor build. It will report `Release includes 4 package(s)` and, once
+6. Watch the AppVeyor build. It will report `Release includes 5 package(s)` and, once
    it finishes, `HttpMessageFormatter`, `FluentAssertions.Web`,
-   `FluentAssertions.Web.v8` and `AwesomeAssertions.Web` will be on nuget.org. The
-   AwesomeAssertions feed and the GitHub release are published by the same build.
+   `FluentAssertions.Web.v8`, `AwesomeAssertions.Web` and `Shouldly.Web` will be on
+   nuget.org. The AwesomeAssertions and Shouldly feeds and the GitHub release are
+   published by the same build.
 
 ### What you did not have to do
 
@@ -179,7 +185,7 @@ entries in `eng/ReleasePackages.props`, but their `<Version>` is your job.
 
 | Message | Cause | Fix |
 |---|---|---|
-| `Version 2.0.4 of FluentAssertions.Web is already on nuget.org` | You bumped the formatter but not its dependents | Bump the three dependents to `2.0.5` and push a new tag |
+| `Version 2.0.4 of FluentAssertions.Web is already on nuget.org` | You bumped the formatter but not its dependents | Bump the four dependents and push a new tag |
 | `Version 2.0.5 of HttpMessageFormatter is already on nuget.org` | That version already shipped | Bump to `2.0.6` |
 | `NOT PUBLISHING: Tag '2.0.5' is not on any release branch` | You tagged a feature branch with a stable version | Merge the PR and tag master, or publish a `-preview` version instead |
 | `This checkout has no .git directory` | CI handed the build a zip archive instead of a git clone | Keep `shallow_clone: false` in `appveyor.yml`, then re-run the build |
@@ -198,12 +204,13 @@ changed file sits under one of its `WatchDirectories` or matches one of its
 
 The map encodes two things worth knowing:
 
-- **The three assertion flavours share source.** They link-compile
-  `src/FluentAssertions.Web` with different `#define`s, so an edit there affects
-  all three. They usually release together, but they carry separate versions, so
-  a change confined to one of them (its `csproj`, a new serializer dependency)
-  can still ship alone.
-- **`HttpMessageFormatter` is a real dependency** of the three assertion
+- **The FluentAssertions and AwesomeAssertions packages share source.** They
+  link-compile `src/FluentAssertions.Web` with different `#define`s, so an edit
+  there affects all three. They usually release together, but they carry separate
+  versions, so a change confined to one of them (its `csproj`, a new serializer
+  dependency) can still ship alone. `Shouldly.Web` has its own source and version
+  line.
+- **`HttpMessageFormatter` is a real dependency** of all four assertion
   packages. When it ships, its dependents ship too, so nothing is left published
   against a dependency version it was never built with.
 
