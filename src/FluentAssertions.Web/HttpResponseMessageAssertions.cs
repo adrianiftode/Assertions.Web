@@ -44,6 +44,14 @@ namespace FluentAssertions.Web;
 /// The <c>And</c> property and the fluid group transitions are AwesomeAssertions and FluentAssertions conventions.
 /// The Shouldly integration exposes independent, flat assertions instead; see the Shouldly package documentation.
 /// </para>
+/// <example>
+/// <code>
+/// response.Should()
+///     .Be400BadRequest()
+///     .And.HaveError("Email", "*required*")
+///     .And.HaveHeader("Content-Type").And.Match("application/json*");
+/// </code>
+/// </example>
 /// </remarks>
 /// <seealso cref="BadRequestAssertions"/>
 /// <seealso cref="HeadersAssertions"/>
