@@ -27,7 +27,7 @@ The repository and product are called **Assertions.Web**, but there is no standa
 | AwesomeAssertions | [`AwesomeAssertions.Web`](https://www.nuget.org/packages/AwesomeAssertions.Web) | `dotnet add package AwesomeAssertions.Web` | [Quick start](#quick-start-awesomeassertionsweb) · [Usage](#awesomeassertionsweb) · [End-to-end](#end-to-end-example-fluentassertions-and-awesomeassertions) |
 | FluentAssertions < 8.0.0 | [`FluentAssertions.Web`](https://www.nuget.org/packages/FluentAssertions.Web) | `dotnet add package FluentAssertions.Web` | [Quick start](#quick-start-fluentassertionsweb) · [Usage](#fluentassertionsweb) · [End-to-end](#end-to-end-example-fluentassertions-and-awesomeassertions) |
 | FluentAssertions >= 8.0.0 (commercial) | [`FluentAssertions.Web.v8`](https://www.nuget.org/packages/FluentAssertions.Web.v8) | `dotnet add package FluentAssertions.Web.v8` | [Quick start](#quick-start-fluentassertionswebv8) · [Usage](#fluentassertionswebv8) · [End-to-end](#end-to-end-example-fluentassertions-and-awesomeassertions) |
-| Shouldly >= 5.0.0-preview.2 | [`Shouldly.Web`](https://www.nuget.org/packages/Shouldly.Web) | `dotnet add package Shouldly.Web --prerelease` | [Quick start](#quick-start-shouldlyweb) · [Usage](#shouldlyweb) · [End-to-end](#end-to-end-example-shouldlyweb) |
+| Shouldly >= 5.0.0-preview.2 | [`Shouldly.Web`](https://www.nuget.org/packages/Shouldly.Web) | `dotnet add package Shouldly.Web --prerelease` | [Quick start](#quick-start-shouldlyweb) · [Usage](#shouldlyweb) · [End-to-end](#end-to-end-assertion-example-shouldlyweb) |
 
 > `Shouldly.Web` is currently a prerelease, so `--prerelease` is required until Shouldly 5.0.0 is stable.
 
@@ -1739,7 +1739,7 @@ A complete integration test is in [End-to-end example: AwesomeAssertions.Web](#e
 
 Shouldly.Web is the Shouldly flavour, a community-maintained, unofficial extension that is **not endorsed by the Shouldly project**. It requires Shouldly >= 5.0.0-preview.2 and is itself prerelease until Shouldly 5.0.0 is stable.
 
-A complete integration test is in [End-to-end example: Shouldly.Web](#end-to-end-example-shouldlyweb).
+A complete integration test is in [End-to-end example: Shouldly.Web](#end-to-end-assertion-example-shouldlyweb).
 
 Instead of `response.Should().Be200Ok()`, Shouldly's `ShouldlyMethodsAttribute` lets the same assertions be called directly on the response, and each assertion returns `void` — there is no `Should()`/`And` chain, so every assertion is its own call (you can also pass a custom message as the first optional argument):
 
