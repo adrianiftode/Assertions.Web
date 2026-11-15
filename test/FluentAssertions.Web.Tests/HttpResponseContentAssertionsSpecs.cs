@@ -202,7 +202,11 @@ public class HttpResponseContentAssertionsSpecs
 
         // Assert
         act.Should().Throw<XunitException>()
+#if AAV
+            .WithMessage("*expected property subject.Comment*Not Hey*reason*");
+#else
             .WithMessage("*Not Hey*with a length*reason*");
+#endif
 #endif
     }
 
@@ -492,7 +496,11 @@ public class HttpResponseContentAssertionsSpecs
 
         // Assert
         act.Should().Throw<XunitException>()
+#if AAV
+            .WithMessage("*expected property subject.Comment*Not Hey*reason*");
+#else
             .WithMessage("*Not Hey*with a length*reason*");
+#endif
 #endif
     }
 
