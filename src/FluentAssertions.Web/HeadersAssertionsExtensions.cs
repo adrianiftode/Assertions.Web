@@ -39,14 +39,6 @@ public static class HeadersAssertionsExtensions
     /// A <see cref="HeadersAssertions"/> bound to <paramref name="expectedHeader"/>. Its header assertions and the
     /// general <see cref="HttpResponseMessageAssertions"/> assertions can be chained from <c>And</c>.
     /// </returns>
-    /// <example>
-    /// <code>
-    /// response.Should()
-    ///     .HaveHeader("Content-Type")
-    ///     .And.Match("application/json*")
-    ///     .And.HaveHeader("Location").And.BeValue("https://example.test/orders/42");
-    /// </code>
-    /// </example>
     /// <seealso cref="HeadersAssertions"/>
     [CustomAssertion]
     public static AndConstraint<HeadersAssertions> HaveHeader(
