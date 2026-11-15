@@ -1,0 +1,48 @@
+<Solution>
+  <Folder Name="/samples/">
+    <File Path="samples/Directory.Build.props" />
+    <Project Path="samples/Sample.Api.Net10/Sample.Api.Net10.csproj" />
+    <Project Path="samples/Sample.Api.Net11/Sample.Api.Net11.csproj" />
+    <Project Path="samples/Sample.Api.Shared/Sample.Api.Shared.shproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="appveyor.yml" />
+    <File Path="Directory.Packages.props" />
+    <File Path="nuget.config" />
+    <File Path="readme.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <File Path="src/Directory.Build.props" />
+    <Project Path="src/Assertions.Web.Serializers.NewtonsoftJson/Assertions.Web.Serializers.NewtonsoftJson.csproj" />
+    <Project Path="src/Assertions.Web/Assertions.Web.csproj" />
+    <Project Path="src/AwesomeAssertions.HttpMessageFormatter/AwesomeAssertions.HttpMessageFormatter.csproj" />
+    <Project Path="src/AwesomeAssertions.Web/AwesomeAssertions.Web.csproj" />
+    <Project Path="src/FluentAssertions.HttpMessageFormatter/FluentAssertions.HttpMessageFormatter.csproj" />
+    <Project Path="src/FluentAssertions.Web.v8/FluentAssertions.Web.v8.csproj" />
+    <Project Path="src/FluentAssertions.Web/FluentAssertions.Web.csproj" />
+    <Project Path="src/HttpMessageFormatter/HttpMessageFormatter.csproj" />
+    <Project Path="src/Shouldly.Web/Shouldly.Web.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <File Path="test/Directory.Build.props" />
+    <Project Path="test/Assertions.Web.Tests/Assertions.Web.Tests.csproj" />
+    <Project Path="test/AwesomeAssertions.Web.AwesomeAssertionsWebConfig.Tests/AwesomeAssertions.Web.AwesomeAssertionsWebConfig.Tests.csproj" />
+    <Project Path="test/AwesomeAssertions.Web.Serializers.NewtonsoftJson.Tests/AwesomeAssertions.Web.Serializers.NewtonsoftJson.Tests.csproj" />
+    <Project Path="test/AwesomeAssertions.Web.Tests/AwesomeAssertions.Web.Tests.csproj" />
+    <Project Path="test/FluentAssertions.HttpMessageFormatter.Tests/FluentAssertions.HttpMessageFormatter.Tests.csproj" />
+    <Project Path="test/FluentAssertions.Web.FluentAssertionsWebConfig.Tests/FluentAssertions.Web.FluentAssertionsWebConfig.Tests.csproj" />
+    <Project Path="test/FluentAssertions.Web.Serializers.NewtonsoftJson.Tests/FluentAssertions.Web.Serializers.NewtonsoftJson.Tests.csproj" />
+    <Project Path="test/FluentAssertions.Web.Tests/FluentAssertions.Web.Tests.csproj" />
+    <Project Path="test/FluentAssertions.Web.v8.Tests/FluentAssertions.Web.v8.Tests.csproj" />
+    <Project Path="test/HttpMessageFormatter.Tests/HttpMessageFormatter.Tests.csproj" />
+    <Project Path="test/Sample.Api.AwesomeAssertions.Tests/Sample.Api.AwesomeAssertions.Tests.csproj" />
+    <Project Path="test/Sample.Api.FluentAssertions.Tests/Sample.Api.FluentAssertions.Tests.csproj" />
+    <Project Path="test/Sample.Api.FluentAssertions.v8.Tests/Sample.Api.FluentAssertions.v8.Tests.csproj" />
+    <Project Path="test/Sample.Api.Shouldly.Tests/Sample.Api.Shouldly.Tests.csproj" />
+    <Project Path="test/Shouldly.Web.AssertionsWebConfig.Tests/Shouldly.Web.AssertionsWebConfig.Tests.csproj" />
+    <Project Path="test/Shouldly.Web.Serializers.NewtonsoftJson.Tests/Shouldly.Web.Serializers.NewtonsoftJson.Tests.csproj" />
+    <Project Path="test/Shouldly.Web.Tests/Shouldly.Web.Tests.csproj" />
+  </Folder>
+</Solution>

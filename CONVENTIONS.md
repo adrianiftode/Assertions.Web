@@ -452,7 +452,7 @@ packable csproj. `HttpMessageFormatter` is the exception — a real, public pack
 
 ```powershell
 dotnet restore
-dotnet build FluentAssertions.Web.sln -c Release # must be warning-clean; CS8600/2/3 are errors
+dotnet build FluentAssertions.Web.slnx -c Release # must be warning-clean; CS8600/2/3 are errors
 dotnet test # runs ALL flavours × net10.0 + net11.0
 ```
 
