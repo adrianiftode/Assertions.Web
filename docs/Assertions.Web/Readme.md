@@ -10,6 +10,8 @@ It provides assertions specific to HTTP responses and outputs rich error message
 
 > There is no standalone `Assertions.Web` package to install: it is the shared contract packed into each assertion package. See the repository readme's [Package reference](https://github.com/adrianiftode/Assertions.Web/blob/master/readme.md#package-reference) for the exact NuGet package ID and `dotnet add package` command of every integration.
 
+For a complete, copy-pasteable integration test that combines the status code, a response header, the typed body and the Location header, see the repository readme's [End-to-end example](https://github.com/adrianiftode/Assertions.Web/blob/master/readme.md#end-to-end-example).
+
 ## Assertions at a glance
 
 FluentAssertions and AwesomeAssertions syntax:
@@ -147,6 +149,7 @@ using (AssertionsWebConfig.UseResponseFormatterOptions(new HttpResponseFormatter
 The complete listing of every assertion, with the `dotnet test` failure output for each group, lives in the [repository readme](https://github.com/adrianiftode/Assertions.Web/blob/master/readme.md):
 
 - [Full API (FluentAssertions / AwesomeAssertions names)](https://github.com/adrianiftode/Assertions.Web/blob/master/readme.md#full-api)
+- [End-to-end example in every flavour](https://github.com/adrianiftode/Assertions.Web/blob/master/readme.md#end-to-end-example)
 - [Shouldly.Web API (the flat Shouldly naming)](https://github.com/adrianiftode/Assertions.Web/blob/master/readme.md#shouldlyweb-api)
 - [Shouldly.Web: the Shouldly names for the same assertions](https://github.com/adrianiftode/Assertions.Web/blob/master/readme.md#shouldlyweb)
 - [Worked examples](https://github.com/adrianiftode/Assertions.Web/blob/master/readme.md#fluentassertionswebawesomeassertionsweb-examples)
