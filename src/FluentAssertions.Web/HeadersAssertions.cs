@@ -306,14 +306,6 @@ public partial class HttpResponseMessageAssertions
     /// chained from <c>And</c>, and the general <see cref="HttpResponseMessageAssertions"/> assertions remain
     /// available because the group derives from this type.
     /// </returns>
-    /// <example>
-    /// <code>
-    /// response.Should()
-    ///     .HaveHeader("Content-Type")
-    ///     .And.Match("application/json*")
-    ///     .And.HaveHeader("Location").And.BeValue("https://example.test/orders/42");
-    /// </code>
-    /// </example>
     /// <seealso cref="HeadersAssertions"/>
     /// <seealso cref="NotHaveHeader"/>
     [CustomAssertion]
