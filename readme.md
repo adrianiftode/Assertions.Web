@@ -42,6 +42,8 @@ Every assertion package targets `netstandard2.0`, packs its own copy of the `Ass
 
 For a complete, copy-pasteable integration test that combines the status code, a response header, the typed body and the Location header, see [End-to-end example](#end-to-end-example).
 
+For the composition rules — the general entry point, the specialized assertion groups, the type each assertion returns and what `.And` exposes next — see [How the fluent API is composed](docs/Assertions.Web/Readme.md#how-the-fluent-api-is-composed).
+
 ## Quick starts
 
 ### Quick start: FluentAssertions.Web
@@ -434,6 +436,10 @@ response.Should().MatchInContent("*\"author\"*");                          // ra
 ```
 
 For the Shouldly flavour this is the same set of assertions, written Shouldly-style — see [Shouldly.Web](#shouldlyweb) below. The [end-to-end example](#end-to-end-example) combines the status, header, typed body and Location assertions in one test for every flavour.
+
+### How the fluent API is composed
+
+[How the fluent API is composed](docs/Assertions.Web/Readme.md#how-the-fluent-api-is-composed) explains which assertion group each method returns, what `.And` exposes next, and how the Shouldly integration expresses the same assertions without chaining.
 
 ### FluentAssertions.Web/AwesomeAssertions.Web Examples
 

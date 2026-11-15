@@ -37,6 +37,100 @@ response.ShouldHaveHeader("X-Correlation-ID");
 response.ShouldMatchInContent("*\"author\"*");
 ```
 
+## How the fluent API is composed
+
+The FluentAssertions and AwesomeAssertions flavours share one fluent API. Every chain starts from the general response assertion returned by `response.Should()`. In `FluentAssertions.Web.v8` and `AwesomeAssertions.Web`, `Should()` returns `HttpResponseMessageAssertions` directly; in `FluentAssertions.Web` (FluentAssertions < 8) the same methods are extension methods over FluentAssertions' own response assertion type.
+
+`HttpResponseMessageAssertions` holds the general assertions: status codes (`Be200Ok`, `Be4XXClientError`, ...), content (`BeAs`, `BeEmpty`, `MatchInContent`), `Satisfy`, and the header entry point `HaveHeader`. The specialized groups extend it:
+
+```text
+HttpResponseMessageAssertions        general response assertions
+├── HeadersAssertions                assertions on one named header
+│   └── LocationAssertions           HeadersAssertions bound to the Location header
+└── BadRequestAssertions             validation errors of a Bad Request response
+```
+
+Because each specialized group derives from `HttpResponseMessageAssertions`, a specialized assertion never hides the general ones: after `.And` you can still assert the status, the body or `Satisfy`. A group only adds the methods for its own concern.
+
+Every fluent assertion returns `AndConstraint<T>`, and `.And` yields `T`. The return type of a method — not its name — therefore determines which methods are available after `.And`. If a method is not offered after `.And`, the current group does not declare it; call an assertion that returns the group that does, or start a new `response.Should()` chain.
+
+### Transitions between assertion groups
+
+| Assertion | Returns, so `.And` exposes | What can follow |
+| --- | --- | --- |
+| `response.Should()` | `HttpResponseMessageAssertions` | any general or specialized assertion |
+| `Be200Ok()`, `Be404NotFound()`, `Be5XXServerError()`, ... | `AndConstraint<HttpResponseMessageAssertions>` | status, content and `Satisfy` assertions |
+| `Be201Created()`, `Be202Accepted()`, `Be204NoContent()`, `Be3XXRedirection()`, `Be409Conflict()`, `Be410Gone()`, ... | `AndConstraint<LocationAssertions>` | Location header assertions (`HaveLocation`, `BeValue`, `BeValues`, `Match`, ...) and the general assertions |
+| `Be400BadRequest()` | `AndConstraint<BadRequestAssertions>` | validation assertions (`HaveError`, `OnlyHaveError`, `NotHaveError`, `HaveErrorMessage`) and the general assertions |
+| `HaveHeader("X-Correlation-ID")` | `AndConstraint<HeadersAssertions>` | value assertions on that header (`BeValue`, `BeValues`, `BeEmpty`, `NotBeEmpty`, `Match`) and the general assertions |
+| `HaveLocation()` on a `LocationAssertions` group | `AndConstraint<HeadersAssertions>` | value assertions on the `Location` header and the general assertions |
+| `HaveError(...)`, `OnlyHaveError(...)`, `NotHaveError(...)`, `HaveErrorMessage(...)` | `AndConstraint<BadRequestAssertions>` | the other validation assertions and the general assertions |
+
+`Be400BadRequest` is the only status assertion that returns `BadRequestAssertions`, and the status assertions listed above are the ones that return `LocationAssertions`. Every other status assertion returns the general `HttpResponseMessageAssertions`.
+
+### Examples
+
+General status and content assertions stay in the general group:
+
+```csharp
+response.Should()
+    .Be200Ok()                                  // AndConstraint<HttpResponseMessageAssertions>
+    .And.BeAs(new { Author = "John" });         // still the general group
+```
+
+A successful response with a `Location` header moves through two specialized groups:
+
+```csharp
+response.Should()
+    .Be201Created()                             // AndConstraint<LocationAssertions>
+    .And.HaveLocation()                         // AndConstraint<HeadersAssertions>, header = "Location"
+    .And.Match("*/api/comments/*")              // AndConstraint<HeadersAssertions>
+    .And.BeAs(new { Author = "John" });         // general assertions remain available
+```
+
+`HaveLocation()` returns `HeadersAssertions`, not `LocationAssertions`, but the header under assertion is still `Location`, so the following `Match` or `BeValue` targets it. It is declared on `LocationAssertions`, so in `FluentAssertions.Web.v8` and `AwesomeAssertions.Web` it is reached through a status assertion that returns that group (`Be201Created().And.HaveLocation()`), not from `response.Should()` or from a `HeadersAssertions` chain.
+
+Validation assertions follow a Bad Request status:
+
+```csharp
+response.Should()
+    .Be400BadRequest()                          // AndConstraint<BadRequestAssertions>
+    .And.HaveError("Author", "*required*")      // AndConstraint<BadRequestAssertions>
+    .And.HaveErrorMessage("*required*");        // general assertions are still available too
+```
+
+A header assertion is a separate concern and does not need the validation chain:
+
+```csharp
+response.Should().Be400BadRequest().And.HaveError("Author", "*required*");
+
+response.Should()
+    .HaveHeader("X-Correlation-ID")             // AndConstraint<HeadersAssertions>
+    .And.Match("*-*");                          // targets X-Correlation-ID
+```
+
+Each `HaveHeader(name)` sets the header under test for the following header assertions, so consecutive `HaveHeader` calls switch the header being asserted. Because a chain stays in the returned group, starting a new `response.Should()` is the clearest way to move to an unrelated concern; it is a stylistic choice rather than a technical requirement for the general assertions, which every specialized group inherits.
+
+### The Shouldly style: no groups, no chain
+
+Shouldly.Web exposes the same assertions as extension methods on `HttpResponseMessage`. Every method returns `void`: there is no returned assertion object, no `.And`, and no transition between groups — each call is independent.
+
+```csharp
+response.ShouldBe201Created();                  // void
+response.ShouldHaveLocation();                  // void
+response.ShouldHaveLocationMatching("*/api/comments/*");
+response.ShouldBeAs(new { Author = "John" });
+
+response.ShouldBe400BadRequest();               // status first: the validation calls do not check it
+response.ShouldHaveError("Author", "*required*");
+response.ShouldOnlyHaveError("Author", "*required*");
+
+response.ShouldHaveHeader("X-Correlation-ID");
+response.ShouldHaveHeaderMatching("X-Correlation-ID", "*-*");
+```
+
+The `ShouldBe400BadRequest()` call is a real requirement, not just syntax: `ShouldHaveError` and the other validation methods only inspect the body, so the status must be asserted separately when it matters.
+
 ## When a test fails, you see the whole conversation
 
 Every failure message produced by these packages is followed by **the complete HTTP response _and_ the originating HTTP request** — status line, headers and both bodies, the same way an HTTP interceptor like Fiddler would render them. There is no need to attach a debugger or to watch `response.Content.ReadAsStringAsync().Result` anymore: the reason for the failure and the payload that caused it are already in the test output.
