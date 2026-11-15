@@ -310,7 +310,11 @@ public async Task Post_ReturnsOkAndWithContent()
   Error Message:
    Expected response to have a content equivalent to a model, but it has differences:
 
-    - expected property response.Content to be "Expected, but not really there..." with a length of 33, but "Hey, you..." has a length of 11, differs near "Hey" (index 0).
+    - expected property response.Content to be the same string, but they differ at index 0:
+   ↓ (actual)
+  "Hey, you..."
+  "Expected, but not really there..."
+   ↑ (expected).
 .
 
 The HTTP response was:
@@ -574,7 +578,11 @@ public async Task Get_WithCommentId_Returns_A_NonSpam_Comment()
   Error Message:
    Expected response to satisfy one or more model assertions, but it wasn't:
 
-    - expected model.Author to be "I DO SPAM!" with a length of 10, but "Adrian" has a length of 6, differs near "Adr" (index 0).
+    - expected model.Author to be the same string, but they differ at index 0:
+   ↓ (actual)
+  "Adrian"
+  "I DO SPAM!"
+   ↑ (expected).
 
 
 The HTTP response was:
@@ -1244,7 +1252,11 @@ response.Should().HaveHeader("X-Correlation-ID").And.Match("*-*", "it should loo
 
 ```text
   Error Message:
-   Expected response to contain the "x-vendor" HTTP header and the expected header value to be equivalent to "other-vendor" with a length of 12, but "vendor" has a length of 6, differs near "ven" (index 0).
+   Expected response to contain the "x-vendor" HTTP header and the expected header value/header to be equivalent to the same string, but they differ at index 0:
+   ↓ (actual)
+  "vendor"
+  "other-vendor"
+   ↑ (expected).
 
 The HTTP response was:
 
