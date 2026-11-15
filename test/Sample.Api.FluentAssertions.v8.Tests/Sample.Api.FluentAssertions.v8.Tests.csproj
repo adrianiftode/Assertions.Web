@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
     <DefineConstants>$(DefineConstants);FAV8</DefineConstants>
   </PropertyGroup>
 
@@ -10,9 +10,9 @@
     <PackageReference Include="FluentAssertions.Analyzers" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0' ">
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" VersionOverride="9.0.1" />
-    <ProjectReference Include="..\..\samples\Sample.Api.Net90\Sample.Api.Net90.csproj" />
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net11.0' ">
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" VersionOverride="11.0.0" />
+    <ProjectReference Include="..\..\samples\Sample.Api.Net11\Sample.Api.Net11.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net10.0' ">

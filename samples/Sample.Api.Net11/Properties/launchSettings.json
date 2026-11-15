@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Sample.Api.Net90": {
+    "Sample.Api.Net11": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

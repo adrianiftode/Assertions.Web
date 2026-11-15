@@ -35,6 +35,15 @@ skip_commits:
     - samples/**/*
   message: /.*skip\sci.*/
 
+install:
+  # The Visual Studio 2026 image does not ship the .NET 11 SDK yet, but the test
+  # projects target net11.0. Install it side-by-side so `dotnet` picks it up.
+  - ps: |
+      $ProgressPreference = 'SilentlyContinue'
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      Invoke-WebRequest 'https://dot.net/v1/dotnet-install.ps1' -OutFile "$env:TEMP\dotnet-install.ps1"
+      & "$env:TEMP\dotnet-install.ps1" -Channel 11.0 -Quality ga -InstallDir "$env:ProgramFiles\dotnet" -NoPath
+
 init:
   - cmd: dotnet --version
 
