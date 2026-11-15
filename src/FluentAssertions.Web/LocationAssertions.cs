@@ -61,14 +61,6 @@ public class LocationAssertions : HeadersAssertions
     /// A <see cref="HeadersAssertions"/> bound to the <c>Location</c> header, so header-value assertions can follow
     /// from <c>And</c>. The general <see cref="HttpResponseMessageAssertions"/> assertions also remain available.
     /// </returns>
-    /// <example>
-    /// <code>
-    /// response.Should()
-    ///     .Be201Created()
-    ///     .And.HaveLocation()
-    ///     .And.Match("https://example.test/orders/*");
-    /// </code>
-    /// </example>
     /// <seealso cref="HttpResponseMessageAssertions.HaveHeader"/>
     [CustomAssertion]
     public AndConstraint<HeadersAssertions> HaveLocation(string because = "", params object[] becauseArgs)
