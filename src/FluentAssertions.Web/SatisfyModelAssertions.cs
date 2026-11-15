@@ -22,6 +22,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="HttpResponseMessageAssertions"/> group.</returns>
     [CustomAssertion]
     public AndConstraint<HttpResponseMessageAssertions> Satisfy<TModel>(
         Action<TModel> assertion,
@@ -90,6 +91,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="HttpResponseMessageAssertions"/> group.</returns>
     [CustomAssertion]
 #pragma warning disable IDE0060 // Remove unused parameter
     public AndConstraint<HttpResponseMessageAssertions> Satisfy<TModel>(TModel givenModelStructure,
@@ -156,6 +158,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="HttpResponseMessageAssertions"/> group.</returns>
     [CustomAssertion]
     public AndConstraint<HttpResponseMessageAssertions> Satisfy<TModel>(
         Func<TModel, Task> assertion,
@@ -232,6 +235,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="HttpResponseMessageAssertions"/> group.</returns>
     [CustomAssertion]
 #pragma warning disable IDE0060 // Remove unused parameter
     public AndConstraint<HttpResponseMessageAssertions> Satisfy<TModel>(TModel givenModelStructure,

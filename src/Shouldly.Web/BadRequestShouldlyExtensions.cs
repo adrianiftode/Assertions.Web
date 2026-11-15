@@ -11,6 +11,19 @@ namespace Shouldly;
 /// semantics of the FluentAssertions.Web <c>BadRequestAssertions</c>. Like there, none of these
 /// check the status code: call <see cref="HttpStatusCodeShouldlyExtensions.ShouldBe400BadRequest"/> first.
 /// </summary>
+/// <remarks>
+/// <para>
+/// These are flat Shouldly assertions: every method returns <c>void</c> and stands on its own. There is no
+/// <c>.And</c> and no <c>BadRequestAssertions</c>-style group to continue from; write each expectation as a
+/// separate call on the response, for example
+/// <c>response.ShouldBe400BadRequest(); response.ShouldHaveError("Email", "*required*");</c>.
+/// </para>
+/// <para>
+/// The status assertion and the validation assertions are independent. Calling a validation assertion does not
+/// imply that the response is a Bad Request, so assert the status explicitly when that matters.
+/// </para>
+/// </remarks>
+/// <seealso cref="HttpStatusCodeShouldlyExtensions"/>
 [ShouldlyMethods]
 [DebuggerStepThrough]
 [EditorBrowsable(EditorBrowsableState.Never)]

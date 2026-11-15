@@ -5,6 +5,19 @@ namespace FluentAssertions;
 /// <summary>
 /// Contains extension methods for custom assertions in unit tests related to <see cref="BadRequestAssertions"/>.
 /// </summary>
+/// <remarks>
+/// <para>
+/// In FluentAssertions versions before 8, these extensions provide the bad-request validation assertions after
+/// <c>response.Should().Be400BadRequest()</c>. The status assertion must run first; these methods do not assert the
+/// status code themselves.
+/// </para>
+/// <para>
+/// Each method returns <see cref="BadRequestAssertions"/>, so validation, status, content and header assertions can
+/// be chained from <c>And</c>. <c>HaveLocation</c> is not reachable from this group; start a new
+/// <c>response.Should()</c> with a location-bearing status assertion to assert a location.
+/// </para>
+/// </remarks>
+/// <seealso cref="LocationAssertions"/>
 [DebuggerNonUserCode]
 public static class BadRequestAssertionsExtensions
 {
@@ -27,6 +40,18 @@ public static class BadRequestAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="BadRequestAssertions"/> group.</returns>
+    /// <example>
+    /// <code>
+    /// response.Should()
+    ///     .Be400BadRequest()
+    ///     .And.HaveError("Email", "*required*")
+    ///     .And.NotHaveError("Age");
+    /// </code>
+    /// </example>
+    /// <seealso cref="OnlyHaveError"/>
+    /// <seealso cref="NotHaveError"/>
+    /// <seealso cref="HaveErrorMessage"/>
     [CustomAssertion]
     public static AndConstraint<BadRequestAssertions> HaveError(
 #pragma warning disable 1573
@@ -55,6 +80,7 @@ public static class BadRequestAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="BadRequestAssertions"/> group.</returns>
     [CustomAssertion]
     public static AndConstraint<BadRequestAssertions> OnlyHaveError(
 #pragma warning disable 1573
@@ -80,6 +106,7 @@ public static class BadRequestAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="BadRequestAssertions"/> group.</returns>
     [CustomAssertion]
     public static AndConstraint<BadRequestAssertions> NotHaveError(
 #pragma warning disable 1573
@@ -101,6 +128,7 @@ public static class BadRequestAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="BadRequestAssertions"/> group.</returns>
     [CustomAssertion]
     public static AndConstraint<BadRequestAssertions> HaveErrorMessage(
 #pragma warning disable 1573

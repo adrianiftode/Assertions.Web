@@ -19,6 +19,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="HttpResponseMessageAssertions"/> group.</returns>
     [CustomAssertion]
     public AndConstraint<HttpResponseMessageAssertions> BeEmpty(string because = "", params object[] becauseArgs)
     {
@@ -58,6 +59,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="HttpResponseMessageAssertions"/> group.</returns>
     [CustomAssertion]
     public AndConstraint<HttpResponseMessageAssertions> BeAs<TModel>(TModel expectedModel, string because = "", params object[] becauseArgs)
         => BeAs(expectedModel, options => options, because, becauseArgs);
@@ -69,13 +71,9 @@ public partial class HttpResponseMessageAssertions
     /// The expected model.
     /// </param>
     /// <param name="options">
-    /// A reference to the <see cref="EquivalencyOptions{TExpectation}"/> configuration object that can be used
-    /// to influence the way the object graphs are compared. You can also provide an alternative instance of the
-#if FAV8
-    /// <see cref="EquivalencyOptions{TExpectation}"/> class. The global defaults are determined by the
-#else
-    /// <see cref="EquivalencyAssertionOptions{TExpectation}"/> class. The global defaults are determined by the
-#endif
+    /// A reference to the equivalency-options configuration object that can be used to influence the way the object
+    /// graphs are compared. You can also provide an alternative instance of that class. The global defaults are
+    /// determined by the assertion framework configuration.
     /// </param>
     /// <param name="because">
     /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
@@ -84,6 +82,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="HttpResponseMessageAssertions"/> group.</returns>
     [CustomAssertion]
 #if FAV8
     public AndConstraint<HttpResponseMessageAssertions> BeAs<TModel>(TModel expectedModel, Func<EquivalencyOptions<TModel>, EquivalencyOptions<TModel>> options, string because = "", params object[] becauseArgs)
@@ -161,6 +160,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="HttpResponseMessageAssertions"/> group.</returns>
     [CustomAssertion]
     public AndConstraint<HttpResponseMessageAssertions> MatchInContent(string expectedWildcardText, string because = "", params object[] becauseArgs)
     {

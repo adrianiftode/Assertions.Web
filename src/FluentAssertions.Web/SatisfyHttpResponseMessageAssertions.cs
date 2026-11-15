@@ -22,6 +22,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="HttpResponseMessageAssertions"/> group.</returns>
     [CustomAssertion]
     public AndConstraint<HttpResponseMessageAssertions> Satisfy(Action<HttpResponseMessage> assertion,
         string because = "", params object[] becauseArgs)
@@ -71,6 +72,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="HttpResponseMessageAssertions"/> group.</returns>
     [CustomAssertion]
     public AndConstraint<HttpResponseMessageAssertions> Satisfy(Func<HttpResponseMessage, Task> assertion,
         string because = "", params object[] becauseArgs)

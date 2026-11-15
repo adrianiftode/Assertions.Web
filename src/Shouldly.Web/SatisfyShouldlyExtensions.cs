@@ -9,6 +9,21 @@ namespace Shouldly;
 /// Shouldly assertions asserting that an HTTP response, or the model its content deserializes into,
 /// satisfies one or more inner assertions.
 /// </summary>
+/// <remarks>
+/// <para>
+/// These are flat Shouldly assertions: every method returns <c>void</c> and stands on its own. There is no
+/// <c>.And</c> and no assertion group to continue from; use a separate call for each expectation.
+/// </para>
+/// <para>
+/// The overloads taking an array or sequence of assertions run each entry as its own condition and report all
+/// failures. A single assertion lambda containing several statements stops at its first failure instead.
+/// </para>
+/// <para>
+/// These assertions do not check the status code. Assert the status separately when it matters.
+/// </para>
+/// </remarks>
+/// <seealso cref="HttpStatusCodeShouldlyExtensions"/>
+/// <seealso cref="HttpResponseContentShouldlyExtensions"/>
 [ShouldlyMethods]
 [DebuggerStepThrough]
 [EditorBrowsable(EditorBrowsableState.Never)]

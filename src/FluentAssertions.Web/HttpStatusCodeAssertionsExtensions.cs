@@ -3,8 +3,27 @@
 namespace FluentAssertions;
 
 /// <summary>
-/// Contains extension methods for custom assertions in unit tests related to <see cref="BadRequestAssertions"/>.
+/// Contains extension methods for custom assertions in unit tests related to the HTTP status code of an
+/// <see cref="HttpResponseMessage"/>.
 /// </summary>
+/// <remarks>
+/// <para>
+/// In FluentAssertions versions before 8, <c>response.Should()</c> returns FluentAssertions' own response assertion
+/// type, so these extension methods provide the Assertions.Web status assertions. Each one returns an
+/// <c>AndConstraint&lt;TAssertions&gt;</c> for an Assertions.Web assertion group, and the chain continues from its
+/// <c>And</c> property exactly as it does in AwesomeAssertions and FluentAssertions 8.
+/// </para>
+/// <para>
+/// Most status assertions return <see cref="HttpResponseMessageAssertions"/>. <c>Be400BadRequest</c> returns
+/// <see cref="BadRequestAssertions"/>. Some status assertions (for example <c>Be201Created</c>,
+/// <c>Be3XXRedirection</c>, <c>Be204NoContent</c>, <c>Be409Conflict</c> and <c>Be410Gone</c>) return
+/// <see cref="LocationAssertions"/>, which allows the chain to inspect the <c>Location</c> header; returning that
+/// group does not assert that the header is present.
+/// </para>
+/// </remarks>
+/// <seealso cref="BadRequestAssertions"/>
+/// <seealso cref="HeadersAssertions"/>
+/// <seealso cref="LocationAssertions"/>
 public static class HttpStatusCodeAssertionsExtensions
 {
     #region Be1XXInformational
@@ -63,6 +82,7 @@ public static class HttpStatusCodeAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     // ReSharper disable once InconsistentNaming
     public static AndConstraint<LocationAssertions> Be3XXRedirection(
@@ -228,6 +248,7 @@ public static class HttpStatusCodeAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public static AndConstraint<LocationAssertions> Be201Created(
 #pragma warning disable 1573
@@ -246,6 +267,7 @@ public static class HttpStatusCodeAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public static AndConstraint<LocationAssertions> Be202Accepted(
 #pragma warning disable 1573
@@ -282,6 +304,7 @@ public static class HttpStatusCodeAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public static AndConstraint<LocationAssertions> Be204NoContent(
 #pragma warning disable 1573
@@ -336,6 +359,7 @@ public static class HttpStatusCodeAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public static AndConstraint<LocationAssertions> Be300MultipleChoices(
 #pragma warning disable 1573
@@ -354,6 +378,7 @@ public static class HttpStatusCodeAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public static AndConstraint<LocationAssertions> Be300Ambiguous(
 #pragma warning disable 1573
@@ -372,6 +397,7 @@ public static class HttpStatusCodeAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public static AndConstraint<LocationAssertions> Be301MovedPermanently(
 #pragma warning disable 1573
@@ -390,6 +416,7 @@ public static class HttpStatusCodeAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public static AndConstraint<LocationAssertions> Be301Moved(
 #pragma warning disable 1573
@@ -408,6 +435,7 @@ public static class HttpStatusCodeAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public static AndConstraint<LocationAssertions> Be302Found(
 #pragma warning disable 1573
@@ -426,6 +454,7 @@ public static class HttpStatusCodeAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public static AndConstraint<LocationAssertions> Be302Redirect(
 #pragma warning disable 1573
@@ -444,6 +473,7 @@ public static class HttpStatusCodeAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public static AndConstraint<LocationAssertions> Be303SeeOther(
 #pragma warning disable 1573
@@ -462,6 +492,7 @@ public static class HttpStatusCodeAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public static AndConstraint<LocationAssertions> Be303RedirectMethod(
 #pragma warning disable 1573
@@ -498,6 +529,7 @@ public static class HttpStatusCodeAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public static AndConstraint<LocationAssertions> Be305UseProxy(
 #pragma warning disable 1573
@@ -534,6 +566,7 @@ public static class HttpStatusCodeAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public static AndConstraint<LocationAssertions> Be307TemporaryRedirect(
 #pragma warning disable 1573
@@ -552,6 +585,7 @@ public static class HttpStatusCodeAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public static AndConstraint<LocationAssertions> Be307RedirectKeepVerb(
 #pragma warning disable 1573
@@ -570,6 +604,7 @@ public static class HttpStatusCodeAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public static AndConstraint<LocationAssertions> Be308PermanentRedirect(
 #pragma warning disable 1573
@@ -588,6 +623,10 @@ public static class HttpStatusCodeAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>
+    /// A <see cref="BadRequestAssertions"/> for the response, so validation-error assertions such as
+    /// <c>HaveError</c> can be chained from <c>And</c>.
+    /// </returns>
     [CustomAssertion]
     public static AndConstraint<BadRequestAssertions> Be400BadRequest(
 #pragma warning disable 1573
@@ -750,6 +789,7 @@ public static class HttpStatusCodeAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public static AndConstraint<LocationAssertions> Be409Conflict(
 #pragma warning disable 1573
@@ -768,6 +808,7 @@ public static class HttpStatusCodeAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public static AndConstraint<LocationAssertions> Be410Gone(
 #pragma warning disable 1573

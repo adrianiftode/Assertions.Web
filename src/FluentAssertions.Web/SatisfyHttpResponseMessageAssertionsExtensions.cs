@@ -3,8 +3,14 @@
 namespace FluentAssertions;
 
 /// <summary>
-/// Contains extension methods for custom assertions in unit tests related to Http Response Message.
+/// Contains extension methods for custom assertions in unit tests related to an <see cref="HttpResponseMessage"/>.
 /// </summary>
+/// <remarks>
+/// In FluentAssertions versions before 8, these extensions provide <c>Satisfy</c> on the response assertion returned
+/// by <c>response.Should()</c>. Each overload returns <see cref="HttpResponseMessageAssertions"/>, so further
+/// assertions can be chained from <c>And</c>.
+/// </remarks>
+/// <seealso cref="HttpResponseMessageAssertions"/>
 [DebuggerNonUserCode]
 public static class SatisfyHttpResponseMessageAssertionsExtensions
 {
@@ -24,6 +30,7 @@ public static class SatisfyHttpResponseMessageAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="HttpResponseMessageAssertions"/> group.</returns>
     [CustomAssertion]
     public static AndConstraint<HttpResponseMessageAssertions> Satisfy(
 #pragma warning disable 1573
@@ -49,6 +56,7 @@ public static class SatisfyHttpResponseMessageAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="HttpResponseMessageAssertions"/> group.</returns>
     [CustomAssertion]
     public static AndConstraint<HttpResponseMessageAssertions> Satisfy(
 #pragma warning disable 1573

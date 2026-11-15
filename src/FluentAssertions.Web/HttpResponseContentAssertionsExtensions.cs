@@ -3,8 +3,16 @@
 namespace FluentAssertions;
 
 /// <summary>
-/// Contains extension methods for custom assertions in unit tests related to Http Response Content Assertions
+/// Contains extension methods for custom assertions in unit tests related to the HTTP response content.
 /// </summary>
+/// <remarks>
+/// <para>
+/// In FluentAssertions versions before 8, these extensions provide the content assertions on the response assertion
+/// returned by <c>response.Should()</c>. Each one returns <see cref="HttpResponseMessageAssertions"/>, so status,
+/// header and further content assertions can be chained from <c>And</c>.
+/// </para>
+/// </remarks>
+/// <seealso cref="HttpResponseMessageAssertions"/>
 [DebuggerNonUserCode]
 public static class HttpResponseContentAssertionsExtensions
 {
@@ -18,6 +26,7 @@ public static class HttpResponseContentAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="HttpResponseMessageAssertions"/> group.</returns>
     [CustomAssertion]
     public static AndConstraint<HttpResponseMessageAssertions> BeEmpty(
 #pragma warning disable 1573
@@ -45,6 +54,7 @@ public static class HttpResponseContentAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="HttpResponseMessageAssertions"/> group.</returns>
     [CustomAssertion]
     public static AndConstraint<HttpResponseMessageAssertions> BeAs<TModel>(
 #pragma warning disable 1573
@@ -66,6 +76,7 @@ public static class HttpResponseContentAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="HttpResponseMessageAssertions"/> group.</returns>
     [CustomAssertion]
     public static AndConstraint<HttpResponseMessageAssertions> BeAs<TModel>(
 #pragma warning disable 1573
@@ -91,6 +102,7 @@ public static class HttpResponseContentAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="HttpResponseMessageAssertions"/> group.</returns>
     [CustomAssertion]
     public static AndConstraint<HttpResponseMessageAssertions> MatchInContent(
 #pragma warning disable 1573
