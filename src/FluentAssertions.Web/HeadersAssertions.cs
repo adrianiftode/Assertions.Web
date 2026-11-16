@@ -7,6 +7,26 @@ namespace FluentAssertions.Web;
 /// <summary>
 /// Contains a number of methods to assert that an <see cref="HttpResponseMessage"/> is in the expected state related to HTTP headers.
 /// </summary>
+/// <remarks>
+/// <para>
+/// A <see cref="HeadersAssertions"/> instance is bound to one header name, supplied when the group is created by
+/// <see cref="HttpResponseMessageAssertions.HaveHeader"/>. Methods such as <see cref="Match"/>, <see cref="BeEmpty"/>, <see cref="NotBeEmpty"/>,
+/// <see cref="BeValues"/> and <see cref="BeValue"/> inspect only that header and return
+/// <see cref="HeadersAssertions"/> again, so they can be composed with <c>And</c>.
+/// </para>
+/// <para>
+/// The group derives from <see cref="HttpResponseMessageAssertions"/>, so status, content and general assertions
+/// remain available from <c>And</c>. Call <see cref="HttpResponseMessageAssertions.HaveHeader"/> again (on the response or from <c>And</c>) to
+/// switch to another header. <see cref="HttpResponseMessageAssertions.NotHaveHeader"/> and <see cref="HttpResponseMessageAssertions.NotHaveLocation"/> return
+/// <see cref="HttpResponseMessageAssertions"/> rather than this group.
+/// </para>
+/// <para>
+/// This type and its <c>And</c> chaining are available in AwesomeAssertions and FluentAssertions 8 and later.
+/// In earlier FluentAssertions versions the same assertions are extension methods that return the same types.
+/// </para>
+/// </remarks>
+/// <seealso cref="LocationAssertions"/>
+/// <seealso cref="HttpResponseMessageAssertions"/>
 public class HeadersAssertions : HttpResponseMessageAssertions
 {
     /// <summary>
@@ -14,16 +34,22 @@ public class HeadersAssertions : HttpResponseMessageAssertions
     /// </summary>
     protected readonly string Header;
 
+#if FAV8
     /// <summary>
     /// Initialized a new instance of the <see cref="HeadersAssertions"/>
     /// class.
     /// </summary>
     /// <param name="value">The subject value to be asserted.</param>
     /// <param name="header">The HTTP header name to be asserted.</param>
-#if FAV8
     /// <param name="assertionChain">The assertion chain to build and manage assertions.</param>
     public HeadersAssertions(HttpResponseMessage value, string header, AssertionChain assertionChain) : base(value, assertionChain) => Header = header;
 #else
+    /// <summary>
+    /// Initialized a new instance of the <see cref="HeadersAssertions"/>
+    /// class.
+    /// </summary>
+    /// <param name="value">The subject value to be asserted.</param>
+    /// <param name="header">The HTTP header name to be asserted.</param>
     public HeadersAssertions(HttpResponseMessage value, string header) : base(value) => Header = header;
 #endif
     /// <summary>
@@ -43,6 +69,7 @@ public class HeadersAssertions : HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="HeadersAssertions"/> group for the header under test.</returns>
     [CustomAssertion]
     public AndConstraint<HeadersAssertions> Match(string expectedWildcardValue, string because = "", params object[] becauseArgs)
     {
@@ -92,6 +119,7 @@ public class HeadersAssertions : HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="HeadersAssertions"/> group for the header under test.</returns>
     [CustomAssertion]
     public AndConstraint<HeadersAssertions> BeEmpty(string because = "", params object[] becauseArgs)
     {
@@ -123,6 +151,7 @@ public class HeadersAssertions : HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="HeadersAssertions"/> group for the header under test.</returns>
     [CustomAssertion]
     public AndConstraint<HeadersAssertions> NotBeEmpty(string because = "", params object[] becauseArgs)
     {
@@ -157,6 +186,7 @@ public class HeadersAssertions : HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="HeadersAssertions"/> group for the header under test.</returns>
     [CustomAssertion]
     public AndConstraint<HeadersAssertions> BeValues(IEnumerable<string> expectedValues,
         string because = "", params object[] becauseArgs)
@@ -207,6 +237,7 @@ public class HeadersAssertions : HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="HeadersAssertions"/> group for the header under test.</returns>
     [CustomAssertion]
     public AndConstraint<HeadersAssertions> BeValue(string expectedValue,
         string because = "", params object[] becauseArgs)
@@ -270,6 +301,13 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>
+    /// A <see cref="HeadersAssertions"/> bound to <paramref name="expectedHeader"/>. Its header assertions can be
+    /// chained from <c>And</c>, and the general <see cref="HttpResponseMessageAssertions"/> assertions remain
+    /// available because the group derives from this type.
+    /// </returns>
+    /// <seealso cref="HeadersAssertions"/>
+    /// <seealso cref="NotHaveHeader"/>
     [CustomAssertion]
     public AndConstraint<HeadersAssertions> HaveHeader(string expectedHeader,
         string because = "", params object[] becauseArgs)
@@ -307,6 +345,10 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>
+    /// The general <see cref="HttpResponseMessageAssertions"/> group, because no header is selected to continue
+    /// asserting. Chain further general assertions from <c>And</c>.
+    /// </returns>
     [CustomAssertion]
     public AndConstraint<HttpResponseMessageAssertions> NotHaveHeader(string expectedHeader,
         string because = "", params object[] becauseArgs)
@@ -338,6 +380,10 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>
+    /// The general <see cref="HttpResponseMessageAssertions"/> group, because no header is selected to continue
+    /// asserting. Chain further general assertions from <c>And</c>.
+    /// </returns>
     [CustomAssertion]
     public AndConstraint<HttpResponseMessageAssertions> NotHaveLocation(string because = "", params object[] becauseArgs)
     {

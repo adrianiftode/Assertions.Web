@@ -5,21 +5,46 @@ namespace FluentAssertions.Web;
 #endif
 
 /// <summary>
-/// Contains a number of methods to assert that an <see cref="HttpResponseMessage"/> is in the expected state related to HTTP Bad Request response
+/// Contains a number of methods to assert that an <see cref="HttpResponseMessage"/> is in the expected state related to HTTP Bad Request response.
 /// </summary>
+/// <remarks>
+/// <para>
+/// This group is reached from <see cref="HttpResponseMessageAssertions.Be400BadRequest"/>:
+/// <c>response.Should().Be400BadRequest().And.HaveError("Email", "*required*")</c>. It checks the JSON validation
+/// errors in the response content. The status assertion must run first; these methods do not assert the status code
+/// themselves.
+/// </para>
+/// <para>
+/// Each method returns <see cref="BadRequestAssertions"/> again, so validation assertions can be combined with
+/// <c>And</c>. Because the group derives from <see cref="HttpResponseMessageAssertions"/>, status, content, general
+/// and <see cref="HttpResponseMessageAssertions.HaveHeader"/> assertions remain available from <c>And</c>.
+/// </para>
+/// <para>
+/// <see cref="LocationAssertions.HaveLocation"/> is not reachable from this group. To assert a location, start a new
+/// <c>response.Should()</c> call with a status assertion that returns <see cref="LocationAssertions"/>.
+/// </para>
+/// </remarks>
+/// <seealso cref="HttpResponseMessageAssertions.Be400BadRequest"/>
+/// <seealso cref="HeadersAssertions"/>
+/// <seealso cref="LocationAssertions"/>
 public class BadRequestAssertions : HttpResponseMessageAssertions
 {
     private const string ErrorsPropertyName = "errors";
 
+#if FAV8
     /// <summary>
     /// Initialized a new instance of the <see cref="BadRequestAssertions"/>
     /// class.
     /// </summary>
     /// <param name="value">The subject value to be asserted.</param>
-#if FAV8
     /// <param name="assertionChain">The assertion chain to build and manage assertions.</param>
     public BadRequestAssertions(HttpResponseMessage value, AssertionChain assertionChain) : base(value, assertionChain)
 #else
+    /// <summary>
+    /// Initialized a new instance of the <see cref="BadRequestAssertions"/>
+    /// class.
+    /// </summary>
+    /// <param name="value">The subject value to be asserted.</param>
     public BadRequestAssertions(HttpResponseMessage value) : base(value)
 #endif
     {
@@ -49,6 +74,10 @@ public class BadRequestAssertions : HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The same <see cref="BadRequestAssertions"/> group.</returns>
+    /// <seealso cref="OnlyHaveError"/>
+    /// <seealso cref="NotHaveError"/>
+    /// <seealso cref="HaveErrorMessage"/>
     [CustomAssertion]
     public AndConstraint<BadRequestAssertions> HaveError(string expectedErrorField, string expectedWildcardErrorMessage,
         string because = "", params object[] becauseArgs)
@@ -122,6 +151,7 @@ public class BadRequestAssertions : HttpResponseMessageAssertions
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
 
+    /// <returns>The same <see cref="BadRequestAssertions"/> group.</returns>
     [CustomAssertion]
     public AndConstraint<BadRequestAssertions> OnlyHaveError(string expectedErrorField, string expectedWildcardErrorMessage,
         string because = "", params object[] becauseArgs)
@@ -220,6 +250,7 @@ public class BadRequestAssertions : HttpResponseMessageAssertions
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
 
+    /// <returns>The same <see cref="BadRequestAssertions"/> group.</returns>
     [CustomAssertion]
     public AndConstraint<BadRequestAssertions> NotHaveError(string expectedErrorField, string because = "", params object[] becauseArgs)
     {
@@ -262,6 +293,7 @@ public class BadRequestAssertions : HttpResponseMessageAssertions
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
 
+    /// <returns>The same <see cref="BadRequestAssertions"/> group.</returns>
     [CustomAssertion]
     public AndConstraint<BadRequestAssertions> HaveErrorMessage(string expectedWildcardErrorMessage,
         string because = "", params object[] becauseArgs)

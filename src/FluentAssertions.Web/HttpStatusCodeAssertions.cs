@@ -96,6 +96,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     // ReSharper disable once InconsistentNaming
     public AndConstraint<LocationAssertions> Be3XXRedirection(string because = "", params object[] becauseArgs)
@@ -396,6 +397,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public AndConstraint<LocationAssertions> Be201Created(string because = "", params object[] becauseArgs)
     {
@@ -434,6 +436,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public AndConstraint<LocationAssertions> Be202Accepted(string because = "", params object[] becauseArgs)
     {
@@ -506,6 +509,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public AndConstraint<LocationAssertions> Be204NoContent(string because = "", params object[] becauseArgs)
     {
@@ -612,6 +616,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public AndConstraint<LocationAssertions> Be300MultipleChoices(string because = "", params object[] becauseArgs)
     {
@@ -650,6 +655,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public AndConstraint<LocationAssertions> Be300Ambiguous(string because = "", params object[] becauseArgs)
     {
@@ -688,6 +694,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public AndConstraint<LocationAssertions> Be301MovedPermanently(string because = "", params object[] becauseArgs)
     {
@@ -726,6 +733,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public AndConstraint<LocationAssertions> Be301Moved(string because = "", params object[] becauseArgs)
     {
@@ -764,6 +772,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public AndConstraint<LocationAssertions> Be302Found(string because = "", params object[] becauseArgs)
     {
@@ -802,6 +811,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public AndConstraint<LocationAssertions> Be302Redirect(string because = "", params object[] becauseArgs)
     {
@@ -840,6 +850,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public AndConstraint<LocationAssertions> Be303SeeOther(string because = "", params object[] becauseArgs)
     {
@@ -878,6 +889,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public AndConstraint<LocationAssertions> Be303RedirectMethod(string because = "", params object[] becauseArgs)
     {
@@ -950,6 +962,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public AndConstraint<LocationAssertions> Be305UseProxy(string because = "", params object[] becauseArgs)
     {
@@ -1022,6 +1035,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public AndConstraint<LocationAssertions> Be307TemporaryRedirect(string because = "", params object[] becauseArgs)
     {
@@ -1060,6 +1074,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public AndConstraint<LocationAssertions> Be307RedirectKeepVerb(string because = "", params object[] becauseArgs)
     {
@@ -1098,6 +1113,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public AndConstraint<LocationAssertions> Be308PermanentRedirect(string because = "", params object[] becauseArgs)
     {
@@ -1136,6 +1152,11 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>
+    /// A <see cref="BadRequestAssertions"/> for the response, so validation-error assertions such as
+    /// <c>HaveError</c> can be chained from <c>And</c>.
+    /// </returns>
+    /// <seealso cref="BadRequestAssertions"/>
     [CustomAssertion]
     public AndConstraint<BadRequestAssertions> Be400BadRequest(string because = "", params object[] becauseArgs)
     {
@@ -1446,6 +1467,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public AndConstraint<LocationAssertions> Be409Conflict(string because = "", params object[] becauseArgs)
     {
@@ -1484,6 +1506,7 @@ public partial class HttpResponseMessageAssertions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>The <see cref="LocationAssertions"/> group for the response.</returns>
     [CustomAssertion]
     public AndConstraint<LocationAssertions> Be410Gone(string because = "", params object[] becauseArgs)
     {

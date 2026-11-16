@@ -6,6 +6,20 @@ namespace FluentAssertions;
 /// <summary>
 /// Contains extension methods for custom assertions in unit tests related to <see cref="LocationAssertions"/>.
 /// </summary>
+/// <remarks>
+/// <para>
+/// In FluentAssertions versions before 8, this extension provides <c>HaveLocation</c> directly on the response
+/// assertion returned by <c>response.Should()</c>. It returns a <see cref="HeadersAssertions"/> bound to the
+/// <c>Location</c> header, so header-value assertions can be chained from <c>And</c>.
+/// </para>
+/// <para>
+/// Some status assertions already return <see cref="LocationAssertions"/>, which offers the same
+/// check without starting a new chain. <c>HaveLocation</c> is not available from a <see cref="BadRequestAssertions"/>
+/// chain.
+/// </para>
+/// </remarks>
+/// <seealso cref="HeadersAssertions"/>
+/// <seealso cref="HttpResponseMessageAssertions"/>
 [DebuggerNonUserCode]
 public static class LocationAssertionsExtensions
 {
@@ -19,6 +33,11 @@ public static class LocationAssertionsExtensions
     /// <param name="becauseArgs">
     /// Zero or more objects to format using the placeholders in <see paramref="because" />.
     /// </param>
+    /// <returns>
+    /// A <see cref="HeadersAssertions"/> bound to the <c>Location</c> header, so header-value assertions can follow
+    /// from <c>And</c>. The general <see cref="HttpResponseMessageAssertions"/> assertions also remain available.
+    /// </returns>
+    /// <seealso cref="HeadersAssertions"/>
     [CustomAssertion]
     public static AndConstraint<HeadersAssertions> HaveLocation(
 #pragma warning disable 1573

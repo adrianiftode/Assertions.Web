@@ -8,6 +8,23 @@ namespace Shouldly;
 /// <summary>
 /// Shouldly assertions on the status code of an <see cref="HttpResponseMessage"/>.
 /// </summary>
+/// <remarks>
+/// <para>
+/// These are flat Shouldly assertions: every method returns <c>void</c> and stands on its own. There is no
+/// <c>.And</c> and no assertion object whose type changes after a status assertion. Write each expectation as a
+/// separate call on the same response, for example:
+/// <c>response.ShouldBe400BadRequest(); response.ShouldHaveError("Email", "*required*");</c>.
+/// </para>
+/// <para>
+/// A status assertion checks only the status code; it makes no assertion about the response body or headers.
+/// After <c>ShouldBe400BadRequest()</c>, use the validation-error assertions; headers and content have their own
+/// assertions. None of them depend on a previous call, so they can be reordered or repeated freely.
+/// </para>
+/// </remarks>
+/// <seealso cref="BadRequestShouldlyExtensions"/>
+/// <seealso cref="HeadersShouldlyExtensions"/>
+/// <seealso cref="LocationShouldlyExtensions"/>
+/// <seealso cref="HttpResponseContentShouldlyExtensions"/>
 [ShouldlyMethods]
 [DebuggerStepThrough]
 [EditorBrowsable(EditorBrowsableState.Never)]

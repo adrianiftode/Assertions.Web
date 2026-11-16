@@ -8,6 +8,18 @@ namespace Shouldly;
 /// <summary>
 /// Shouldly assertions on the body content of an <see cref="HttpResponseMessage"/>.
 /// </summary>
+/// <remarks>
+/// <para>
+/// These are flat Shouldly assertions: every method returns <c>void</c> and stands on its own. There is no
+/// <c>.And</c> and no assertion group to continue from; write each content expectation as a separate call.
+/// </para>
+/// <para>
+/// These assertions do not check the status code. A status assertion is a separate call, for example
+/// <c>response.ShouldBe200Ok(); response.ShouldBeAs(expectedModel);</c>.
+/// </para>
+/// </remarks>
+/// <seealso cref="HttpStatusCodeShouldlyExtensions"/>
+/// <seealso cref="SatisfyShouldlyExtensions"/>
 [ShouldlyMethods]
 [DebuggerStepThrough]
 [EditorBrowsable(EditorBrowsableState.Never)]

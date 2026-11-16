@@ -8,6 +8,20 @@ namespace Shouldly;
 /// <summary>
 /// Shouldly assertions on the HTTP headers of an <see cref="HttpResponseMessage"/>.
 /// </summary>
+/// <remarks>
+/// <para>
+/// These are flat Shouldly assertions: every method returns <c>void</c> and takes the header name as a parameter.
+/// There is no header assertion object to continue from and no <c>.And</c>; pass the header name to each assertion
+/// instead of chaining from a group, for example
+/// <c>response.ShouldHaveHeader("Content-Type"); response.ShouldHaveHeaderMatching("Content-Type", "application/json*");</c>.
+/// </para>
+/// <para>
+/// Header presence is checked case-insensitively by <see cref="ShouldHaveHeader"/>,
+/// <see cref="ShouldNotHaveHeader"/>, <see cref="ShouldHaveEmptyHeader"/> and <see cref="ShouldHaveNonEmptyHeader"/>.
+/// The value-oriented assertions document their own comparison rules.
+/// </para>
+/// </remarks>
+/// <seealso cref="LocationShouldlyExtensions"/>
 [ShouldlyMethods]
 [DebuggerStepThrough]
 [EditorBrowsable(EditorBrowsableState.Never)]

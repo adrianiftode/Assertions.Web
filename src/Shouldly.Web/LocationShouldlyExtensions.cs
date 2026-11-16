@@ -8,6 +8,17 @@ namespace Shouldly;
 /// <summary>
 /// Shouldly assertions on the Location header of an <see cref="HttpResponseMessage"/>.
 /// </summary>
+/// <remarks>
+/// <para>
+/// These are flat Shouldly assertions: every method returns <c>void</c>, targets the <c>Location</c> header and
+/// stands on its own. There is no <c>.And</c> and no location assertion group to continue from.
+/// </para>
+/// <para>
+/// These assertions do not check the status code. A location-bearing status assertion is a separate call, for
+/// example <c>response.ShouldBe201Created(); response.ShouldHaveLocation();</c>.
+/// </para>
+/// </remarks>
+/// <seealso cref="HeadersShouldlyExtensions"/>
 [ShouldlyMethods]
 [DebuggerStepThrough]
 [EditorBrowsable(EditorBrowsableState.Never)]

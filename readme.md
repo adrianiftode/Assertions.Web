@@ -24,10 +24,10 @@ The repository and product are called **Assertions.Web**, but there is no standa
 
 | Assertion framework | NuGet package ID | Install | Documentation |
 |---|---|---|---|
-| AwesomeAssertions | [`AwesomeAssertions.Web`](https://www.nuget.org/packages/AwesomeAssertions.Web) | `dotnet add package AwesomeAssertions.Web` | [Quick start](#quick-start-awesomeassertionsweb) · [Usage](#awesomeassertionsweb) · [End-to-end](#end-to-end-example-awesomeassertionsweb) |
-| FluentAssertions < 8.0.0 | [`FluentAssertions.Web`](https://www.nuget.org/packages/FluentAssertions.Web) | `dotnet add package FluentAssertions.Web` | [Quick start](#quick-start-fluentassertionsweb) · [Usage](#fluentassertionsweb) · [End-to-end](#end-to-end-example-fluentassertionsweb) |
-| FluentAssertions >= 8.0.0 (commercial) | [`FluentAssertions.Web.v8`](https://www.nuget.org/packages/FluentAssertions.Web.v8) | `dotnet add package FluentAssertions.Web.v8` | [Quick start](#quick-start-fluentassertionswebv8) · [Usage](#fluentassertionswebv8) · [End-to-end](#end-to-end-example-fluentassertionswebv8) |
-| Shouldly >= 5.0.0-preview.2 | [`Shouldly.Web`](https://www.nuget.org/packages/Shouldly.Web) | `dotnet add package Shouldly.Web --prerelease` | [Quick start](#quick-start-shouldlyweb) · [Usage](#shouldlyweb) · [End-to-end](#end-to-end-example-shouldlyweb) |
+| AwesomeAssertions | [`AwesomeAssertions.Web`](https://www.nuget.org/packages/AwesomeAssertions.Web) | `dotnet add package AwesomeAssertions.Web` | [Quick start](#quick-start-awesomeassertionsweb) · [Usage](#awesomeassertionsweb) · [End-to-end](#end-to-end-example-fluentassertions-and-awesomeassertions) |
+| FluentAssertions < 8.0.0 | [`FluentAssertions.Web`](https://www.nuget.org/packages/FluentAssertions.Web) | `dotnet add package FluentAssertions.Web` | [Quick start](#quick-start-fluentassertionsweb) · [Usage](#fluentassertionsweb) · [End-to-end](#end-to-end-example-fluentassertions-and-awesomeassertions) |
+| FluentAssertions >= 8.0.0 (commercial) | [`FluentAssertions.Web.v8`](https://www.nuget.org/packages/FluentAssertions.Web.v8) | `dotnet add package FluentAssertions.Web.v8` | [Quick start](#quick-start-fluentassertionswebv8) · [Usage](#fluentassertionswebv8) · [End-to-end](#end-to-end-example-fluentassertions-and-awesomeassertions) |
+| Shouldly >= 5.0.0-preview.2 | [`Shouldly.Web`](https://www.nuget.org/packages/Shouldly.Web) | `dotnet add package Shouldly.Web --prerelease` | [Quick start](#quick-start-shouldlyweb) · [Usage](#shouldlyweb) · [End-to-end](#end-to-end-assertion-example-shouldlyweb) |
 
 > `Shouldly.Web` is currently a prerelease, so `--prerelease` is required until Shouldly 5.0.0 is stable.
 
@@ -142,36 +142,15 @@ public class CommentsApiTests : IClassFixture<WebApplicationFactory<Program>>
 
 > `Program` is the API's entry point. If it is not visible to the test project, add `public partial class Program { }` to the API project, which is the usual `WebApplicationFactory` setup.
 
-### End-to-end example: AwesomeAssertions.Web
+### End-to-end example: FluentAssertions and AwesomeAssertions
 
-```csharp
-using System.Text;
-using AwesomeAssertions;
+The fluent API is the same across `FluentAssertions.Web`, `FluentAssertions.Web.v8` and `AwesomeAssertions.Web`. The following test uses the FluentAssertions namespace; use the package and namespace that match the assertion framework already used by your test project:
 
-[Fact]
-public async Task Post_ReturnsCreated_WithHeader_Location_AndTypedBody()
-{
-    // Arrange
-    var client = _factory.CreateClient();
+- `FluentAssertions.Web`: `using FluentAssertions;`
+- `FluentAssertions.Web.v8`: `using FluentAssertions;`
+- `AwesomeAssertions.Web`: `using AwesomeAssertions;`
 
-    // Act
-    var response = await client.PostAsync("/api/comments", new StringContent(
-    """
-    {
-      "author": "John",
-      "content": "Hey, you..."
-    }
-    """, Encoding.UTF8, "application/json"));
-
-    // Assert
-    response.Should().Be201Created()
-        .And.HaveHeader("X-Correlation-ID").And.Match("*-*")
-        .And.HaveLocation().And.Match("*/api/Comments/*")
-        .And.BeAs(new { Author = "John", Content = "Hey, you..." });
-}
-```
-
-### End-to-end example: FluentAssertions.Web
+The fixture and Arrange/Act are shared by all flavours:
 
 ```csharp
 using System.Text;
@@ -200,64 +179,17 @@ public async Task Post_ReturnsCreated_WithHeader_Location_AndTypedBody()
 }
 ```
 
-### End-to-end example: FluentAssertions.Web.v8
+For `AwesomeAssertions.Web`, change only the using directive to `using AwesomeAssertions;`. The assertion statements are identical. `FluentAssertions.Web.v8` uses the same code and namespace as `FluentAssertions.Web`; it targets FluentAssertions >= 8.0.0.
 
-`FluentAssertions.Web.v8` is the same API as `FluentAssertions.Web`, built against the commercial FluentAssertions >= 8.0.0. The test is identical; only the package changes:
+### End-to-end assertion example: Shouldly.Web
 
-```csharp
-using System.Text;
-using FluentAssertions;
-
-[Fact]
-public async Task Post_ReturnsCreated_WithHeader_Location_AndTypedBody()
-{
-    // Arrange
-    var client = _factory.CreateClient();
-
-    // Act
-    var response = await client.PostAsync("/api/comments", new StringContent(
-    """
-    {
-      "author": "John",
-      "content": "Hey, you..."
-    }
-    """, Encoding.UTF8, "application/json"));
-
-    // Assert
-    response.Should().Be201Created()
-        .And.HaveHeader("X-Correlation-ID").And.Match("*-*")
-        .And.HaveLocation().And.Match("*/api/Comments/*")
-        .And.BeAs(new { Author = "John", Content = "Hey, you..." });
-}
-```
-
-### End-to-end example: Shouldly.Web
+Shouldly uses independent extension methods rather than a fluent `Should()`/`And` chain. Reuse the same fixture and Arrange/Act above; only the Assert block changes:
 
 ```csharp
-using System.Text;
-using Shouldly;
-
-[Fact]
-public async Task Post_ReturnsCreated_WithHeader_Location_AndTypedBody()
-{
-    // Arrange
-    var client = _factory.CreateClient();
-
-    // Act
-    var response = await client.PostAsync("/api/comments", new StringContent(
-    """
-    {
-      "author": "John",
-      "content": "Hey, you..."
-    }
-    """, Encoding.UTF8, "application/json"));
-
-    // Assert
-    response.ShouldBe201Created();
-    response.ShouldHaveHeaderMatching("X-Correlation-ID", "*-*");
-    response.ShouldHaveLocationMatching("*/api/Comments/*");
-    response.ShouldBeAs(new { Author = "John", Content = "Hey, you..." });
-}
+response.ShouldBe201Created();
+response.ShouldHaveHeaderMatching("X-Correlation-ID", "*-*");
+response.ShouldHaveLocationMatching("*/api/Comments/*");
+response.ShouldBeAs(new { Author = "John", Content = "Hey, you..." });
 ```
 
 ### Flavour differences
@@ -270,7 +202,7 @@ All four flavours support every assertion in this scenario, so no flavour needs 
 - **Shouldly.Web is a prerelease** until Shouldly 5.0.0 is stable, so install it with `dotnet add package Shouldly.Web --prerelease`.
 - The typed body assertion accepts any POCO or record, not only the anonymous type used here.
 
-A new assertion-framework integration follows the same layout: a `### End-to-end example: <package>` subsection with the shared Arrange/Act and its native `Assert` syntax.
+Document a new assertion-framework integration by reusing the shared scenario and showing only the framework-specific syntax and packaging differences. Add another complete copy of the Arrange/Act only when the integration requires a genuinely different setup.
 
 ## When a test fails, you see the whole conversation
 
@@ -1781,7 +1713,7 @@ A failure here looks exactly like the status code outputs shown above: the expec
 When FluentAssertions.Web was created, [FluentAssertions.Http](https://github.com/balanikas/FluentAssertions.Http) also existed at the time, solving the same problem when considering the asserting language.
 Besides the extra assertions added by FluentAssertions.Web, an important effort is put by this library on what happens when a test fails.
 
-A complete integration test is in [End-to-end example: FluentAssertions.Web](#end-to-end-example-fluentassertionsweb).
+A complete integration test is in [End-to-end example: FluentAssertions.Web](#end-to-end-example-fluentassertions-and-awesomeassertions).
 
 #### The HttpResponsesMessage assertions from FluentAssertions vs. FluentAssertions.Web
 
@@ -1795,19 +1727,19 @@ Starting 8.0.0, FA is not an FOSS anymore. **FluentAssertions.Web** will maintai
     - **FluentAssertions.Web** will continue to dependend on the FOSS versions
     - **FluentAssertions.Web.v8** will dependend on the Commercial versions
 
-A complete integration test is in [End-to-end example: FluentAssertions.Web.v8](#end-to-end-example-fluentassertionswebv8).
+A complete integration test is in [End-to-end example: FluentAssertions.Web.v8](#end-to-end-example-fluentassertions-and-awesomeassertions).
 
 ### AwesomeAssertions.Web
 
 AwesomeAssertions.Web is the AwesomeAssertions flavour of the same assertions. It exposes the identical `Should()`/`And` API as the FluentAssertions flavour, so all the examples and the [Full API](#full-api) above apply unchanged. It depends on AwesomeAssertions instead of FluentAssertions.
 
-A complete integration test is in [End-to-end example: AwesomeAssertions.Web](#end-to-end-example-awesomeassertionsweb).
+A complete integration test is in [End-to-end example: AwesomeAssertions.Web](#end-to-end-example-fluentassertions-and-awesomeassertions).
 
 ### Shouldly.Web
 
 Shouldly.Web is the Shouldly flavour, a community-maintained, unofficial extension that is **not endorsed by the Shouldly project**. It requires Shouldly >= 5.0.0-preview.2 and is itself prerelease until Shouldly 5.0.0 is stable.
 
-A complete integration test is in [End-to-end example: Shouldly.Web](#end-to-end-example-shouldlyweb).
+A complete integration test is in [End-to-end example: Shouldly.Web](#end-to-end-assertion-example-shouldlyweb).
 
 Instead of `response.Should().Be200Ok()`, Shouldly's `ShouldlyMethodsAttribute` lets the same assertions be called directly on the response, and each assertion returns `void` — there is no `Should()`/`And` chain, so every assertion is its own call (you can also pass a custom message as the first optional argument):
 
