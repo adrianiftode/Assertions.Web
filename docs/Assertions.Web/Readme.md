@@ -211,6 +211,8 @@ Both methods deserialize the response body with `AssertionsWebConfig.Serializer`
 | Assert raw wire text | `response.Should().MatchInContent(wildcard);` | `response.ShouldMatchInContent(wildcard);` |
 | Assert the response object itself | `response.Should().Satisfy(response => ...);` | `response.ShouldSatisfy(response => ...);` |
 
+`Satisfy` exists so custom assertions about the model or the response remain inside an HTTP assertion. When an inner condition fails, the library reports it together with the complete request/response conversation; manual deserialization followed by plain framework assertions does not provide that context. This applies to both model `Satisfy<T>()` and response-level `Satisfy(...)`.
+
 `BeAs<T>()` deserializes into `expectedModel.GetType()` and compares the complete object graph with the installed framework's equivalency engine; JSON properties that do not map to the expected model are not compared. The optional equivalency configuration is framework-specific and affects the result. Model `Satisfy<T>()` deserializes into `TModel` and runs ordinary framework assertions; it does not perform whole-object equivalency. Its optional `givenModelStructure` parameter is only a type-inference aid and its values are never used.
 
 A validation `ProblemDetails` response has standard members and generated extension data such as `traceId`. A custom DTO with a concrete `TraceId` property is clearest when the whole body is deterministic; otherwise model `ProblemDetails.Extensions` with `[JsonExtensionData]` and assert the value through `Satisfy<T>()`. With the default serializer, extension values are `JsonElement`; custom serializers may materialize them differently, so a typed DTO is usually easier for `BeAs<T>()` equivalency.

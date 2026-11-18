@@ -27,7 +27,9 @@ public static class SatisfyModelAssertionsExtensions
     /// JSON parsing failure before any inner assertion is evaluated. An unexpected exception thrown by the assertion is
     /// captured and reported with its exception text. The assertion can be a single assertion or a collection
     /// of assertions if the assertion action is expressed as a statement lambda. In the inferred overloads, the given model
-    /// structure only supplies the model type; its values are ignored.
+    /// structure only supplies the model type; its values are ignored. Failures are collected by this HTTP assertion and
+    /// reported with the complete request/response conversation; this is the main reason to prefer <c>Satisfy</c> over
+    /// manual deserialization followed by plain framework assertions.
     /// </remarks>
     /// <param name="because">
     /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
@@ -59,7 +61,9 @@ public static class SatisfyModelAssertionsExtensions
     /// JSON parsing failure before any inner assertion is evaluated. An unexpected exception thrown by the assertion is
     /// captured and reported with its exception text. The assertion can be a single assertion or a collection
     /// of assertions if the assertion action is expressed as a statement lambda. In the inferred overloads, the given model
-    /// structure only supplies the model type; its values are ignored.
+    /// structure only supplies the model type; its values are ignored. Failures are collected by this HTTP assertion and
+    /// reported with the complete request/response conversation; this is the main reason to prefer <c>Satisfy</c> over
+    /// manual deserialization followed by plain framework assertions.
     /// </remarks>
     /// <param name="assertion">
     /// An assertion or a collection of assertions regarding the given model.
@@ -95,7 +99,9 @@ public static class SatisfyModelAssertionsExtensions
     /// JSON parsing failure before any inner assertion is evaluated. An unexpected exception thrown by the assertion is
     /// captured and reported with its exception text. The assertion can be a single assertion or a collection
     /// of assertions if the assertion action is expressed as a statement lambda. In the inferred overloads, the given model
-    /// structure only supplies the model type; its values are ignored.
+    /// structure only supplies the model type; its values are ignored. Failures are collected by this HTTP assertion and
+    /// reported with the complete request/response conversation; this is the main reason to prefer <c>Satisfy</c> over
+    /// manual deserialization followed by plain framework assertions.
     /// </remarks>
     /// <param name="because">
     /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
@@ -127,7 +133,9 @@ public static class SatisfyModelAssertionsExtensions
     /// JSON parsing failure before any inner assertion is evaluated. An unexpected exception thrown by the assertion is
     /// captured and reported with its exception text. The assertion can be a single assertion or a collection
     /// of assertions if the assertion action is expressed as a statement lambda. In the inferred overloads, the given model
-    /// structure only supplies the model type; its values are ignored.
+    /// structure only supplies the model type; its values are ignored. Failures are collected by this HTTP assertion and
+    /// reported with the complete request/response conversation; this is the main reason to prefer <c>Satisfy</c> over
+    /// manual deserialization followed by plain framework assertions.
     /// </remarks>
     /// <param name="assertion">
     /// An assertion or a collection of assertions regarding the given model.

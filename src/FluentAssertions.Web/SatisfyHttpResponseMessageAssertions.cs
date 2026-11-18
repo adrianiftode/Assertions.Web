@@ -13,7 +13,10 @@ public partial class HttpResponseMessageAssertions
     /// An assertion about the HTTP response.
     /// </param>
     /// <remarks>
-    /// The assertion can be a single assertion or a collection of assertions if the assertion action is expressed as a statement lambda.
+    /// Use this for custom assertions about the response itself; no deserialization occurs. Failures are collected by
+    /// this HTTP assertion and reported with the complete request/response conversation, which is the main reason to
+    /// prefer <c>Satisfy</c> over plain assertions outside the library. The assertion can be a single assertion or a
+    /// collection of assertions if the assertion action is expressed as a statement lambda.
     /// </remarks>
     /// <param name="because">
     /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
@@ -63,7 +66,10 @@ public partial class HttpResponseMessageAssertions
     /// An assertion about the HTTP response.
     /// </param>
     /// <remarks>
-    /// The assertion can be a single assertion or a collection of assertions if the assertion action is expressed as a statement lambda.
+    /// Use this for custom assertions about the response itself; no deserialization occurs. Failures are collected by
+    /// this HTTP assertion and reported with the complete request/response conversation, which is the main reason to
+    /// prefer <c>Satisfy</c> over plain assertions outside the library. The assertion can be a single assertion or a
+    /// collection of assertions if the assertion action is expressed as a statement lambda.
     /// </remarks>
     /// <param name="because">
     /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
