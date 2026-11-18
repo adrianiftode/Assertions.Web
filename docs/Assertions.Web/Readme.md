@@ -200,6 +200,99 @@ A new chain is required when the next assertion only exists on a group the curre
 
 No return type was changed as part of this review. Returning a broader group would be a source and binary breaking change, and moving group-specific entry points onto the base type would weaken the preconditions that the current groups express. The FA 6/7 extensions can still reach `HaveLocation` and the validation methods directly from the initial `response.Should()`; always call `Be400BadRequest()` before validation assertions so the same test works unchanged in v8 and AwesomeAssertions.
 
+## Choosing between `BeAs<T>()` and `Satisfy<T>()`
+
+`Satisfy` is a general-purpose C# extension point: its delegate body can contain arbitrary C# code, not just assertion calls. It can inspect values, perform calculations, apply conditional logic, loop, call helpers, use any framework assertion, and use `await` in the async overloads. When code inside that body fails, the library reports it together with the complete request/response conversation. Preserving HTTP context is a library-wide capability, but it is especially valuable here: arbitrary test code stays inside the HTTP assertion. Manual deserialization followed by plain framework assertions loses that context.
+
+The [worked example](../../readme.md#real-test-logic-inside-satisfy) calculates a total, checks a field conditionally and validates a discount code in the same lambda; only the method name differs between FA/AWE and Shouldly.
+
+The narrower APIs are secondary guidance:
+
+| Goal | FluentAssertions / AwesomeAssertions | Shouldly |
+| --- | --- | --- |
+| Run arbitrary C# over the deserialized body | `response.Should().Satisfy<TModel>(model => ...);` | `response.ShouldSatisfy<TModel>(model => ...);` |
+| Run arbitrary C# over the response itself | `response.Should().Satisfy(response => ...);` | `response.ShouldSatisfy(response => ...);` |
+| Compare the complete expected body | `response.Should().BeAs(expectedModel);` | `response.ShouldBeAs(expectedModel);` |
+| Assert raw wire text | `response.Should().MatchInContent(wildcard);` | `response.ShouldMatchInContent(wildcard);` |
+
+`BeAs<T>()` deserializes into `expectedModel.GetType()` and compares the complete object graph with the installed framework's equivalency engine; JSON properties that do not map to the expected model are not compared. The optional equivalency configuration is framework-specific and affects the result. Model `Satisfy<T>()` deserializes into `TModel` and runs the callback; it does not perform whole-object equivalency. Its optional `givenModelStructure` parameter is only a type-inference aid and its values are never used.
+
+A validation `ProblemDetails` response has standard members and generated extension data such as `traceId`. A custom DTO with a concrete `TraceId` property is clearest when the whole body is deterministic; otherwise model `ProblemDetails.Extensions` with `[JsonExtensionData]` and assert the value through `Satisfy<T>()`. With the default serializer, extension values are `JsonElement`; custom serializers may materialize them differently, so a typed DTO is usually easier for `BeAs<T>()` equivalency.
+
+```csharp
+internal sealed class ExpectedProblemDetails
+{
+    public string? Type { get; set; }
+    public string? Title { get; set; }
+    public int? Status { get; set; }
+    public Dictionary<string, string[]>? Errors { get; set; }
+    public string? TraceId { get; set; }
+}
+
+response.Should().BeAs(new ExpectedProblemDetails
+{
+    Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+    Title = "One or more validation errors occurred.",
+    Status = 400,
+    Errors = new Dictionary<string, string[]>
+    {
+        ["Author"] = new[] { "The Author field is required." }
+    },
+    TraceId = "00-aae99e6ddbee1a15d42f336faae193e3-1972a9b2677febe5-00"
+});
+```
+
+The Shouldly spelling is `response.ShouldBeAs(expectedModel)`. When `traceId` is generated per request, exclude it from equivalency (`options.Excluding(p => p.TraceId)` in the fluent flavours, or `EquivalencyOptions.MembersToIgnore` in Shouldly) and check it separately.
+
+For a subset plus extension data, use `[JsonExtensionData]` and `Satisfy<T>()`:
+
+```csharp
+internal sealed class ProblemDetailsWithExtensions
+{
+    public int? Status { get; set; }
+    public Dictionary<string, string[]>? Errors { get; set; }
+
+    [JsonExtensionData]
+    public Dictionary<string, JsonElement>? Extensions { get; set; }
+}
+
+// FluentAssertions / AwesomeAssertions
+response.Should().Satisfy<ProblemDetailsWithExtensions>(problem =>
+{
+    problem.Status.Should().Be(400);
+    var errors = problem.Errors;
+    errors.Should().NotBeNull();
+    errors!.Should().ContainKey("Author");
+    var extensions = problem.Extensions;
+    extensions.Should().NotBeNull();
+    extensions!.Should().ContainKey("traceId");
+    extensions["traceId"].GetString().Should().StartWith("00-");
+});
+
+// Shouldly
+response.ShouldSatisfy<ProblemDetailsWithExtensions>(problem =>
+{
+    problem.Status.ShouldBe(400);
+    var errors = problem.Errors;
+    errors.ShouldNotBeNull();
+    errors.ShouldContainKey("Author");
+    var extensions = problem.Extensions;
+    extensions.ShouldNotBeNull();
+    extensions.ShouldContainKey("traceId");
+    extensions["traceId"].GetString().ShouldStartWith("00-");
+});
+```
+
+The failure boundary is identical across integrations:
+
+| Stage | Diagnostic |
+| --- | --- |
+| Deserialization fails | Both APIs report **“the JSON representation could not be parsed”** and include the serializer exception text (Shouldly uses its **“should be as”** layout). |
+| Equivalency/custom assertion fails | `BeAs<T>()` reports **“has differences”** with equivalency details; `Satisfy<T>()` reports inner failures under **“satisfy one or more model assertions”** (Shouldly: **“should satisfy all the conditions specified”** with numbered errors). |
+| A `Satisfy<T>()` condition throws unexpectedly | The exception text is captured in the assertion failure instead of escaping as an unrelated crash. |
+
+Every failure includes the complete request/response dump. See the root README's [full ProblemDetails examples](https://github.com/adrianiftode/Assertions.Web/blob/master/readme.md#choosing-between-beast-and-satisfyt) for nullable handling, volatile-value exclusion and multi-condition Shouldly assertions.
+
 ### The Shouldly style: no groups, no chain
 
 Shouldly.Web exposes the same assertions as extension methods on `HttpResponseMessage`. Every method returns `void`: there is no returned assertion object, no `.And`, and no transition between groups — each call is independent.

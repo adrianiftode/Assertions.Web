@@ -54,6 +54,14 @@ public partial class HttpResponseMessageAssertions
     /// <summary>
     /// Asserts that HTTP response content can be an equivalent representation of the expected model.
     /// </summary>
+    /// <remarks>
+    /// Use this assertion when the complete expected body is known. The response is deserialized into the runtime type
+    /// of <paramref name="expectedModel"/> and the full object graph is compared with the assertion framework's
+    /// equivalency engine. Use <c>Satisfy&lt;T&gt;()</c> for custom assertions over a deserialized model. A body that
+    /// cannot be deserialized is reported as a JSON parsing failure; differences found after successful deserialization
+    /// are reported as equivalency differences. Equivalency options are passed to the installed assertion framework,
+    /// so its configuration affects the comparison.
+    /// </remarks>
     /// <param name="expectedModel">
     /// The expected model.
     /// </param>
@@ -72,6 +80,14 @@ public partial class HttpResponseMessageAssertions
     /// <summary>
     /// Asserts that HTTP response content can be an equivalent representation of the expected model.
     /// </summary>
+    /// <remarks>
+    /// Use this assertion when the complete expected body is known. The response is deserialized into the runtime type
+    /// of <paramref name="expectedModel"/> and the full object graph is compared with the assertion framework's
+    /// equivalency engine. Use <c>Satisfy&lt;T&gt;()</c> for custom assertions over a deserialized model. A body that
+    /// cannot be deserialized is reported as a JSON parsing failure; differences found after successful deserialization
+    /// are reported as equivalency differences. Equivalency options are passed to the installed assertion framework,
+    /// so its configuration affects the comparison.
+    /// </remarks>
     /// <param name="expectedModel">
     /// The expected model.
     /// </param>
