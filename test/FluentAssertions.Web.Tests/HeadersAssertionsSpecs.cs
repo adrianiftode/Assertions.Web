@@ -885,6 +885,8 @@ public class HeadersAssertionsSpecs
         {
             Content = new StringContent(string.Empty)
         };
+        // .NET classifies Allow as a content header and rejects it on HttpResponseHeaders.
+        // GetHeaders() unions both collections, so this is the supported way to model it here.
         response.Content.Headers.TryAddWithoutValidation("Allow", values);
         return response;
     }

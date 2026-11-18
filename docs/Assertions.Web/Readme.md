@@ -50,7 +50,7 @@ response.ShouldMatchInContent("*\"author\"*");
 | `HaveHeader("Allow").And.Match("GET*")` | `ShouldHaveHeaderMatching("Allow", "GET*")` | **At least one** value matches the wildcard. |
 | `HaveHeader("Allow").And.BeEmpty()` | `ShouldHaveEmptyHeader("Allow")` | The header has no values. |
 
-A realistic `Allow` header shows why the distinction matters. When the header is added through the typed or validated content-header API, .NET exposes `Allow: GET, POST` as two values:
+A realistic `Allow` header shows why the distinction matters. When the header is added through the content-header API, .NET exposes `Allow: GET, POST` as two values:
 
 ```csharp
 response.Content.Headers.TryAddWithoutValidation("Allow", new[] { "GET", "POST" });
@@ -99,6 +99,8 @@ response.Should().HaveHeader("allow").And.BeValues(new[] { "GET", "POST" }); // 
 
 response.Should().HaveHeader("content-type").And.Match("application/json*"); // wildcard casing must match
 ```
+
+> .NET classifies `Allow` as a content header and rejects it on `HttpResponseHeaders`, even though HTTP defines it as response metadata. The shared lookup spans response and content headers, so the example above is the supported way to model it; the `Content-Type` assertion exercises the content-header path explicitly.
 
 Shouldly uses the same contract through `ShouldHaveHeaderWithValue`, `ShouldHaveHeaderWithValues` and `ShouldHaveHeaderMatching`; only the method names change.
 

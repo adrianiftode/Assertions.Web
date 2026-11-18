@@ -38,6 +38,27 @@ public class CaseSensitivitySpecs
     }
 
     [Fact]
+    public void Location_field_names_are_case_insensitive_through_the_public_location_assertions()
+    {
+        // Arrange
+        using var response = new HttpResponseMessage(HttpStatusCode.Created);
+        response.Headers.TryAddWithoutValidation("lOcAtIoN", "/Items/1");
+
+#if SH
+        // Act / Assert
+        response.ShouldHaveLocation();
+        response.ShouldHaveLocationWithValue("/ITEMS/1");
+        response.ShouldHaveLocationMatching("/Items/*");
+        response.ShouldHaveLocationWithValues(new[] { "/Items/1" });
+#else
+        // Act / Assert
+        response.Should().Be201Created().And.HaveLocation().And.BeValue("/ITEMS/1");
+        response.Should().Be201Created().And.HaveLocation().And.Match("/Items/*");
+        response.Should().Be201Created().And.HaveLocation().And.BeValues(new[] { "/Items/1" });
+#endif
+    }
+
+    [Fact]
     public void Single_header_values_ignore_case_for_compatibility()
     {
         // Arrange
@@ -177,6 +198,8 @@ public class CaseSensitivitySpecs
         {
             Content = new StringContent(string.Empty)
         };
+        // .NET classifies Allow as a content header and rejects it on HttpResponseHeaders.
+        // GetHeaders() unions both collections, so this is the supported way to model it here.
         response.Content.Headers.TryAddWithoutValidation("Allow", values);
         return response;
     }
