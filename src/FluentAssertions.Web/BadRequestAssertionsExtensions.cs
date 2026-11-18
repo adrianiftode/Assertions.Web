@@ -18,6 +18,10 @@ namespace FluentAssertions;
 /// be chained from <c>And</c>. <c>HaveLocation</c> is not reachable from this group; start a new
 /// <c>response.Should()</c> with a location-bearing status assertion to assert a location.
 /// </para>
+/// <para>
+/// Validation field names and the JSON <c>errors</c> property are matched case-insensitively, while wildcard error
+/// messages are case-sensitive text patterns.
+/// </para>
 /// </remarks>
 /// <seealso cref="LocationAssertions"/>
 [DebuggerNonUserCode]

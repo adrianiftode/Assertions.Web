@@ -57,7 +57,9 @@ public static class HttpResponseContentShouldlyExtensions
     /// of <paramref name="expectedModel"/> and the full object graph is compared with Shouldly's equivalency engine.
     /// Use <c>ShouldSatisfy&lt;T&gt;()</c> for custom assertions over a deserialized model. A body that cannot be
     /// deserialized uses the <c>should be as</c> failure layout; equivalency differences are reported separately.
-    /// <see cref="EquivalencyOptions"/> are passed to Shouldly, so its configuration affects the comparison.
+    /// <see cref="EquivalencyOptions"/> are passed to Shouldly, so its configuration affects the comparison. JSON
+    /// property-name matching follows the configured serializer, while string values inside the model use Shouldly's
+    /// equivalency defaults and are case-sensitive unless the options say otherwise.
     /// </remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="expectedModel">The expected model.</param>
@@ -76,7 +78,9 @@ public static class HttpResponseContentShouldlyExtensions
     /// of <paramref name="expectedModel"/> and the full object graph is compared with Shouldly's equivalency engine.
     /// Use <c>ShouldSatisfy&lt;T&gt;()</c> for custom assertions over a deserialized model. A body that cannot be
     /// deserialized uses the <c>should be as</c> failure layout; equivalency differences are reported separately.
-    /// <see cref="EquivalencyOptions"/> are passed to Shouldly, so its configuration affects the comparison.
+    /// <see cref="EquivalencyOptions"/> are passed to Shouldly, so its configuration affects the comparison. JSON
+    /// property-name matching follows the configured serializer, while string values inside the model use Shouldly's
+    /// equivalency defaults and are case-sensitive unless the options say otherwise.
     /// </remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="expectedModel">The expected model.</param>
@@ -95,6 +99,10 @@ public static class HttpResponseContentShouldlyExtensions
     /// Asserts that an HTTP response body matches a wildcard pattern, where <c>*</c> matches any
     /// run of characters and <c>?</c> matches exactly one.
     /// </summary>
+    /// <remarks>
+    /// The pattern is an anchored, case-sensitive and culture-invariant text match. Casing is not normalized by this
+    /// library; use <c>ShouldSatisfy</c> when case-insensitive matching is intended.
+    /// </remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="expectedWildcardText">The wildcard pattern with which the body is matched.</param>
     /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>

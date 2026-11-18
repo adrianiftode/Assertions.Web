@@ -254,7 +254,9 @@ Never `.Result` or bare `.GetAwaiter().GetResult()` — always through
 **[Established]**
 
 Header lookups are **case-insensitive** (`StringComparison.OrdinalIgnoreCase`) and span response **and content**
-headers (`GetHeaders()` unions both). Do not read `response.Headers` directly. **[Established]**
+headers (`GetHeaders()` unions both), including the multi-value `BeValues` paths. Do not read `response.Headers`
+directly. Header **values** follow the assertion-specific rules in the shared case-sensitivity map; do not normalize
+them globally. **[Established]**
 
 ---
 
