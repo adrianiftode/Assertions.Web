@@ -149,6 +149,10 @@ Non-negotiables **[Established]**:
 * Return `AndConstraint<T>`; `new AndConstraint<X>(this)` when staying on the same subject.
 * Full XML docs on every public member (`GenerateDocumentationFile=True`). Copy the `because`/`becauseArgs`
  boilerplate verbatim; wildcard parameters also carry the standard `* / ?` `<remarks>` block.
+  `CS1591` and `CS1573` are build errors in `src/Directory.Build.props`: every public member needs a
+  meaningful `<summary>` and every parameter a `<param>`. Fluent assertions also document the returned
+  `AndConstraint<T>` and what `.And` exposes next; `<remarks>` covers non-obvious behavior, when a new
+  `response.Should()` chain is needed, and framework-specific composition rules.
 
 **Argument validation is a throw, not an assertion failure** — `Guard.ThrowIfArgumentIsNull` /
 `ThrowIfArgumentIsNullOrEmpty` (`Internal/Guard.cs`), called *before* the first `Execute.Assertion`, with a
@@ -380,18 +384,21 @@ are the place to demonstrate a new assertion in realistic use:
 
 * Adding a public assertion = instance method **+** extension method **+** `[CustomAssertion]` **+** XML docs
 **+** specs, or `ApiAccessibilityTests` fails.
+* XML docs are part of the public API contract: changing an assertion's returned group, composition rule, or
+  framework-specific usage means updating its XML docs and the package READMEs/shared guide in the same change.
 * It must compile under all three symbol sets. Any FA-8-only or FA-6/7-only API needs an `#if FAV8` branch.
 * `netstandard2.0` for all `src/` projects (`src/Directory.Build.props`) — no newer BCL APIs.
  `HttpMessageFormatter` alone multi-targets `netstandard2.0;net8.0;net10.0`.
-* `Nullable=enable` everywhere, and `WarningsAsErrors=CS8600;CS8602;CS8603` — a nullable warning **breaks the
- build**. Assertion parameters are non-nullable (`string expectedHeader`) and guarded by `Guard`; `Subject!` is
- used after the null-guard step.
+* `Nullable=enable` everywhere, and `WarningsAsErrors` includes `CS8600;CS8602;CS8603;CS1591;CS1573` —
+ nullable and public XML documentation warnings **break the build**. Assertion parameters are non-nullable
+ (`string expectedHeader`) and guarded by `Guard`; `Subject!` is used after the null-guard step.
 * Internals are `internal` under an `Internal` namespace, exposed to tests via
  `[assembly: InternalsVisibleTo("FluentAssertions.Web.Tests")]` in `Properties/AssemblyInfo.cs`
  (`Properties/` is excluded from the link globs, so each flavour has its own).
-* Versioning: single `VersionPrefix` in `src/Directory.Build.props`, overridden in CI by
- `/p:Version=$(APPVEYOR_BUILD_VERSION)` for all packages at once. There is **no documented SemVer policy** and
- no `[Obsolete]` member in the repo — don't invent one. **[Unclear]**
+* Versioning: each packable project carries its own `<Version>`; `eng/ReleasePackages.props` defines which
+ paths and dependencies affect each package. There is deliberately no repo-wide `VersionPrefix` fallback and
+ CI does not pass `/p:Version` when building or packing. There is **no documented SemVer policy** and no
+ `[Obsolete]` member in the repo — don't invent one. **[Unclear]**
 
 ---
 
@@ -452,7 +459,7 @@ packable csproj. `HttpMessageFormatter` is the exception — a real, public pack
 
 ```powershell
 dotnet restore
-dotnet build FluentAssertions.Web.slnx -c Release # must be warning-clean; CS8600/2/3 are errors
+dotnet build FluentAssertions.Web.slnx -c Release # must be warning-clean; CS8600/2/3, CS1591 and CS1573 are errors
 dotnet test # runs ALL flavours × net10.0 + net11.0
 ```
 
@@ -462,6 +469,7 @@ Targeted runs while iterating:
 dotnet test test\FluentAssertions.Web.Tests
 dotnet test test\FluentAssertions.Web.Tests --filter "FullyQualifiedName~HeadersAssertionsSpecs"
 dotnet pack --include-symbols -c Release
+./build/Test-PackageDocumentation.ps1
 ```
 
 **Minimum verification before a commit:** `dotnet build` of the solution plus a **full** `dotnet test` from the
@@ -470,8 +478,9 @@ pass compiled as `FAV8` and as `FAV8;AAV`, and a flavour-specific compile error 
 shows up in `FluentAssertions.Web.v8.Tests` / `AwesomeAssertions.Web.Tests`. **[Established]**
 
 There is no formatting/lint step and no `global.json`. CI (`appveyor.yml`) additionally runs SonarCloud with
-coverlet OpenCover coverage; coverage collection is opt-in via `/p:CollectCoverage=true`. Packages are pushed to
-NuGet only on a tag matching `\d+\.\d+\.\d+`. A new packable project must be added to `appveyor.yml`
+coverlet OpenCover coverage; coverage collection is opt-in via `/p:CollectCoverage=true`. CI also runs
+`build/Test-PackageDocumentation.ps1` on every build (including PRs) to fail when a package is missing XML docs.
+Packages are pushed to NuGet only on a tag matching `\d+\.\d+\.\d+`. A new packable project must be added to `appveyor.yml`
 `artifacts` **and** `deploy`. **[Established]**
 
 ---

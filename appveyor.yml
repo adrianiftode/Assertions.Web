@@ -135,6 +135,13 @@ after_test:
           }
       }
 
+  # Enforce the shipped API documentation contract on every build, including PRs:
+  # each package must carry XML docs for every assembly it puts under lib/.
+  - ps: |
+      $ErrorActionPreference = "Stop"
+
+      & .\build\Test-PackageDocumentation.ps1 -Configuration $env:CONFIGURATION
+
   # Decide what this release publishes, then pack only that. Runs for every build
   # so a non release build still produces artifacts; the deploy section below is
   # what restricts publishing to tags.

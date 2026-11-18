@@ -26,7 +26,9 @@
 
     Directory.Packages.props is in every WatchFiles set on purpose: bumping
     FluentAssertions, AwesomeAssertions, Newtonsoft.Json or System.Text.Json
-    changes what ships inside every package.
+    changes what ships inside every package. src/Directory.Build.props is there
+    for the same reason: it sets the compiler and packaging defaults of every
+    src/ project.
 
     IMPORTANT - bumping a dependency's version:
     NuGet derives the dependency range in a package's nuspec from the referenced
@@ -42,37 +44,37 @@
     <ReleasePackage Include="HttpMessageFormatter"
                     ProjectPath="src/HttpMessageFormatter/HttpMessageFormatter.csproj"
                     WatchDirectories="src/HttpMessageFormatter"
-                    WatchFiles="Directory.Packages.props"
+                    WatchFiles="Directory.Packages.props;src/Directory.Build.props"
                     DependsOn="" />
 
     <ReleasePackage Include="FluentAssertions.Web"
                     ProjectPath="src/FluentAssertions.Web/FluentAssertions.Web.csproj"
                     WatchDirectories="src/FluentAssertions.Web;src/Assertions.Web.Shared;src/Assertions.Web;src/FluentAssertions.HttpMessageFormatter"
-                    WatchFiles="Directory.Packages.props"
+                    WatchFiles="Directory.Packages.props;src/Directory.Build.props"
                     DependsOn="HttpMessageFormatter" />
 
     <ReleasePackage Include="FluentAssertions.Web.v8"
                     ProjectPath="src/FluentAssertions.Web.v8/FluentAssertions.Web.v8.csproj"
                     WatchDirectories="src/FluentAssertions.Web.v8;src/FluentAssertions.Web;src/Assertions.Web.Shared;src/Assertions.Web;src/FluentAssertions.HttpMessageFormatter"
-                    WatchFiles="Directory.Packages.props"
+                    WatchFiles="Directory.Packages.props;src/Directory.Build.props"
                     DependsOn="HttpMessageFormatter" />
 
     <ReleasePackage Include="AwesomeAssertions.Web"
                     ProjectPath="src/AwesomeAssertions.Web/AwesomeAssertions.Web.csproj"
-                    WatchDirectories="src/AwesomeAssertions.Web;src/Assertions.Web.Shared;src/Assertions.Web;src/AwesomeAssertions.HttpMessageFormatter;src/FluentAssertions.Web"
-                    WatchFiles="Directory.Packages.props"
+                    WatchDirectories="src/AwesomeAssertions.Web;src/Assertions.Web.Shared;src/Assertions.Web;src/AwesomeAssertions.HttpMessageFormatter;src/FluentAssertions.HttpMessageFormatter;src/FluentAssertions.Web"
+                    WatchFiles="Directory.Packages.props;src/Directory.Build.props"
                     DependsOn="HttpMessageFormatter" />
 
     <ReleasePackage Include="Assertions.Web.Serializers.NewtonsoftJson"
                     ProjectPath="src/Assertions.Web.Serializers.NewtonsoftJson/Assertions.Web.Serializers.NewtonsoftJson.csproj"
                     WatchDirectories="src/Assertions.Web.Serializers.NewtonsoftJson;src/Assertions.Web"
-                    WatchFiles="Directory.Packages.props"
+                    WatchFiles="Directory.Packages.props;src/Directory.Build.props"
                     DependsOn="" />
 
     <ReleasePackage Include="Shouldly.Web"
                     ProjectPath="src/Shouldly.Web/Shouldly.Web.csproj"
                     WatchDirectories="src/Shouldly.Web;src/Assertions.Web;src/Assertions.Web.Shared"
-                    WatchFiles="Directory.Packages.props"
+                    WatchFiles="Directory.Packages.props;src/Directory.Build.props"
                     DependsOn="HttpMessageFormatter" />
   </ItemGroup>
 
