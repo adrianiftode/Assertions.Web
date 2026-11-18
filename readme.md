@@ -206,8 +206,6 @@ All four flavours support every assertion in this scenario, so no flavour needs 
 - **Shouldly.Web is a prerelease** until Shouldly 5.0.0 is stable, so install it with `dotnet add package Shouldly.Web --prerelease`.
 - The typed body assertion accepts any POCO or record, not only the anonymous type used here.
 
-Document a new assertion-framework integration by reusing the shared scenario and showing only the framework-specific syntax and packaging differences. Add another complete copy of the Arrange/Act only when the integration requires a genuinely different setup.
-
 ## When a test fails, you see the whole conversation
 
 Every failure message produced by this library is followed by **the complete HTTP response _and_ the originating HTTP request** — status line, headers and both bodies, the same way an HTTP interceptor like Fiddler would render them. There is no need to attach a debugger or to watch `response.Content.ReadAsStringAsync().Result` anymore: the reason for the failure and the payload that caused it are already in the test output.
