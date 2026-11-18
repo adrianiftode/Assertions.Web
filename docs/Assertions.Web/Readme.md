@@ -204,7 +204,7 @@ No return type was changed as part of this review. Returning a broader group wou
 
 `Satisfy` is a general-purpose C# extension point: its delegate body can contain arbitrary C# code, not just assertion calls. It can inspect values, perform calculations, apply conditional logic, loop, call helpers, use any framework assertion, and use `await` in the async overloads. When code inside that body fails, the library reports it together with the complete request/response conversation. Preserving HTTP context is a library-wide capability, but it is especially valuable here: arbitrary test code stays inside the HTTP assertion. Manual deserialization followed by plain framework assertions loses that context.
 
-The [worked example](../../readme.md#real-test-logic-inside-satisfy) calculates a total, checks a field conditionally and calls a domain helper; only the call differs between FA/AWE and Shouldly.
+The [worked example](../../readme.md#real-test-logic-inside-satisfy) calculates a total, checks a field conditionally and validates a discount code in the same lambda; only the method name differs between FA/AWE and Shouldly.
 
 The narrower APIs are secondary guidance:
 

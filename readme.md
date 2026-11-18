@@ -445,7 +445,7 @@ The narrower APIs are secondary guidance:
 
 #### Real test logic inside `Satisfy`
 
-The following callback calculates a total, conditionally checks a field, and calls a domain-specific helper. None of that is special assertion syntax, but a failure still carries the HTTP conversation:
+The following callback calculates a total, conditionally checks a field, and validates a discount code in the same lambda. None of that is special assertion syntax, but a failure still carries the HTTP conversation:
 
 ```csharp
 internal sealed class CartResponse
@@ -462,15 +462,6 @@ internal sealed class CartItem
     public int Quantity { get; set; }
 }
 
-private static void AssertDiscountCode(string? code)
-{
-    if (string.IsNullOrWhiteSpace(code) || code.Length != 8)
-    {
-        throw new InvalidOperationException("A discounted cart must have an eight-character discount code.");
-    }
-}
-
-// FluentAssertions / AwesomeAssertions
 response.Should().Satisfy<CartResponse>(cart =>
 {
     var calculatedTotal = cart.Items.Sum(item => item.Price * item.Quantity);
@@ -481,27 +472,16 @@ response.Should().Satisfy<CartResponse>(cart =>
 
     if (string.Equals(cart.Status, "Discounted", StringComparison.OrdinalIgnoreCase))
     {
-        AssertDiscountCode(cart.DiscountCode);
-    }
-});
-
-// Shouldly
-response.ShouldSatisfy<CartResponse>(cart =>
-{
-    var calculatedTotal = cart.Items.Sum(item => item.Price * item.Quantity);
-    if (cart.Total != calculatedTotal)
-    {
-        throw new InvalidOperationException($"The total was {cart.Total}, but the items add up to {calculatedTotal}.");
-    }
-
-    if (string.Equals(cart.Status, "Discounted", StringComparison.OrdinalIgnoreCase))
-    {
-        AssertDiscountCode(cart.DiscountCode);
+        var discountCode = cart.DiscountCode;
+        if (string.IsNullOrWhiteSpace(discountCode) || discountCode.Length != 8)
+        {
+            throw new InvalidOperationException("A discounted cart must have an eight-character discount code.");
+        }
     }
 });
 ```
 
-`Satisfy` on the response itself follows the same rule with `HttpResponseMessage` as the callback argument; it does not deserialize the body. The logic is still ordinary C# and its failures still retain the HTTP conversation.
+Shouldly uses the same lambda with `response.ShouldSatisfy<CartResponse>(...)`; only the method name changes. `Satisfy` on the response itself follows the same rule with `HttpResponseMessage` as the callback argument; it does not deserialize the body. The logic is still ordinary C# and its failures still retain the HTTP conversation.
 
 The optional configuration passed to `BeAs<T>()` is handed to the installed assertion framework's equivalency engine. Framework defaults and configuration — member selection, strictness, collection ordering, and similar rules — therefore affect the result. The lambda shape is the same in FA 6/7, FA v8 and AwesomeAssertions; Shouldly takes an `EquivalencyOptions` instance.
 

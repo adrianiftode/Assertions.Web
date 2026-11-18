@@ -212,7 +212,11 @@ public class DeserializationAssertionPatternsSpecs
 
             if (string.Equals(cart.Status, "Discounted", StringComparison.OrdinalIgnoreCase))
             {
-                AssertDiscountCode(cart.DiscountCode);
+                var discountCode = cart.DiscountCode;
+                if (string.IsNullOrWhiteSpace(discountCode) || discountCode.Length != 8)
+                {
+                    throw new InvalidOperationException("A discounted cart must have an eight-character discount code.");
+                }
             }
         });
 
@@ -235,7 +239,11 @@ public class DeserializationAssertionPatternsSpecs
 
             if (string.Equals(cart.Status, "Discounted", StringComparison.OrdinalIgnoreCase))
             {
-                AssertDiscountCode(cart.DiscountCode);
+                var discountCode = cart.DiscountCode;
+                if (string.IsNullOrWhiteSpace(discountCode) || discountCode.Length != 8)
+                {
+                    throw new InvalidOperationException("A discounted cart must have an eight-character discount code.");
+                }
             }
         });
 
@@ -243,14 +251,6 @@ public class DeserializationAssertionPatternsSpecs
         act.Should().Throw<XunitException>()
             .WithMessage("*satisfy one or more model assertions*A discounted cart must have an eight-character discount code.*The HTTP response was:*SHORT*");
 #endif
-    }
-
-    private static void AssertDiscountCode(string? code)
-    {
-        if (string.IsNullOrWhiteSpace(code) || code.Length != 8)
-        {
-            throw new InvalidOperationException("A discounted cart must have an eight-character discount code.");
-        }
     }
 
     private static HttpResponseMessage CartHttpResponse() =>
