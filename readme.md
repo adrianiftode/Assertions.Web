@@ -44,6 +44,61 @@ For a complete, copy-pasteable integration test that combines the status code, a
 
 For the composition rules — the general entry point, the specialized assertion groups, the type each assertion returns and what `.And` exposes next — see [How the fluent API is composed](docs/Assertions.Web/Readme.md#how-the-fluent-api-is-composed).
 
+## Prompt for AI agents and rapid test authoring
+
+Use this prompt when asking an agent to add, migrate or extend HTTP response tests with this library. It restates the version-sensitive rules that cannot be inferred reliably from method names alone.
+
+```text
+You are adding or updating HTTP integration tests for <endpoint under test> in <project or repository>. Use the assertion-framework integration already present in the test project. Treat the response as an HTTP conversation: status, headers, Location, body and failure diagnostics.
+
+0. Before editing
+- Read the test project file, central package file (Directory.Packages.props if present), and one or two existing integration tests. Identify the assertion framework, its version, test framework, namespaces, naming conventions and the full-suite command.
+- Copy the using directives from an existing test that uses the same integration. Do not guess namespaces.
+- Use exactly one HTTP assertion flavour. The FluentAssertions and AwesomeAssertions flavours both define Should() for HttpResponseMessage, so installing more than one creates ambiguous calls. If no integration exists, choose the package matching the assertion framework the tests already use. Use published NuGet packages only, never a project reference to library source.
+- Keep the response disposable (using var response = await ...) and assert while it is still readable.
+
+1. Flavour rules
+- FluentAssertions < 8.0.0: install FluentAssertions.Web.
+- FluentAssertions >= 8.0.0 (commercial): install FluentAssertions.Web.v8. Should() and the assertion classes live in the FluentAssertions namespace for this flavour.
+- AwesomeAssertions: install AwesomeAssertions.Web. Should() and core assertions come from AwesomeAssertions; the assertion classes live in AwesomeAssertions.Web.
+- Shouldly >= 5.0.0-preview.2: install Shouldly.Web --prerelease and use the Shouldly namespace. Its calls are flat void extension methods: no Should(), no .And and no group transitions. Each call is an independent statement.
+- There is no standalone Assertions.Web NuGet package. Assertions.Web is the shared configuration contract packed into every assertion package, not the normal test entry point.
+
+2. Discover the installed API
+- Read the installed package Readme.md and XML documentation from the NuGet global packages folder (%USERPROFILE%\.nuget\packages on Windows, ~/.nuget/packages elsewhere) before guessing names or parameter order. Version-specific details matter more than web search results.
+- Confirm exact signatures for status, header, Location, body and error assertions, including wildcard syntax and return types.
+
+3. Fluent chains (FluentAssertions / AwesomeAssertions)
+- Start with response.Should(). Assert the exact status with a named method such as Be200Ok(), Be201Created(), Be400BadRequest(), Be404NotFound() or Be415UnsupportedMediaType(). Use a family assertion such as Be2XXSuccessful() only when the exact code is intentionally not part of the contract.
+- Return types control chaining. .And exposes the group returned by the previous assertion, not a uniform menu. Specialized groups inherit general methods, but group-only methods are not everywhere. If a call does not compile, do not invent an API: call the entry assertion that returns the needed group or start a new response.Should() chain.
+- Be201Created() returns LocationAssertions, but it does not assert that Location exists. Write Be201Created().And.HaveLocation().And.Match("*/api/..."). HaveLocation() is available on location-bearing status groups and, in FA 6/7, as an extension from the initial chain. It is not reachable after Be400BadRequest() or from a header group. Use wildcards instead of expecting a dedicated ends-with assertion.
+- In FA v8 and AwesomeAssertions, call Be400BadRequest() before HaveError(...), OnlyHaveError(...), NotHaveError(...) or HaveErrorMessage(...). FA 6/7 also exposes these as extensions from the initial chain, but status-first is clearer and portable. Keep validation assertions immediately after the status. Field names are framework-emitted names, so use wildcards for volatile messages. HaveErrorMessage checks error messages, not necessarily ProblemDetails.title.
+- HaveHeader(name) asserts presence and binds the chain to that header. Use BeValue when the header has exactly one complete value, BeValues when the complete value collection is expected, and Match(wildcard) when at least one value should match. Assertions never split comma-containing values. For Allow: GET, POST exposed as two values, use BeValues(new[] { "GET", "POST" }); if .NET exposes one raw GET, POST value, use BeValue("GET, POST"). Current BeValues header-name lookup is case-sensitive, so use the exact casing from the response.
+- There is no Content-Type helper: use HaveHeader("Content-Type").And.Match("application/json*"). Wildcard matching is anchored and case-sensitive, so include the trailing *.
+- Use BeAs(model) for a whole equivalent JSON body, Satisfy<T>(...) for selected model assertions, and MatchInContent(...) for deliberate wire-text checks. Use ordinary framework assertions only inside Satisfy<T> or for non-HTTP values.
+- After header work, start a fresh response.Should() chain before content checks. This is essential for BeEmpty(): HeadersAssertions.BeEmpty() checks the selected header's values, while response.Should().BeEmpty() checks the body. General methods such as BeAs and Satisfy are inherited, so a fresh chain is a clarity guard there, not always a compiler requirement.
+
+4. Shouldly style
+- Translate fluent calls to standalone calls: ShouldBe201Created(), ShouldHaveLocation(), ShouldHaveLocationMatching(...), ShouldHaveHeader(...), ShouldHaveHeaderWithValue(...), ShouldHaveHeaderWithValues(...), ShouldHaveHeaderMatching(...), ShouldBeAs(...), ShouldSatisfy<T>(...), ShouldHaveError(...), ShouldNotHaveLocation(), ShouldMatchInContent(...) and ShouldBeEmpty().
+- Never write .And or chain one HTTP assertion into another. Assert the status separately before validation, header or body checks. When several independent conditions are checked through ShouldSatisfy, prefer a collection of conditions so every failure is reported.
+
+5. Common mistakes to avoid
+- Do not install multiple flavours or reference library source.
+- Do not assume a missing JSON property produces a validation error. Probe the API: explicit null, malformed JSON or an unsupported media type may be what actually yields 400 or 415.
+- Do not assert exact framework-generated messages, volatile traceIds or absolute test-host URLs when a wildcard path is enough.
+- Do not replace library HTTP assertions with raw status/header/content reads when an equivalent exists.
+- Do not mutate global serializer or response formatter settings in a normal test.
+- Do not weaken an existing assertion to make a migration easier.
+
+6. Verification and report
+- Run the complete suite with the project's command, normally dotnet test --nologo from the repository root. Do not claim success unless the command exits successfully.
+- If compilation fails, inspect the current assertion group and the installed XML docs; fix the transition rather than changing packages. If an assertion fails, read the complete request/response dump.
+- Optionally mutate an expected status, header, count or property once to prove the new assertion can fail, then restore it.
+- Report the exact package ID/version chosen or reused, files changed, endpoint scenarios asserted, exact assertion calls, any limitations encountered, and the exact command with Passed, Failed, Skipped and Total counts.
+```
+
+The benchmark sessions that produced the best results failed most often on discoverability rather than library behaviour: selecting the wrong package, misunderstanding which group `.And` exposed, reaching `HaveLocation()` from the wrong chain, and treating a multi-value header as one comma-separated value. This prompt turns those findings into a pre-flight checklist and requires evidence-based verification instead of an unsupported "tests passed" claim.
+
 ## Quick starts
 
 ### Quick start: FluentAssertions.Web
