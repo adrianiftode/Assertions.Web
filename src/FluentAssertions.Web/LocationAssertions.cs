@@ -17,7 +17,9 @@ namespace FluentAssertions.Web;
 /// <para>
 /// <see cref="HaveLocation"/> checks that the header exists and returns <see cref="HeadersAssertions"/>, so the
 /// header-value assertions can follow. The inherited header assertions are also available directly from <c>And</c>
-/// because this group derives from <see cref="HeadersAssertions"/>.
+/// because this group derives from <see cref="HeadersAssertions"/>. After that transition this group's own
+/// <see cref="HaveLocation"/> is no longer available; start a new chain with a location-bearing status if it is
+/// needed again.
 /// </para>
 /// <para>
 /// A chain that is currently on <see cref="BadRequestAssertions"/> cannot reach this group. To use

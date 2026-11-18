@@ -35,10 +35,15 @@ namespace FluentAssertions.Web;
 /// </para>
 /// <para>
 /// The specialized groups derive from this type, so general assertions remain available from their <c>And</c>
-/// property. Start a new <c>response.Should()</c> call when the current chain cannot reach the group you need.
-/// For example, <c>HaveLocation()</c> only exists on <see cref="LocationAssertions"/>, so it is not available from
-/// a <see cref="BadRequestAssertions"/> chain; assert a location-bearing status first in a new chain. The same
-/// applies when an assertion needs the whole <see cref="HttpResponseMessage"/> rather than the current group.
+/// property. A specialized group can also declare a method with the same name as a general one; that method wins.
+/// For example, <c>HeadersAssertions.BeEmpty()</c> checks the selected header's values, not the response content.
+/// </para>
+/// <para>
+/// Start a new <c>response.Should()</c> call when the current chain cannot reach the group you need. For example,
+/// <c>HaveLocation()</c> only exists on <see cref="LocationAssertions"/>, so it is not available from a
+/// <see cref="BadRequestAssertions"/> chain or after <see cref="HaveHeader"/> has moved the chain to
+/// <see cref="HeadersAssertions"/>; assert a location-bearing status first in a new chain. The same applies after
+/// <see cref="LocationAssertions.HaveLocation"/> returns <see cref="HeadersAssertions"/>.
 /// </para>
 /// <para>
 /// The <c>And</c> property and the fluid group transitions are AwesomeAssertions and FluentAssertions conventions.
