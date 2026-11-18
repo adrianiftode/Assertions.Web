@@ -815,5 +815,77 @@ public class HeadersAssertionsSpecs
             .WithMessage("*empty*Use And.BeEmpty to test if the HTTP header has no values.*");
 #endif
     }
+
+    [Fact]
+    public void When_asserting_an_allow_header_with_two_values_to_have_them_in_any_order_it_should_succeed()
+    {
+        // Arrange. .NET exposes these as two separate values, not one comma-separated string.
+        using var subject = AllowResponse("POST", "GET");
+
+        // Act
+#if SH
+        Action act = () => subject.ShouldHaveHeaderWithValues("Allow", new[] { "GET", "POST" });
+
+        // Assert
+        act.ShouldNotThrow();
+#else
+        Action act = () => subject.Should().HaveHeader("Allow").And.BeValues(new[] { "GET", "POST" });
+
+        // Assert
+        act.Should().NotThrow();
+#endif
+    }
+
+    [Fact]
+    public void When_a_header_is_exposed_as_one_comma_separated_value_then_no_splitting_should_occur()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage();
+        subject.Headers.TryAddWithoutValidation("X-Raw-Allow", "GET, POST");
+
+        // Act
+#if SH
+        Action singleValueAct = () => subject.ShouldHaveHeaderWithValue("X-Raw-Allow", "GET, POST");
+        Action multipleValuesAct = () => subject.ShouldHaveHeaderWithValues("X-Raw-Allow", new[] { "GET", "POST" });
+
+        // Assert
+        singleValueAct.ShouldNotThrow();
+        multipleValuesAct.ShouldFailWith("subject.Headers[\"X-Raw-Allow\"]", "should be", "[\"GET\", \"POST\"]", "[\"GET, POST\"]");
+#else
+        Action singleValueAct = () => subject.Should().HaveHeader("X-Raw-Allow").And.BeValue("GET, POST");
+        Action multipleValuesAct = () => subject.Should().HaveHeader("X-Raw-Allow").And.BeValues(new[] { "GET", "POST" });
+
+        // Assert
+        singleValueAct.Should().NotThrow();
+        multipleValuesAct.Should().Throw<XunitException>()
+            .WithMessage("*X-Raw-Allow*having values*GET*POST*differences*");
+#endif
+    }
+
+#if !SH
+    [Fact]
+    public void When_a_location_group_has_no_location_header_then_be_value_should_fail_with_an_assertion_not_a_null_reference()
+    {
+        // Arrange. Be201Created returns LocationAssertions without asserting the header is present.
+        using var subject = new HttpResponseMessage(HttpStatusCode.Created);
+
+        // Act
+        Action act = () => subject.Should().Be201Created().And.BeValue("http://localhost/api/comments/1");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("*Location*HTTP header*more or no values*");
+    }
+#endif
     #endregion
+
+    private static HttpResponseMessage AllowResponse(params string[] values)
+    {
+        var response = new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(string.Empty)
+        };
+        response.Content.Headers.TryAddWithoutValidation("Allow", values);
+        return response;
+    }
 }
