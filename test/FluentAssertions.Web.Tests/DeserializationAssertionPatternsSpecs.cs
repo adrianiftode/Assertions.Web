@@ -26,6 +26,20 @@ public class DeserializationAssertionPatternsSpecs
         public Dictionary<string, JsonElement>? Extensions { get; set; }
     }
 
+    private sealed class CartResponse
+    {
+        public string? Status { get; set; }
+        public decimal Total { get; set; }
+        public string? DiscountCode { get; set; }
+        public List<CartItem> Items { get; set; } = new();
+    }
+
+    private sealed class CartItem
+    {
+        public decimal Price { get; set; }
+        public int Quantity { get; set; }
+    }
+
     [Fact]
     public void When_be_as_asserts_a_problem_details_model_then_the_complete_expected_graph_is_compared()
     {
@@ -179,6 +193,70 @@ public class DeserializationAssertionPatternsSpecs
             .WithMessage("*satisfy one or more model assertions*Status*");
 #endif
     }
+
+    [Fact]
+    public void When_satisfy_runs_real_test_logic_then_its_failure_keeps_the_http_conversation()
+    {
+        // Arrange
+        using var response = CartHttpResponse();
+
+#if SH
+        // Act
+        Action act = () => response.ShouldSatisfy<CartResponse>(CheckCart);
+
+        // Assert
+        act.ShouldFailWith("response.Content",
+            "should satisfy all the conditions specified, but does not.",
+            "Error 1",
+            "A discounted cart must have an eight-character discount code.",
+            "The HTTP response was:",
+            "SHORT");
+#else
+        // Act
+        Action act = () => response.Should().Satisfy<CartResponse>(CheckCart);
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("*satisfy one or more model assertions*A discounted cart must have an eight-character discount code.*The HTTP response was:*SHORT*");
+#endif
+    }
+
+    private static void CheckCart(CartResponse cart)
+    {
+        var calculatedTotal = cart.Items.Sum(item => item.Price * item.Quantity);
+        if (cart.Total != calculatedTotal)
+        {
+            throw new InvalidOperationException($"The total was {cart.Total}, but the items add up to {calculatedTotal}.");
+        }
+
+        if (string.Equals(cart.Status, "Discounted", StringComparison.OrdinalIgnoreCase))
+        {
+            AssertDiscountCode(cart.DiscountCode);
+        }
+    }
+
+    private static void AssertDiscountCode(string? code)
+    {
+        if (string.IsNullOrWhiteSpace(code) || code.Length != 8)
+        {
+            throw new InvalidOperationException("A discounted cart must have an eight-character discount code.");
+        }
+    }
+
+    private static HttpResponseMessage CartHttpResponse() =>
+        new(HttpStatusCode.OK)
+        {
+            Content = new StringContent(/*lang=json,strict*/ """
+            {
+              "status": "Discounted",
+              "total": 18.00,
+              "discountCode": "SHORT",
+              "items": [
+                { "price": 9.00, "quantity": 2 }
+              ]
+            }
+            """, Encoding.UTF8, "application/json")
+        };
 
     private static HttpResponseMessage ProblemDetailsResponse() =>
         new(HttpStatusCode.BadRequest)

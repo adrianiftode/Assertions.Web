@@ -75,7 +75,7 @@ You are adding or updating HTTP integration tests for <endpoint under test> in <
 - In FA v8 and AwesomeAssertions, call Be400BadRequest() before HaveError(...), OnlyHaveError(...), NotHaveError(...) or HaveErrorMessage(...). FA 6/7 also exposes these as extensions from the initial chain, but status-first is clearer and portable. Keep validation assertions immediately after the status. Field names are framework-emitted names, so use wildcards for volatile messages. HaveErrorMessage checks error messages, not necessarily ProblemDetails.title.
 - HaveHeader(name) asserts presence and binds the chain to that header. Use BeValue when the header has exactly one complete value, BeValues when the complete value collection is expected, and Match(wildcard) when at least one value should match. Assertions never split comma-containing values. For Allow: GET, POST exposed as two values, use BeValues(new[] { "GET", "POST" }); if .NET exposes one raw GET, POST value, use BeValue("GET, POST"). Current BeValues header-name lookup is case-sensitive, so use the exact casing from the response.
 - There is no Content-Type helper: use HaveHeader("Content-Type").And.Match("application/json*"). Wildcard matching is anchored and case-sensitive, so include the trailing *.
-- Use BeAs(model) when the complete expected object graph is known: it deserializes into expectedModel.GetType() and compares the whole model. Use Satisfy<T>(...) when only selected fields, custom rules or volatile values matter: it deserializes into T and runs ordinary framework assertions. Treat the Satisfy body as arbitrary C#: branch, loop, call helpers and use any framework assertion there. A key reason to use Satisfy<T>(...) or Satisfy(...) is that failing inner checks are reported by the library together with the complete request/response conversation; plain assertions after manual deserialization are not. Use MatchInContent(...) for deliberate wire-text checks, and plain framework assertions only inside Satisfy<T> or for non-HTTP values. Satisfy(...) on the response itself does not deserialize the body.
+- Treat Satisfy<T>(...) and Satisfy(...) as arbitrary C# extension points over a deserialized model or the response itself: inspect values, perform calculations, branch, loop, call helpers, use any framework assertion, and await in the async overloads. They are not limited to assertion chaining. When code inside either callback fails, the library reports the failure with the complete request/response conversation. Preserving HTTP context is a library-wide capability, but it is especially important here because otherwise arbitrary test code remains inside that context. Use BeAs(model) only when the complete expected object graph is known: it deserializes into expectedModel.GetType() and compares the whole model. Use MatchInContent(...) for deliberate wire-text checks, and plain framework assertions only inside Satisfy<T> or for non-HTTP values. Satisfy(...) on the response itself does not deserialize the body.
 - After header work, start a fresh response.Should() chain before content checks. This is essential for BeEmpty(): HeadersAssertions.BeEmpty() checks the selected header's values, while response.Should().BeEmpty() checks the body. General methods such as BeAs and Satisfy are inherited, so a fresh chain is a clarity guard there, not always a compiler requirement.
 
 4. Shouldly style
@@ -432,16 +432,66 @@ For the Shouldly flavour this is the same set of assertions, written Shouldly-st
 
 ### Choosing between `BeAs<T>()` and `Satisfy<T>()`
 
-Both methods deserialize the response body with the configured serializer, but they answer different questions:
+`Satisfy` is deliberately an escape hatch: its delegate body can contain arbitrary C# code, not just assertion calls. It is a general-purpose extension point, not an assertion DSL. It can inspect values, calculate results, branch, loop, call helper methods, use any framework assertion, and use `await` in the async overloads. When something inside that body fails, Assertions.Web reports it together with the complete request/response conversation. If the same logic were run after manually deserializing the response and using ordinary assertions, that HTTP context would be lost. Preserving the conversation is a library-wide capability, but it is especially valuable here because `Satisfy` keeps otherwise arbitrary test code inside that context.
+
+The narrower APIs are secondary guidance:
 
 | Call | Use when | What happens |
 | --- | --- | --- |
+| `Satisfy<TModel>(model => ...)` | test logic needs arbitrary C# over a deserialized model | The body is deserialized into `TModel` and the callback runs. No whole-object equivalency is performed. |
+| `Satisfy(...)` on `HttpResponseMessage` | test logic needs arbitrary C# over the response itself | No deserialization occurs. |
 | `BeAs(expectedModel)` | the complete expected body is known | The body is deserialized into `expectedModel.GetType()` and the whole object graph is compared with the framework's equivalency engine. JSON properties that do not map to the expected model are not compared. |
-| `Satisfy<TModel>(model => ...)` | only selected fields, custom rules or volatile values matter | The body is deserialized into `TModel` and ordinary framework assertions are run against it. No whole-object equivalency is performed. |
 | `MatchInContent(wildcard)` | the raw wire text matters | The body is matched as text without deserialization. |
-| `Satisfy(...)` on `HttpResponseMessage` | custom assertions concern the response itself | No deserialization occurs. |
 
-`Satisfy` is deliberately an escape hatch: the delegate body is ordinary C#. Branch, loop, call helpers, compute values, use any framework assertion, and use `await` in the async overloads. When something inside that body fails, the library turns it into an HTTP assertion failure and keeps the complete request/response conversation. Without `Satisfy`, the same custom code would have to deserialize the response manually, and its local failure would lose that HTTP context. This matters especially for `Satisfy`, because the custom logic is often where the test carries its most specific context.
+#### Real test logic inside `Satisfy`
+
+The following callback calculates a total, conditionally checks a field, and calls a domain-specific helper. None of that is special assertion syntax, but a failure still carries the HTTP conversation:
+
+```csharp
+internal sealed class CartResponse
+{
+    public string? Status { get; set; }
+    public decimal Total { get; set; }
+    public string? DiscountCode { get; set; }
+    public List<CartItem> Items { get; set; } = new();
+}
+
+internal sealed class CartItem
+{
+    public decimal Price { get; set; }
+    public int Quantity { get; set; }
+}
+
+private static void CheckCart(CartResponse cart)
+{
+    var calculatedTotal = cart.Items.Sum(item => item.Price * item.Quantity);
+    if (cart.Total != calculatedTotal)
+    {
+        throw new InvalidOperationException($"The total was {cart.Total}, but the items add up to {calculatedTotal}.");
+    }
+
+    if (string.Equals(cart.Status, "Discounted", StringComparison.OrdinalIgnoreCase))
+    {
+        AssertDiscountCode(cart.DiscountCode);
+    }
+}
+
+private static void AssertDiscountCode(string? code)
+{
+    if (string.IsNullOrWhiteSpace(code) || code.Length != 8)
+    {
+        throw new InvalidOperationException("A discounted cart must have an eight-character discount code.");
+    }
+}
+
+// FluentAssertions / AwesomeAssertions
+response.Should().Satisfy<CartResponse>(CheckCart);
+
+// Shouldly
+response.ShouldSatisfy<CartResponse>(CheckCart);
+```
+
+`Satisfy` on the response itself follows the same rule with `HttpResponseMessage` as the callback argument; it does not deserialize the body. The logic is still ordinary C# and its failures still retain the HTTP conversation.
 
 The optional configuration passed to `BeAs<T>()` is handed to the installed assertion framework's equivalency engine. Framework defaults and configuration — member selection, strictness, collection ordering, and similar rules — therefore affect the result. The lambda shape is the same in FA 6/7, FA v8 and AwesomeAssertions; Shouldly takes an `EquivalencyOptions` instance.
 

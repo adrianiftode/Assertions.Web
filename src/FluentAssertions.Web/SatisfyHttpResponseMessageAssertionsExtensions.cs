@@ -21,12 +21,13 @@ public static class SatisfyHttpResponseMessageAssertionsExtensions
     /// An assertion about the HTTP response.
     /// </param>
     /// <remarks>
-    /// The delegate body is ordinary C#: branch, loop, call helpers and use any framework assertion; async overloads
-    /// also support <c>await</c>. Use this for custom assertions about the response itself; no deserialization occurs.
-    /// Failures are collected by
-    /// this HTTP assertion and reported with the complete request/response conversation, which is the main reason to
-    /// prefer <c>Satisfy</c> over plain assertions outside the library. The assertion can be a single assertion or a
-    /// collection of assertions if the assertion action is expressed as a statement lambda.
+    /// The callback is a general-purpose C# extension point, not a DSL limited to assertion-framework methods: it can
+    /// inspect values, perform calculations, apply conditional logic, loop, call helpers, use any framework assertion,
+    /// and use <c>await</c> in async overloads. It runs against the response itself; no deserialization occurs.
+    /// Failures are reported with the complete request/response conversation. Assertions.Web preserves that context
+    /// across the library, but it is especially valuable here because arbitrary test code stays inside the HTTP
+    /// assertion. The assertion can be a single assertion or a collection of assertions if it is expressed as a
+    /// statement lambda.
     /// </remarks>
     /// <param name="because">
     /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
@@ -52,12 +53,13 @@ public static class SatisfyHttpResponseMessageAssertionsExtensions
     /// An assertion about the HTTP response.
     /// </param>
     /// <remarks>
-    /// The delegate body is ordinary C#: branch, loop, call helpers and use any framework assertion; async overloads
-    /// also support <c>await</c>. Use this for custom assertions about the response itself; no deserialization occurs.
-    /// Failures are collected by
-    /// this HTTP assertion and reported with the complete request/response conversation, which is the main reason to
-    /// prefer <c>Satisfy</c> over plain assertions outside the library. The assertion can be a single assertion or a
-    /// collection of assertions if the assertion action is expressed as a statement lambda.
+    /// The callback is a general-purpose C# extension point, not a DSL limited to assertion-framework methods: it can
+    /// inspect values, perform calculations, apply conditional logic, loop, call helpers, use any framework assertion,
+    /// and use <c>await</c> in async overloads. It runs against the response itself; no deserialization occurs.
+    /// Failures are reported with the complete request/response conversation. Assertions.Web preserves that context
+    /// across the library, but it is especially valuable here because arbitrary test code stays inside the HTTP
+    /// assertion. The assertion can be a single assertion or a collection of assertions if it is expressed as a
+    /// statement lambda.
     /// </remarks>
     /// <param name="because">
     /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion

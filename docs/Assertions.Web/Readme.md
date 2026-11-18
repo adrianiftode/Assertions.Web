@@ -202,18 +202,20 @@ No return type was changed as part of this review. Returning a broader group wou
 
 ## Choosing between `BeAs<T>()` and `Satisfy<T>()`
 
-Both methods deserialize the response body with `AssertionsWebConfig.Serializer`, but they are not interchangeable:
+`Satisfy` is a general-purpose C# extension point: its delegate body can contain arbitrary C# code, not just assertion calls. It can inspect values, perform calculations, apply conditional logic, loop, call helpers, use any framework assertion, and use `await` in the async overloads. When code inside that body fails, the library reports it together with the complete request/response conversation. Preserving HTTP context is a library-wide capability, but it is especially valuable here: arbitrary test code stays inside the HTTP assertion. Manual deserialization followed by plain framework assertions loses that context.
+
+The [worked example](../../readme.md#real-test-logic-inside-satisfy) calculates a total, checks a field conditionally and calls a domain helper; only the call differs between FA/AWE and Shouldly.
+
+The narrower APIs are secondary guidance:
 
 | Goal | FluentAssertions / AwesomeAssertions | Shouldly |
 | --- | --- | --- |
-| Compare the whole expected body | `response.Should().BeAs(expectedModel);` | `response.ShouldBeAs(expectedModel);` |
-| Assert selected fields or custom rules on the deserialized body | `response.Should().Satisfy<TModel>(model => ...);` | `response.ShouldSatisfy<TModel>(model => ...);` |
+| Run arbitrary C# over the deserialized body | `response.Should().Satisfy<TModel>(model => ...);` | `response.ShouldSatisfy<TModel>(model => ...);` |
+| Run arbitrary C# over the response itself | `response.Should().Satisfy(response => ...);` | `response.ShouldSatisfy(response => ...);` |
+| Compare the complete expected body | `response.Should().BeAs(expectedModel);` | `response.ShouldBeAs(expectedModel);` |
 | Assert raw wire text | `response.Should().MatchInContent(wildcard);` | `response.ShouldMatchInContent(wildcard);` |
-| Assert the response object itself | `response.Should().Satisfy(response => ...);` | `response.ShouldSatisfy(response => ...);` |
 
-`Satisfy` is deliberately an escape hatch: its delegate body is ordinary C#. Branch, loop, call helpers, compute values, use any framework assertion, and use `await` in the async overloads. When something inside that body fails, the library turns it into an HTTP assertion failure and preserves the complete request/response conversation. Manual deserialization followed by plain framework assertions loses that context. This applies to both model `Satisfy<T>()` and response-level `Satisfy(...)`, and it is the main reason the API exists.
-
-`BeAs<T>()` deserializes into `expectedModel.GetType()` and compares the complete object graph with the installed framework's equivalency engine; JSON properties that do not map to the expected model are not compared. The optional equivalency configuration is framework-specific and affects the result. Model `Satisfy<T>()` deserializes into `TModel` and runs ordinary framework assertions; it does not perform whole-object equivalency. Its optional `givenModelStructure` parameter is only a type-inference aid and its values are never used.
+`BeAs<T>()` deserializes into `expectedModel.GetType()` and compares the complete object graph with the installed framework's equivalency engine; JSON properties that do not map to the expected model are not compared. The optional equivalency configuration is framework-specific and affects the result. Model `Satisfy<T>()` deserializes into `TModel` and runs the callback; it does not perform whole-object equivalency. Its optional `givenModelStructure` parameter is only a type-inference aid and its values are never used.
 
 A validation `ProblemDetails` response has standard members and generated extension data such as `traceId`. A custom DTO with a concrete `TraceId` property is clearest when the whole body is deterministic; otherwise model `ProblemDetails.Extensions` with `[JsonExtensionData]` and assert the value through `Satisfy<T>()`. With the default serializer, extension values are `JsonElement`; custom serializers may materialize them differently, so a typed DTO is usually easier for `BeAs<T>()` equivalency.
 
