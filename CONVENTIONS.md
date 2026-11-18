@@ -211,6 +211,12 @@ map](docs/Assertions.Web/Readme.md#transitions-between-assertion-groups).
  `.Match(...)` / `.BeEmpty()` / `.NotBeEmpty()`.
 * Everything else → `AndConstraint<HttpResponseMessageAssertions>`.
 
+A derived group may intentionally declare a same-signature method with a different target, for example
+`HeadersAssertions.BeEmpty()` (selected header values) hiding the response-content `BeEmpty()`. Mark the declaration
+with `new`, explain both targets in the shipped XML docs, and show the chain restart in the shared [transition
+map](docs/Assertions.Web/Readme.md#the-two-beempty-targets). Do not rename or remove such a member without an
+approved breaking change; an alias can be added additively if discoverability still needs improvement.
+
 Sub-assertion classes derive from `HttpResponseMessageAssertions`, so the whole base surface stays reachable
 after `.And.`. When returning a *different* subject object, construct it with the chain on `FAV8`:
 

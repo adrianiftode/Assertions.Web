@@ -12,6 +12,11 @@ public partial class HttpResponseMessageAssertions
     /// <summary>
     /// Asserts that the HTTP content is empty.
     /// </summary>
+    /// <remarks>
+    /// This method targets the response body. When the current chain is a header group, <c>BeEmpty</c> instead
+    /// checks the values of the selected header. Start a new <c>response.Should()</c> chain to reach this
+    /// response-content assertion after header checks.
+    /// </remarks>
     /// <param name="because">
     /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
     /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.

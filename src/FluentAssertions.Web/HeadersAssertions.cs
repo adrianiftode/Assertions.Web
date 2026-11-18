@@ -117,6 +117,12 @@ public class HeadersAssertions : HttpResponseMessageAssertions
     /// <summary>
     /// Asserts that an existing HTTP header in an HTTP response has no values.
     /// </summary>
+    /// <remarks>
+    /// This method targets the header selected by <c>HaveHeader</c> or <c>HaveLocation</c>; it does not assert that
+    /// the response content is empty. Because this group declares <c>BeEmpty</c>, it hides the response-content
+    /// <c>BeEmpty</c> inherited from <see cref="HttpResponseMessageAssertions"/>. Start a new
+    /// <c>response.Should()</c> chain when the response content must be checked.
+    /// </remarks>
     /// <param name="because">
     /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
     /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.
@@ -126,7 +132,7 @@ public class HeadersAssertions : HttpResponseMessageAssertions
     /// </param>
     /// <returns>The same <see cref="HeadersAssertions"/> group for the header under test.</returns>
     [CustomAssertion]
-    public AndConstraint<HeadersAssertions> BeEmpty(string because = "", params object[] becauseArgs)
+    public new AndConstraint<HeadersAssertions> BeEmpty(string because = "", params object[] becauseArgs)
     {
         var headerValues = Subject.GetHeaderValues(Header);
 

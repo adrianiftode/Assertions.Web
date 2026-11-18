@@ -107,6 +107,37 @@ Every fluent assertion returns `AndConstraint<T>`, and `.And` yields `T`. The re
 
 Returning a specialized group does not assert its precondition. `Be201Created().And.HaveLocation()` is what asserts that the header is present. `HaveLocation()` itself returns `HeadersAssertions`, so a second `HaveLocation()` is not available until a new chain reaches `LocationAssertions` again. The same rule applies when a validation chain needs the `Location` group or when a header chain needs a status that returns it.
 
+### The two `BeEmpty()` targets
+
+`BeEmpty()` has the same name in two different assertion groups. The chain target, not the method name, decides what is checked:
+
+| Call | Target | Meaning |
+| --- | --- | --- |
+| `response.Should().BeEmpty()` | response content | The response body is null or an empty string. |
+| `response.Should().HaveHeader("X-Optional").And.BeEmpty()` | the selected header | `X-Optional` is present but has no values. It says nothing about the body. |
+| `response.Should().Be201Created().And.HaveLocation().And.BeEmpty()` | the `Location` header | `Location` is present but has no values. It says nothing about the body. The same target applies to `Be201Created().And.BeEmpty()` because `LocationAssertions` inherits the header method. |
+| `response.Should().Be400BadRequest().And.BeEmpty()` | response content | `BadRequestAssertions` does not declare `BeEmpty`, so the inherited content assertion is used. |
+| `response.ShouldHaveEmptyHeader("X-Optional")` | the selected header | Shouldly's explicit name has the same header-value meaning. |
+| `response.ShouldBeEmpty()` | response content | Shouldly's response-body assertion. |
+
+To assert both in one test, keep the header assertion in its group and start a fresh chain for the body:
+
+```csharp
+response.Should()
+    .HaveHeader("X-Optional")
+    .And.BeEmpty();        // header values
+
+response.Should()
+    .BeEmpty();            // response content
+```
+
+```csharp
+response.ShouldHaveEmptyHeader("X-Optional"); // header values
+response.ShouldBeEmpty();                     // response content
+```
+
+`HeadersAssertions.BeEmpty()` deliberately does **not** mean “the response has no headers”; that would be a different assertion. Renaming it would improve discoverability but would break source and binary compatibility across the fluent packages, and `HaveNoHeaders()` would misstate the current semantics. The name is retained; the shipped XML documentation and this table make the target explicit.
+
 ### Examples
 
 General status and content assertions stay in the general group:
