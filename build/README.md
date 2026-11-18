@@ -214,9 +214,9 @@ The map encodes two things worth knowing:
   packages. When it ships, its dependents ship too, so nothing is left published
   against a dependency version it was never built with.
 
-`Directory.Packages.props` is watched by every package on purpose. Bumping
-`FluentAssertions`, `AwesomeAssertions`, `Newtonsoft.Json` or `System.Text.Json`
-changes what ships inside every package.
+`Directory.Packages.props` and `src/Directory.Build.props` are watched by every
+package on purpose. Dependency bumps and compiler/packaging defaults change what
+ships inside every package.
 
 ## Adding a package
 
@@ -231,9 +231,14 @@ changes what ships inside every package.
 ```powershell
 dotnet build
 dotnet test
+./build/Test-PackageDocumentation.ps1
 ./build/tests/Test-ReleasePackageDetection.ps1
 ./build/tests/Test-ReleasePolicy.ps1
 ```
+
+`Test-PackageDocumentation.ps1` packs every project in the manifest and fails if any
+assembly in a `.nupkg` is missing its companion `.xml` file. CI runs it on every
+build, including pull requests, so packaging regressions are caught before a tag.
 
 The detection test builds a throwaway git repo and checks that each kind of change
 selects the right packages, so you can change the manifest without guessing. It
