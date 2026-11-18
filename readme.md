@@ -75,7 +75,7 @@ You are adding or updating HTTP integration tests for <endpoint under test> in <
 - In FA v8 and AwesomeAssertions, call Be400BadRequest() before HaveError(...), OnlyHaveError(...), NotHaveError(...) or HaveErrorMessage(...). FA 6/7 also exposes these as extensions from the initial chain, but status-first is clearer and portable. Keep validation assertions immediately after the status. Field names are framework-emitted names, so use wildcards for volatile messages. HaveErrorMessage checks error messages, not necessarily ProblemDetails.title.
 - HaveHeader(name) asserts presence and binds the chain to that header. Use BeValue when the header has exactly one complete value, BeValues when the complete value collection is expected, and Match(wildcard) when at least one value should match. Assertions never split comma-containing values. For Allow: GET, POST exposed as two values, use BeValues(new[] { "GET", "POST" }); if .NET exposes one raw GET, POST value, use BeValue("GET, POST"). Current BeValues header-name lookup is case-sensitive, so use the exact casing from the response.
 - There is no Content-Type helper: use HaveHeader("Content-Type").And.Match("application/json*"). Wildcard matching is anchored and case-sensitive, so include the trailing *.
-- Use BeAs(model) for a whole equivalent JSON body, Satisfy<T>(...) for selected model assertions, and MatchInContent(...) for deliberate wire-text checks. Use ordinary framework assertions only inside Satisfy<T> or for non-HTTP values.
+- Use BeAs(model) when the complete expected object graph is known: it deserializes into expectedModel.GetType() and compares the whole model. Use Satisfy<T>(...) when only selected fields, custom rules or volatile values matter: it deserializes into T and runs ordinary framework assertions. Use MatchInContent(...) for deliberate wire-text checks, and plain framework assertions only inside Satisfy<T> or for non-HTTP values. Satisfy(...) on the response itself does not deserialize the body.
 - After header work, start a fresh response.Should() chain before content checks. This is essential for BeEmpty(): HeadersAssertions.BeEmpty() checks the selected header's values, while response.Should().BeEmpty() checks the body. General methods such as BeAs and Satisfy are inherited, so a fresh chain is a clarity guard there, not always a compiler requirement.
 
 4. Shouldly style
@@ -85,7 +85,7 @@ You are adding or updating HTTP integration tests for <endpoint under test> in <
 5. Common mistakes to avoid
 - Do not install multiple flavours or reference library source.
 - Do not assume a missing JSON property produces a validation error. Probe the API: explicit null, malformed JSON or an unsupported media type may be what actually yields 400 or 415.
-- Do not assert exact framework-generated messages, volatile traceIds or absolute test-host URLs when a wildcard path is enough.
+- Do not assert exact framework-generated messages, volatile traceIds or absolute test-host URLs when a wildcard path is enough. For ProblemDetails, model the standard fields with BeAs and assert a generated traceId extension through Satisfy<T> by presence or format, not by an exact value.
 - Do not replace library HTTP assertions with raw status/header/content reads when an equivalent exists.
 - Do not mutate global serializer or response formatter settings in a normal test.
 - Do not weaken an existing assertion to make a migration easier.
@@ -429,6 +429,148 @@ For the Shouldly flavour this is the same set of assertions, written Shouldly-st
 ### How the fluent API is composed
 
 [How the fluent API is composed](docs/Assertions.Web/Readme.md#how-the-fluent-api-is-composed) explains which assertion group each method returns, what `.And` exposes next, and how the Shouldly integration expresses the same assertions without chaining.
+
+### Choosing between `BeAs<T>()` and `Satisfy<T>()`
+
+Both methods deserialize the response body with the configured serializer, but they answer different questions:
+
+| Call | Use when | What happens |
+| --- | --- | --- |
+| `BeAs(expectedModel)` | the complete expected body is known | The body is deserialized into `expectedModel.GetType()` and the whole object graph is compared with the framework's equivalency engine. JSON properties that do not map to the expected model are not compared. |
+| `Satisfy<TModel>(model => ...)` | only selected fields, custom rules or volatile values matter | The body is deserialized into `TModel` and ordinary framework assertions are run against it. No whole-object equivalency is performed. |
+| `MatchInContent(wildcard)` | the raw wire text matters | The body is matched as text without deserialization. |
+| `Satisfy(...)` on `HttpResponseMessage` | custom assertions concern the response itself | No deserialization occurs. |
+
+The optional configuration passed to `BeAs<T>()` is handed to the installed assertion framework's equivalency engine. Framework defaults and configuration — member selection, strictness, collection ordering, and similar rules — therefore affect the result. The lambda shape is the same in FA 6/7, FA v8 and AwesomeAssertions; Shouldly takes an `EquivalencyOptions` instance.
+
+The failure boundary is the same in every integration:
+
+| Stage | Diagnostic the caller gets |
+| --- | --- |
+| Body cannot be deserialized | Both APIs report **“the JSON representation could not be parsed”** and include the serializer's exception text. Shouldly uses its **“should be as”** layout with the same serializer message. |
+| Deserialization succeeds, equivalency or custom assertion fails | `BeAs<T>()` reports **“has differences”** with the framework's equivalency details; `Satisfy<T>()` reports inner failures under **“satisfy one or more model assertions”**. Shouldly reports **“should satisfy all the conditions specified”** with numbered errors. |
+| Unexpected exception inside a `Satisfy<T>()` condition | It is captured and reported as an assertion failure with the exception text rather than escaping as an unrelated test crash. |
+
+Every failure is followed by the complete request/response dump, so the payload that produced the diagnostic is available without a debugger.
+
+#### A ProblemDetails response with standard and additional properties
+
+ASP.NET Core's validation `ProblemDetails` payload contains standard members plus generated extension data such as `traceId`:
+
+```json
+{
+  "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+  "title": "One or more validation errors occurred.",
+  "status": 400,
+  "errors": {
+    "Author": [ "The Author field is required." ]
+  },
+  "traceId": "00-aae99e6ddbee1a15d42f336faae193e3-1972a9b2677febe5-00"
+}
+```
+
+There are two ways to expose an extension member. A custom DTO with a concrete `TraceId` property, as below, is the clearest choice when the name and type are part of the contract. Alternatively, model the standard `ProblemDetails.Extensions` dictionary with `[JsonExtensionData]`; with the default serializer its values are `JsonElement`, while a custom serializer may materialize them differently, so the DTO is usually easier for `BeAs<T>()` equivalency.
+
+```csharp
+internal sealed class ExpectedProblemDetails
+{
+    public string? Type { get; set; }
+    public string? Title { get; set; }
+    public int? Status { get; set; }
+    public Dictionary<string, string[]>? Errors { get; set; }
+    public string? TraceId { get; set; }
+}
+
+// FluentAssertions / AwesomeAssertions
+response.Should().BeAs(new ExpectedProblemDetails
+{
+    Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+    Title = "One or more validation errors occurred.",
+    Status = 400,
+    Errors = new Dictionary<string, string[]>
+    {
+        ["Author"] = new[] { "The Author field is required." }
+    },
+    TraceId = "00-aae99e6ddbee1a15d42f336faae193e3-1972a9b2677febe5-00"
+});
+
+// Shouldly
+response.ShouldBeAs(new ExpectedProblemDetails { /* same values */ });
+```
+
+Use `BeAs<T>()` here when a change to any of those values should fail the test. With a generated `traceId`, assert the standard fields by equivalency and exclude the volatile member, then check the extension separately:
+
+```csharp
+var expected = new ExpectedProblemDetails
+{
+    Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+    Title = "One or more validation errors occurred.",
+    Status = 400,
+    Errors = new Dictionary<string, string[]>
+    {
+        ["Author"] = new[] { "The Author field is required." }
+    }
+};
+
+// FluentAssertions / AwesomeAssertions
+response.Should().BeAs(expected, options => options.Excluding(p => p.TraceId));
+
+// Shouldly
+response.ShouldBeAs(expected, new EquivalencyOptions
+{
+    MembersToIgnore = { "TraceId" }
+});
+```
+
+Use `Satisfy<T>()` when the test should inspect selected standard fields and extension data without stating the entire expected graph. `JsonExtensionData` exposes non-standard members such as `traceId`:
+
+```csharp
+internal sealed class ProblemDetailsWithExtensions
+{
+    public int? Status { get; set; }
+    public Dictionary<string, string[]>? Errors { get; set; }
+
+    [JsonExtensionData]
+    public Dictionary<string, JsonElement>? Extensions { get; set; }
+}
+
+// FluentAssertions / AwesomeAssertions
+response.Should().Satisfy<ProblemDetailsWithExtensions>(problem =>
+{
+    problem.Status.Should().Be(400);
+    var errors = problem.Errors;
+    errors.Should().NotBeNull();
+    errors!.Should().ContainKey("Author");
+    errors["Author"].Should().ContainSingle()
+        .Which.Should().Match("*required*");
+
+    var extensions = problem.Extensions;
+    extensions.Should().NotBeNull();
+    extensions!.Should().ContainKey("traceId");
+    var traceId = extensions["traceId"].GetString();
+    traceId.Should().NotBeNullOrWhiteSpace();
+    traceId.Should().StartWith("00-");
+});
+
+// Shouldly
+response.ShouldSatisfy<ProblemDetailsWithExtensions>(problem =>
+{
+    problem.Status.ShouldBe(400);
+    var errors = problem.Errors;
+    errors.ShouldNotBeNull();
+    errors.ShouldContainKey("Author");
+    errors["Author"][0].ShouldContain("required");
+
+    var extensions = problem.Extensions;
+    extensions.ShouldNotBeNull();
+    extensions.ShouldContainKey("traceId");
+    var traceId = extensions["traceId"].GetString();
+    traceId.ShouldNotBeNullOrEmpty();
+    traceId.ShouldStartWith("00-");
+});
+```
+
+In Shouldly, pass a collection of `Action<ProblemDetailsWithExtensions>` conditions to `ShouldSatisfy` when every failed condition should be reported; one statement lambda stops at its first failure. The optional `givenModelStructure` parameter on the fluent and Shouldly `Satisfy` overloads is only a type-inference aid; its values are never used.
 
 ### FluentAssertions.Web/AwesomeAssertions.Web Examples
 

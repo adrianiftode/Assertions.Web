@@ -21,7 +21,13 @@ public static class SatisfyModelAssertionsExtensions
     /// An assertion regarding the given model.
     /// </param>
     /// <remarks>
-    /// The assertion can be a single assertion or a collection of assertions if the assertion action is expressed as a statement lambda.
+    /// Use this assertion for custom assertions over the deserialized <typeparamref name="TModel"/>, not for whole-object
+    /// equivalency; use <c>BeAs&lt;T&gt;()</c> when the complete expected body is known. The response is deserialized into
+    /// <typeparamref name="TModel"/> before the supplied assertion runs, and a deserialization failure is reported as a
+    /// JSON parsing failure before any inner assertion is evaluated. An unexpected exception thrown by the assertion is
+    /// captured and reported with its exception text. The assertion can be a single assertion or a collection
+    /// of assertions if the assertion action is expressed as a statement lambda. In the inferred overloads, the given model
+    /// structure only supplies the model type; its values are ignored.
     /// </remarks>
     /// <param name="because">
     /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
@@ -47,7 +53,13 @@ public static class SatisfyModelAssertionsExtensions
     /// A proposed model structure that will help to compose the assertions. This is used to defined the type of the asserted model and it doesn't have to contain other values than the default one.
     /// </param>
     /// <remarks>
-    /// The assertion can be a single assertion or a collection of assertions if the assertion action is expressed as a statement lambda.
+    /// Use this assertion for custom assertions over the deserialized <typeparamref name="TModel"/>, not for whole-object
+    /// equivalency; use <c>BeAs&lt;T&gt;()</c> when the complete expected body is known. The response is deserialized into
+    /// <typeparamref name="TModel"/> before the supplied assertion runs, and a deserialization failure is reported as a
+    /// JSON parsing failure before any inner assertion is evaluated. An unexpected exception thrown by the assertion is
+    /// captured and reported with its exception text. The assertion can be a single assertion or a collection
+    /// of assertions if the assertion action is expressed as a statement lambda. In the inferred overloads, the given model
+    /// structure only supplies the model type; its values are ignored.
     /// </remarks>
     /// <param name="assertion">
     /// An assertion or a collection of assertions regarding the given model.
@@ -77,7 +89,13 @@ public static class SatisfyModelAssertionsExtensions
     /// An assertion regarding the given model.
     /// </param>
     /// <remarks>
-    /// The assertion can be a single assertion or a collection of assertions if the assertion action is expressed as a statement lambda.
+    /// Use this assertion for custom assertions over the deserialized <typeparamref name="TModel"/>, not for whole-object
+    /// equivalency; use <c>BeAs&lt;T&gt;()</c> when the complete expected body is known. The response is deserialized into
+    /// <typeparamref name="TModel"/> before the supplied assertion runs, and a deserialization failure is reported as a
+    /// JSON parsing failure before any inner assertion is evaluated. An unexpected exception thrown by the assertion is
+    /// captured and reported with its exception text. The assertion can be a single assertion or a collection
+    /// of assertions if the assertion action is expressed as a statement lambda. In the inferred overloads, the given model
+    /// structure only supplies the model type; its values are ignored.
     /// </remarks>
     /// <param name="because">
     /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
@@ -103,7 +121,13 @@ public static class SatisfyModelAssertionsExtensions
     /// A proposed model structure that will help to compose the assertions. This is used to defined the type of the asserted model and it doesn't have to contain other values than the default one.
     /// </param>
     /// <remarks>
-    /// The assertion can be a single assertion or a collection of assertions if the assertion action is expressed as a statement lambda.
+    /// Use this assertion for custom assertions over the deserialized <typeparamref name="TModel"/>, not for whole-object
+    /// equivalency; use <c>BeAs&lt;T&gt;()</c> when the complete expected body is known. The response is deserialized into
+    /// <typeparamref name="TModel"/> before the supplied assertion runs, and a deserialization failure is reported as a
+    /// JSON parsing failure before any inner assertion is evaluated. An unexpected exception thrown by the assertion is
+    /// captured and reported with its exception text. The assertion can be a single assertion or a collection
+    /// of assertions if the assertion action is expressed as a statement lambda. In the inferred overloads, the given model
+    /// structure only supplies the model type; its values are ignored.
     /// </remarks>
     /// <param name="assertion">
     /// An assertion or a collection of assertions regarding the given model.

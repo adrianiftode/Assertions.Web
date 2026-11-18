@@ -21,6 +21,13 @@ namespace Shouldly;
 /// <para>
 /// These assertions do not check the status code. Assert the status separately when it matters.
 /// </para>
+/// <para>
+/// The model overloads deserialize the body into <c>TModel</c> before running the supplied conditions; use
+/// <c>ShouldBeAs&lt;T&gt;()</c> for whole-object equivalency instead. A deserialization failure uses the
+/// <c>should be as</c> layout, while failed model conditions use <c>should satisfy all the conditions specified</c>.
+/// Unexpected exceptions thrown by a condition are captured with their exception text. The optional
+/// <c>givenModelStructure</c> argument only infers the model type; its values are ignored.
+/// </para>
 /// </remarks>
 /// <seealso cref="HttpStatusCodeShouldlyExtensions"/>
 /// <seealso cref="HttpResponseContentShouldlyExtensions"/>
@@ -120,6 +127,11 @@ public static class SatisfyShouldlyExtensions
     /// <summary>
     /// Asserts that an HTTP response content can be a model that satisfies an assertion.
     /// </summary>
+    /// <remarks>
+    /// Use this for custom assertions over the deserialized <typeparamref name="TModel"/>; use
+    /// <c>ShouldBeAs&lt;T&gt;()</c> when the complete expected body is known. Deserialization failures use the
+    /// <c>should be as</c> layout and are reported before failed model conditions.
+    /// </remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="assertion">An assertion regarding the given model.</param>
     /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
@@ -139,6 +151,11 @@ public static class SatisfyShouldlyExtensions
     /// Asserts that an HTTP response content can be a model that satisfies an assertion starting from an
     /// inferred model structure.
     /// </summary>
+    /// <remarks>
+    /// Use this for custom assertions over the deserialized <typeparamref name="TModel"/>; use
+    /// <c>ShouldBeAs&lt;T&gt;()</c> when the complete expected body is known. The given model structure only infers
+    /// the model type; its values are ignored.
+    /// </remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="givenModelStructure">
     /// A proposed model structure that will help to compose the assertions. This is used to define the type
@@ -162,6 +179,11 @@ public static class SatisfyShouldlyExtensions
     /// <summary>
     /// Asserts that an HTTP response content can be a model that satisfies an asynchronous assertion.
     /// </summary>
+    /// <remarks>
+    /// Use this for custom asynchronous assertions over the deserialized <typeparamref name="TModel"/>; use
+    /// <c>ShouldBeAs&lt;T&gt;()</c> when the complete expected body is known. Deserialization failures use the
+    /// <c>should be as</c> layout and are reported before failed model conditions.
+    /// </remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="assertion">An assertion regarding the given model.</param>
     /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
@@ -185,6 +207,11 @@ public static class SatisfyShouldlyExtensions
     /// Asserts that an HTTP response content can be a model that satisfies an asynchronous assertion starting
     /// from an inferred model structure.
     /// </summary>
+    /// <remarks>
+    /// Use this for custom asynchronous assertions over the deserialized <typeparamref name="TModel"/>; use
+    /// <c>ShouldBeAs&lt;T&gt;()</c> when the complete expected body is known. The given model structure only infers
+    /// the model type; its values are ignored.
+    /// </remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="givenModelStructure">
     /// A proposed model structure that will help to compose the assertions. This is used to define the type
@@ -214,7 +241,10 @@ public static class SatisfyShouldlyExtensions
     /// </summary>
     /// <remarks>
     /// Each entry runs as its own condition, so all failing assertions are reported. By contrast, a single
-    /// assertion whose lambda body holds several statements stops at its first failure.
+    /// assertion whose lambda body holds several statements stops at its first failure. Use these model conditions
+    /// for custom assertions over the deserialized <c>TModel</c>; use <c>ShouldBeAs&lt;T&gt;()</c>
+    /// for whole-object equivalency. In the inferred overload, the given model structure only supplies the model
+    /// type; its values are ignored.
     /// </remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="assertions">Assertions regarding the model; each one is a separate condition.</param>
@@ -237,7 +267,10 @@ public static class SatisfyShouldlyExtensions
     /// </summary>
     /// <remarks>
     /// Each entry runs as its own condition, so all failing assertions are reported. By contrast, a single
-    /// assertion whose lambda body holds several statements stops at its first failure.
+    /// assertion whose lambda body holds several statements stops at its first failure. Use these model conditions
+    /// for custom assertions over the deserialized <c>TModel</c>; use <c>ShouldBeAs&lt;T&gt;()</c>
+    /// for whole-object equivalency. In the inferred overload, the given model structure only supplies the model
+    /// type; its values are ignored.
     /// </remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="givenModelStructure">

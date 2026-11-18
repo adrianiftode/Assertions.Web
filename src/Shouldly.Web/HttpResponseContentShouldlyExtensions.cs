@@ -52,6 +52,13 @@ public static class HttpResponseContentShouldlyExtensions
     /// <summary>
     /// Asserts that an HTTP response body is an equivalent representation of the expected model.
     /// </summary>
+    /// <remarks>
+    /// Use this assertion when the complete expected body is known. The response is deserialized into the runtime type
+    /// of <paramref name="expectedModel"/> and the full object graph is compared with Shouldly's equivalency engine.
+    /// Use <c>ShouldSatisfy&lt;T&gt;()</c> for custom assertions over a deserialized model. A body that cannot be
+    /// deserialized uses the <c>should be as</c> failure layout; equivalency differences are reported separately.
+    /// <see cref="EquivalencyOptions"/> are passed to Shouldly, so its configuration affects the comparison.
+    /// </remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="expectedModel">The expected model.</param>
     /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
@@ -64,6 +71,13 @@ public static class HttpResponseContentShouldlyExtensions
     /// Asserts that an HTTP response body is an equivalent representation of the expected model,
     /// comparing the object graphs with the specified <see cref="EquivalencyOptions"/>.
     /// </summary>
+    /// <remarks>
+    /// Use this assertion when the complete expected body is known. The response is deserialized into the runtime type
+    /// of <paramref name="expectedModel"/> and the full object graph is compared with Shouldly's equivalency engine.
+    /// Use <c>ShouldSatisfy&lt;T&gt;()</c> for custom assertions over a deserialized model. A body that cannot be
+    /// deserialized uses the <c>should be as</c> failure layout; equivalency differences are reported separately.
+    /// <see cref="EquivalencyOptions"/> are passed to Shouldly, so its configuration affects the comparison.
+    /// </remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="expectedModel">The expected model.</param>
     /// <param name="options">Rules that influence how the object graphs are compared.</param>
