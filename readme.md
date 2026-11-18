@@ -22,12 +22,12 @@ The repository is home to a family of assertion frameworks on top of the shared 
 
 The repository and product are called **Assertions.Web**, but there is no standalone `Assertions.Web` package to install. `Assertions.Web` is the shared contract that is packed into every assertion package. Install the package named after the assertion framework your tests already use; no integration is the default. The assertion-framework packages are listed alphabetically.
 
-| Assertion framework | NuGet package ID | Install | Documentation |
+| Assertion framework | NuGet package ID and install | Syntax / composition | Documentation |
 |---|---|---|---|
-| AwesomeAssertions | [`AwesomeAssertions.Web`](https://www.nuget.org/packages/AwesomeAssertions.Web) | `dotnet add package AwesomeAssertions.Web` | [Quick start](#quick-start-awesomeassertionsweb) · [Usage](#awesomeassertionsweb) · [End-to-end](#end-to-end-example-fluentassertions-and-awesomeassertions) |
-| FluentAssertions < 8.0.0 | [`FluentAssertions.Web`](https://www.nuget.org/packages/FluentAssertions.Web) | `dotnet add package FluentAssertions.Web` | [Quick start](#quick-start-fluentassertionsweb) · [Usage](#fluentassertionsweb) · [End-to-end](#end-to-end-example-fluentassertions-and-awesomeassertions) |
-| FluentAssertions >= 8.0.0 (commercial) | [`FluentAssertions.Web.v8`](https://www.nuget.org/packages/FluentAssertions.Web.v8) | `dotnet add package FluentAssertions.Web.v8` | [Quick start](#quick-start-fluentassertionswebv8) · [Usage](#fluentassertionswebv8) · [End-to-end](#end-to-end-example-fluentassertions-and-awesomeassertions) |
-| Shouldly >= 5.0.0-preview.2 | [`Shouldly.Web`](https://www.nuget.org/packages/Shouldly.Web) | `dotnet add package Shouldly.Web --prerelease` | [Quick start](#quick-start-shouldlyweb) · [Usage](#shouldlyweb) · [End-to-end](#end-to-end-assertion-example-shouldlyweb) |
+| AwesomeAssertions | [`AwesomeAssertions.Web`](https://www.nuget.org/packages/AwesomeAssertions.Web) — `dotnet add package AwesomeAssertions.Web` | Fluent `response.Should().…And…`; `using AwesomeAssertions;` | [Quick start](#quick-start-awesomeassertionsweb) · [Usage](#awesomeassertionsweb) · [End-to-end](#end-to-end-example-fluentassertions-and-awesomeassertions) |
+| FluentAssertions < 8.0.0 | [`FluentAssertions.Web`](https://www.nuget.org/packages/FluentAssertions.Web) — `dotnet add package FluentAssertions.Web` | Fluent `response.Should().…And…`; `using FluentAssertions;`. Some FA 6/7-only entry points from `Should()` are not portable to v8. | [Quick start](#quick-start-fluentassertionsweb) · [Usage](#fluentassertionsweb) · [End-to-end](#end-to-end-example-fluentassertions-and-awesomeassertions) |
+| FluentAssertions >= 8.0.0 (commercial) | [`FluentAssertions.Web.v8`](https://www.nuget.org/packages/FluentAssertions.Web.v8) — `dotnet add package FluentAssertions.Web.v8` | The same fluent chain and namespace as FA 6/7; prefer the portable status-first paths shown in the canonical example. | [Quick start](#quick-start-fluentassertionswebv8) · [Usage](#fluentassertionswebv8) · [End-to-end](#end-to-end-example-fluentassertions-and-awesomeassertions) |
+| Shouldly >= 5.0.0-preview.2 | [`Shouldly.Web`](https://www.nuget.org/packages/Shouldly.Web) — `dotnet add package Shouldly.Web --prerelease` | Flat `response.ShouldXxx();`; `using Shouldly;`; no `.And`. | [Quick start](#quick-start-shouldlyweb) · [Usage](#shouldlyweb) · [End-to-end](#end-to-end-assertion-example-shouldlyweb) |
 
 > `Shouldly.Web` is currently a prerelease, so `--prerelease` is required until Shouldly 5.0.0 is stable.
 
@@ -175,7 +175,7 @@ var formatted = response.Format();
 
 ## End-to-end example
 
-One integration test, written once per assertion-framework flavour. The scenario is the normal usage path of an HTTP API: `POST /api/comments` creates a comment, and the response carries
+One canonical fluent integration test covers FluentAssertions 6/7, FluentAssertions v8 and AwesomeAssertions; an equivalent Shouldly test shows that framework's standalone composition. The scenario is the normal usage path of an HTTP API: `POST /api/comments` creates a comment, and the response carries
 
 - a `201 Created` status code,
 - an `X-Correlation-ID` response header,
@@ -240,9 +240,11 @@ For `AwesomeAssertions.Web`, change only the using directive to `using AwesomeAs
 
 ### End-to-end assertion example: Shouldly.Web
 
-Shouldly uses independent extension methods rather than a fluent `Should()`/`And` chain. Reuse the same fixture and Arrange/Act above; only the Assert block changes:
+Shouldly uses independent extension methods rather than a fluent `Should()`/`And` chain. Reuse the same fixture and Arrange/Act above, add `using Shouldly;`, and replace only the Assert block:
 
 ```csharp
+using Shouldly;
+
 response.ShouldBe201Created();
 response.ShouldHaveHeaderMatching("X-Correlation-ID", "*-*");
 response.ShouldHaveLocationMatching("*/api/Comments/*");
