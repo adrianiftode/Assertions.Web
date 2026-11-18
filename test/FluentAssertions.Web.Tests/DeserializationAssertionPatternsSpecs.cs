@@ -202,7 +202,19 @@ public class DeserializationAssertionPatternsSpecs
 
 #if SH
         // Act
-        Action act = () => response.ShouldSatisfy<CartResponse>(CheckCart);
+        Action act = () => response.ShouldSatisfy<CartResponse>(cart =>
+        {
+            var calculatedTotal = cart.Items.Sum(item => item.Price * item.Quantity);
+            if (cart.Total != calculatedTotal)
+            {
+                throw new InvalidOperationException($"The total was {cart.Total}, but the items add up to {calculatedTotal}.");
+            }
+
+            if (string.Equals(cart.Status, "Discounted", StringComparison.OrdinalIgnoreCase))
+            {
+                AssertDiscountCode(cart.DiscountCode);
+            }
+        });
 
         // Assert
         act.ShouldFailWith("response.Content",
@@ -213,26 +225,24 @@ public class DeserializationAssertionPatternsSpecs
             "SHORT");
 #else
         // Act
-        Action act = () => response.Should().Satisfy<CartResponse>(CheckCart);
+        Action act = () => response.Should().Satisfy<CartResponse>(cart =>
+        {
+            var calculatedTotal = cart.Items.Sum(item => item.Price * item.Quantity);
+            if (cart.Total != calculatedTotal)
+            {
+                throw new InvalidOperationException($"The total was {cart.Total}, but the items add up to {calculatedTotal}.");
+            }
+
+            if (string.Equals(cart.Status, "Discounted", StringComparison.OrdinalIgnoreCase))
+            {
+                AssertDiscountCode(cart.DiscountCode);
+            }
+        });
 
         // Assert
         act.Should().Throw<XunitException>()
             .WithMessage("*satisfy one or more model assertions*A discounted cart must have an eight-character discount code.*The HTTP response was:*SHORT*");
 #endif
-    }
-
-    private static void CheckCart(CartResponse cart)
-    {
-        var calculatedTotal = cart.Items.Sum(item => item.Price * item.Quantity);
-        if (cart.Total != calculatedTotal)
-        {
-            throw new InvalidOperationException($"The total was {cart.Total}, but the items add up to {calculatedTotal}.");
-        }
-
-        if (string.Equals(cart.Status, "Discounted", StringComparison.OrdinalIgnoreCase))
-        {
-            AssertDiscountCode(cart.DiscountCode);
-        }
     }
 
     private static void AssertDiscountCode(string? code)

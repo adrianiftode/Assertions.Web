@@ -462,7 +462,16 @@ internal sealed class CartItem
     public int Quantity { get; set; }
 }
 
-private static void CheckCart(CartResponse cart)
+private static void AssertDiscountCode(string? code)
+{
+    if (string.IsNullOrWhiteSpace(code) || code.Length != 8)
+    {
+        throw new InvalidOperationException("A discounted cart must have an eight-character discount code.");
+    }
+}
+
+// FluentAssertions / AwesomeAssertions
+response.Should().Satisfy<CartResponse>(cart =>
 {
     var calculatedTotal = cart.Items.Sum(item => item.Price * item.Quantity);
     if (cart.Total != calculatedTotal)
@@ -474,21 +483,22 @@ private static void CheckCart(CartResponse cart)
     {
         AssertDiscountCode(cart.DiscountCode);
     }
-}
-
-private static void AssertDiscountCode(string? code)
-{
-    if (string.IsNullOrWhiteSpace(code) || code.Length != 8)
-    {
-        throw new InvalidOperationException("A discounted cart must have an eight-character discount code.");
-    }
-}
-
-// FluentAssertions / AwesomeAssertions
-response.Should().Satisfy<CartResponse>(CheckCart);
+});
 
 // Shouldly
-response.ShouldSatisfy<CartResponse>(CheckCart);
+response.ShouldSatisfy<CartResponse>(cart =>
+{
+    var calculatedTotal = cart.Items.Sum(item => item.Price * item.Quantity);
+    if (cart.Total != calculatedTotal)
+    {
+        throw new InvalidOperationException($"The total was {cart.Total}, but the items add up to {calculatedTotal}.");
+    }
+
+    if (string.Equals(cart.Status, "Discounted", StringComparison.OrdinalIgnoreCase))
+    {
+        AssertDiscountCode(cart.DiscountCode);
+    }
+});
 ```
 
 `Satisfy` on the response itself follows the same rule with `HttpResponseMessage` as the callback argument; it does not deserialize the body. The logic is still ordinary C# and its failures still retain the HTTP conversation.
