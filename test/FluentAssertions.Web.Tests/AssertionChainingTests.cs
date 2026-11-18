@@ -188,6 +188,98 @@ public class AssertionChainingTests
 #endif
     }
 
+    [Fact]
+    public void When_asserting_an_empty_header_and_empty_content_then_each_be_empty_targets_its_own_subject()
+    {
+        // Arrange
+        using var response = new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(string.Empty)
+        };
+        response.Headers.Add("X-Optional", (string?)null);
+
+        // Act
+#if SH
+        Action act = () =>
+        {
+            response.ShouldHaveEmptyHeader("X-Optional");
+            response.ShouldBeEmpty();
+        };
+
+        // Assert
+        act.ShouldNotThrow();
+#else
+        Action act = () =>
+        {
+            response.Should().HaveHeader("X-Optional").And.BeEmpty();
+            response.Should().BeEmpty();
+        };
+
+        // Assert
+        act.Should().NotThrow();
+#endif
+    }
+
+    [Fact]
+    public void When_a_header_has_values_then_header_be_empty_fails_but_content_be_empty_can_pass()
+    {
+        // Arrange
+        using var response = new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(string.Empty)
+        };
+        response.Headers.Add("X-NonEmpty", "value");
+
+        // Act
+#if SH
+        Action headerAct = () => response.ShouldHaveEmptyHeader("X-NonEmpty");
+        Action contentAct = () => response.ShouldBeEmpty();
+
+        // Assert
+        headerAct.ShouldFailWith("response.Headers[\"X-NonEmpty\"]", "should be empty", "value");
+        contentAct.ShouldNotThrow();
+#else
+        Action headerAct = () => response.Should().HaveHeader("X-NonEmpty").And.BeEmpty();
+        Action contentAct = () => response.Should().BeEmpty();
+
+        // Assert
+        headerAct.Should().Throw<XunitException>()
+            .WithMessage("*X-NonEmpty*no header values*");
+        contentAct.Should().NotThrow();
+#endif
+    }
+
+    [Fact]
+    public void When_be_empty_follows_a_location_bearing_status_then_it_targets_the_location_header()
+    {
+        // Arrange
+        using var response = new HttpResponseMessage(HttpStatusCode.Created)
+        {
+            Content = new StringContent(string.Empty)
+        };
+        response.Headers.Location = new Uri("http://localhost/api/comments/1");
+
+        // Act
+#if SH
+        Action statusAct = () => response.ShouldBe201Created();
+        Action locationAct = () => response.ShouldHaveEmptyHeader("Location");
+        Action contentAct = () => response.ShouldBeEmpty();
+
+        // Assert
+        statusAct.ShouldNotThrow();
+        locationAct.ShouldFailWith("response.Headers[\"Location\"]", "should be empty");
+        contentAct.ShouldNotThrow();
+#else
+        Action locationAct = () => response.Should().Be201Created().And.BeEmpty();
+        Action contentAct = () => response.Should().BeEmpty();
+
+        // Assert
+        locationAct.Should().Throw<XunitException>()
+            .WithMessage("*Location*no header values*");
+        contentAct.Should().NotThrow();
+#endif
+    }
+
     private static HttpResponseMessage JsonResponse(HttpStatusCode statusCode, string json)
         => new(statusCode)
         {

@@ -28,6 +28,10 @@ public static class HttpResponseContentShouldlyExtensions
     /// <summary>
     /// Asserts that an HTTP response body is null or an empty string.
     /// </summary>
+    /// <remarks>
+    /// This assertion targets the response body. Use <see cref="HeadersShouldlyExtensions.ShouldHaveEmptyHeader"/>
+    /// to assert that a header has no values.
+    /// </remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
     /// <param name="actualExpression">Captured by the compiler; do not pass it.</param>

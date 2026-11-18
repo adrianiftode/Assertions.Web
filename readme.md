@@ -1413,7 +1413,14 @@ response.Should().HaveHeader("Allow").And.BeValues(new[] { "GET", "POST" });
 
 If the header is added as one raw string (`"GET, POST"`), it is one value and must be asserted with `BeValue("GET, POST")` or `BeValues(new[] { "GET, POST" })`. See [Single-value and multi-value headers](docs/Assertions.Web/Readme.md#single-value-and-multi-value-headers) for the full comparison table, including the Shouldly equivalents.
 
-`BeEmpty()` in this table asserts that the header selected by `HaveHeader` has no values. To assert that the response content is empty, use a fresh `response.Should().BeEmpty()` chain.
+`BeEmpty()` in this table asserts that the header selected by `HaveHeader` has no values; it does not mean that the response has no headers. To assert both an empty header and an empty body in one test, keep the header assertion in its group and start a fresh chain for the content:
+
+```csharp
+response.Should().HaveHeader("X-Optional").And.BeEmpty(); // header values
+response.Should().BeEmpty();                              // response content
+```
+
+With Shouldly the names are already distinct: `ShouldHaveEmptyHeader("X-Optional")` targets the header, while `ShouldBeEmpty()` targets the body. See [The two `BeEmpty()` targets](docs/Assertions.Web/Readme.md#the-two-beempty-targets) for the full table and the API compatibility decision.
 
 <details>
 <summary><code>dotnet test</code> output for <code>And.BeValue("other-vendor")</code> when it fails</summary>
