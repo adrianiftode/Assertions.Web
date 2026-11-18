@@ -16,9 +16,11 @@ namespace Shouldly;
 /// <c>response.ShouldHaveHeader("Content-Type"); response.ShouldHaveHeaderMatching("Content-Type", "application/json*");</c>.
 /// </para>
 /// <para>
-/// Header presence is checked case-insensitively by <see cref="ShouldHaveHeader"/>,
-/// <see cref="ShouldNotHaveHeader"/>, <see cref="ShouldHaveEmptyHeader"/> and <see cref="ShouldHaveNonEmptyHeader"/>.
-/// The value-oriented assertions document their own comparison rules.
+/// All header names are matched case-insensitively, as required by HTTP. That includes
+/// <see cref="ShouldHaveHeaderWithValues"/> and the Location-specific assertions. Value comparison is deliberately
+/// method-specific: <see cref="ShouldHaveHeaderWithValue"/> ignores value casing for compatibility, while
+/// <see cref="ShouldHaveHeaderWithValues"/> and <see cref="ShouldHaveHeaderMatching"/> are case-sensitive on values.
+/// HTTP field values are not universally case-insensitive, so the library does not normalize them globally.
 /// </para>
 /// </remarks>
 /// <seealso cref="LocationShouldlyExtensions"/>
@@ -30,6 +32,7 @@ public static class HeadersShouldlyExtensions
     /// <summary>
     /// Asserts that an HTTP response has a named header.
     /// </summary>
+    /// <remarks>The header name is matched case-insensitively, as required by HTTP.</remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="header">The expected header name.</param>
     /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
@@ -44,6 +47,7 @@ public static class HeadersShouldlyExtensions
     /// <summary>
     /// Asserts that an HTTP response does not have a named header.
     /// </summary>
+    /// <remarks>The header name is matched case-insensitively, as required by HTTP.</remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="header">The unexpected header name.</param>
     /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
@@ -60,9 +64,10 @@ public static class HeadersShouldlyExtensions
     /// The comparison ignores the value's case, but not its surrounding whitespace.
     /// </summary>
     /// <remarks>
-    /// The whole value is compared; the assertion does not split values on commas. A header exposing
-    /// <c>GET, POST</c> as one value matches <c>ShouldHaveHeaderWithValue("Allow", "GET, POST")</c>, not
-    /// <c>ShouldHaveHeaderWithValue("Allow", "GET")</c>.
+    /// The header name is matched case-insensitively, as required by HTTP. The whole value is compared; the assertion
+    /// does not split values on commas. A header exposing <c>GET, POST</c> as one value matches
+    /// <c>ShouldHaveHeaderWithValue("Allow", "GET, POST")</c>, not <c>ShouldHaveHeaderWithValue("Allow", "GET")</c>.
+    /// The ignore-case value comparison is a compatibility promise, not a field-specific semantic comparison.
     /// </remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="header">The HTTP header name to be asserted.</param>
@@ -80,13 +85,12 @@ public static class HeadersShouldlyExtensions
 
     /// <summary>
     /// Asserts that an existing HTTP header has all expected values, in any order. Each value is
-    /// compared with its expectation case-sensitively. Mirroring the FluentAssertions assertions,
-    /// the header itself is looked up case-sensitively here; <see cref="ShouldHaveHeader"/> and the
-    /// other assertions are case-insensitive on the header name.
+    /// compared with its expectation case-sensitively.
     /// </summary>
     /// <remarks>
-    /// The values are those exposed by <see cref="System.Net.Http.Headers.HttpHeaders"/>. The assertion does not
-    /// split them on commas. Use <see cref="ShouldHaveEmptyHeader"/> for a header with no values.
+    /// The header name is matched case-insensitively, as required by HTTP. The values are those exposed by
+    /// <see cref="System.Net.Http.Headers.HttpHeaders"/>; they are compared case-sensitively, in any order, and are
+    /// not split on commas. Use <see cref="ShouldHaveEmptyHeader"/> for a header with no values.
     /// </remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="header">The HTTP header name to be asserted.</param>
@@ -113,6 +117,10 @@ public static class HeadersShouldlyExtensions
     /// Asserts that an existing HTTP header has at least one value matching a wildcard pattern, where
     /// <c>*</c> matches any run of characters and <c>?</c> matches exactly one.
     /// </summary>
+    /// <remarks>
+    /// The header name is matched case-insensitively. The wildcard pattern is an anchored, case-sensitive,
+    /// culture-invariant text pattern: casing in the pattern must match the value exactly.
+    /// </remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="header">The HTTP header name to be asserted.</param>
     /// <param name="expectedWildcardValue">The wildcard pattern with which the header values are matched.</param>
@@ -206,7 +214,10 @@ public static class HeadersShouldlyExtensions
         IEnumerable<string> expectedValues, string? customMessage, string shouldlyMethod, string? actualExpression)
     {
         var response = EnsureHeaderPresent(actual, header, customMessage, shouldlyMethod, actualExpression);
-        var values = response.GetHeaders().FirstOrDefault(c => c.Key == header).Value ?? Array.Empty<string>();
+        var values = response
+            .GetHeaders()
+            .FirstOrDefault(c => string.Equals(c.Key, header, StringComparison.OrdinalIgnoreCase))
+            .Value ?? Array.Empty<string>();
         ShouldlyWebFailure.Rethrow(response,
             () => values.ShouldBe(expectedValues, ignoreOrder: true, customMessage,
                 $"{actualExpression}.Headers[\"{header}\"]"));

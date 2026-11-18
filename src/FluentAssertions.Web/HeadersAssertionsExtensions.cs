@@ -25,6 +25,7 @@ public static class HeadersAssertionsExtensions
     /// <summary>
     /// Asserts that an HTTP response has a named header.
     /// </summary>
+    /// <remarks>The header name is matched case-insensitively, as required by HTTP.</remarks>
     /// <param name="expectedHeader">
     /// The expected header with which the HTTP headers list is matched.
     /// </param>
@@ -52,6 +53,7 @@ public static class HeadersAssertionsExtensions
     /// <summary>
     /// Asserts that an HTTP response does not have a named header.
     /// </summary>
+    /// <remarks>The header name is matched case-insensitively, as required by HTTP.</remarks>
     /// <param name="expectedHeader">
     /// The expected header with which the HTTP headers list is matched.
     /// </param>

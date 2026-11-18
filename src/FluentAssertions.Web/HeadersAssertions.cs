@@ -26,6 +26,12 @@ namespace FluentAssertions.Web;
 /// <see cref="HttpResponseMessageAssertions"/> rather than this group.
 /// </para>
 /// <para>
+/// Header names are matched case-insensitively, as required by HTTP. Value comparison is deliberately method-specific:
+/// <see cref="BeValue"/> ignores case for compatibility, while <see cref="BeValues"/> and <see cref="Match"/> compare
+/// values case-sensitively. HTTP field values are not universally case-insensitive, so the library does not normalize
+/// them globally.
+/// </para>
+/// <para>
 /// This type and its <c>And</c> chaining are available in AwesomeAssertions and FluentAssertions 8 and later.
 /// In earlier FluentAssertions versions the same assertions are extension methods that return the same types.
 /// </para>
@@ -60,6 +66,10 @@ public class HeadersAssertions : HttpResponseMessageAssertions
     /// <summary>
     /// Asserts that an existing HTTP header in an HTTP response contains at least a value that matches a wildcard pattern.
     /// </summary>
+    /// <remarks>
+    /// The header name is matched case-insensitively. The wildcard pattern is an anchored, case-sensitive text
+    /// pattern: casing in the pattern must match the value exactly.
+    /// </remarks>
     /// <param name="expectedWildcardValue">
     /// The wildcard pattern with which the subject is matched, where * and ? have special meanings.
     /// <remarks>
@@ -119,9 +129,10 @@ public class HeadersAssertions : HttpResponseMessageAssertions
     /// </summary>
     /// <remarks>
     /// This method targets the header selected by <c>HaveHeader</c> or <c>HaveLocation</c>; it does not assert that
-    /// the response content is empty. Because this group declares <c>BeEmpty</c>, it hides the response-content
-    /// <c>BeEmpty</c> inherited from <see cref="HttpResponseMessageAssertions"/>. Start a new
-    /// <c>response.Should()</c> chain when the response content must be checked.
+    /// the response content is empty. The header name is matched case-insensitively. Because this group declares
+    /// <c>BeEmpty</c>, it hides the response-content <c>BeEmpty</c> inherited from
+    /// <see cref="HttpResponseMessageAssertions"/>. Start a new <c>response.Should()</c> chain when the response
+    /// content must be checked.
     /// </remarks>
     /// <param name="because">
     /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
@@ -155,6 +166,7 @@ public class HeadersAssertions : HttpResponseMessageAssertions
     /// <summary>
     /// Asserts that an existing HTTP header in an HTTP response has any values.
     /// </summary>
+    /// <remarks>The header name is matched case-insensitively.</remarks>
     /// <param name="because">
     /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
     /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.
@@ -188,8 +200,9 @@ public class HeadersAssertions : HttpResponseMessageAssertions
     /// Asserts that an existing HTTP header in an HTTP response has an expected list of header values.
     /// </summary>
     /// <remarks>
-    /// The complete collection of values exposed by <see cref="System.Net.Http.Headers.HttpHeaders"/> is compared
-    /// with <paramref name="expectedValues"/>, and the order of the values is ignored. The assertion does not split
+    /// The header name is matched case-insensitively, as required by HTTP. The complete collection of values exposed
+    /// by <see cref="System.Net.Http.Headers.HttpHeaders"/> is compared with <paramref name="expectedValues"/>,
+    /// the order of the values is ignored, and the values are compared case-sensitively. The assertion does not split
     /// values on commas: if the header exposes <c>GET, POST</c> as one value, expect one <c>GET, POST</c> element;
     /// if it exposes <c>GET</c> and <c>POST</c> as two values, expect two elements. Use <see cref="BeEmpty"/> for a
     /// header with no values.
@@ -215,7 +228,10 @@ public class HeadersAssertions : HttpResponseMessageAssertions
             throw new ArgumentException("Cannot verify an HTTP header to be a collection of expected values against an empty collection. Use And.BeEmpty to test if the HTTP header has no values.", nameof(expectedValues));
         }
 
-        var values = Subject.GetHeaders().FirstOrDefault(c => c.Key == Header).Value;
+        var values = Subject
+            .GetHeaders()
+            .FirstOrDefault(c => string.Equals(c.Key, Header, StringComparison.OrdinalIgnoreCase))
+            .Value;
 
         string[] failures;
 
@@ -246,10 +262,12 @@ public class HeadersAssertions : HttpResponseMessageAssertions
     /// Asserts that an existing HTTP header in an HTTP response has an expected value.
     /// </summary>
     /// <remarks>
-    /// The header must have exactly one non-empty value, and that whole value is compared with
-    /// <paramref name="expectedValue"/>. A header with multiple values fails even when one of them matches. The
-    /// assertion does not split values on commas: a header exposing <c>GET, POST</c> as one value matches
-    /// <c>BeValue("GET, POST")</c>, not <c>BeValue("GET")</c>.
+    /// The header name is matched case-insensitively, as required by HTTP. The header must have exactly one non-empty
+    /// value, and that whole value is compared with <paramref name="expectedValue"/>. For compatibility this
+    /// single-value comparison ignores value casing but preserves whitespace; it is not a field-specific semantic
+    /// comparison. A header with multiple values fails even when one of them matches. The assertion does not split
+    /// values on commas: a header exposing <c>GET, POST</c> as one value matches <c>BeValue("GET, POST")</c>, not
+    /// <c>BeValue("GET")</c>.
     /// </remarks>
     /// <param name="expectedValue">
     /// The expected value with which the HTTP header value list is compared.
@@ -315,6 +333,7 @@ public partial class HttpResponseMessageAssertions
     /// <summary>
     /// Asserts that an HTTP response has a named header.
     /// </summary>
+    /// <remarks>The header name is matched case-insensitively, as required by HTTP.</remarks>
     /// <param name="expectedHeader">
     /// The expected header with which the HTTP headers list is matched.
     /// </param>
@@ -359,6 +378,7 @@ public partial class HttpResponseMessageAssertions
     /// <summary>
     /// Asserts that an HTTP response does not have a named header.
     /// </summary>
+    /// <remarks>The header name is matched case-insensitively, as required by HTTP.</remarks>
     /// <param name="expectedHeader">
     /// The expected header with which the HTTP headers list is matched.
     /// </param>
@@ -397,6 +417,7 @@ public partial class HttpResponseMessageAssertions
     /// <summary>
     /// Asserts that an HTTP response does not have a Location header.
     /// </summary>
+    /// <remarks>The HTTP field name is matched case-insensitively, as required by HTTP.</remarks>
     /// <param name="because">
     /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
     /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.

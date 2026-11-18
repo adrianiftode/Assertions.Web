@@ -22,6 +22,10 @@ namespace Shouldly;
 /// The status assertion and the validation assertions are independent. Calling a validation assertion does not
 /// imply that the response is a Bad Request, so assert the status explicitly when that matters.
 /// </para>
+/// <para>
+/// Validation field names and the JSON <c>errors</c> property are matched case-insensitively, while wildcard error
+/// messages are case-sensitive text patterns.
+/// </para>
 /// </remarks>
 /// <seealso cref="HttpStatusCodeShouldlyExtensions"/>
 [ShouldlyMethods]

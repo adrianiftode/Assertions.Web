@@ -48,6 +48,10 @@ public static class LocationShouldlyExtensions
     /// Asserts that the Location header of an HTTP response has exactly one value equivalent to the
     /// expected one. The comparison ignores the value's case, but not its surrounding whitespace.
     /// </summary>
+    /// <remarks>
+    /// The HTTP field name is matched case-insensitively. The ignore-case value comparison is a compatibility
+    /// promise, not a field-specific semantic comparison.
+    /// </remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="expectedValue">The expected Location header value.</param>
     /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
@@ -66,6 +70,7 @@ public static class LocationShouldlyExtensions
     /// Asserts that the Location header of an HTTP response has at least one value matching a wildcard
     /// pattern, where <c>*</c> matches any run of characters and <c>?</c> matches exactly one.
     /// </summary>
+    /// <remarks>The wildcard pattern is an anchored, case-sensitive text pattern.</remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="expectedWildcardValue">The wildcard pattern with which the header values are matched.</param>
     /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
@@ -82,9 +87,9 @@ public static class LocationShouldlyExtensions
 
     /// <summary>
     /// Asserts that the Location header of an HTTP response has all expected values, in any order.
-    /// Each value is compared with its expectation case-sensitively. Mirroring the
-    /// FluentAssertions assertions, the header itself is looked up case-sensitively here.
+    /// Each value is compared with its expectation case-sensitively.
     /// </summary>
+    /// <remarks>The HTTP field name is matched case-insensitively, as required by HTTP.</remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="expectedValues">The expected values with which the Location header values are compared.</param>
     /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>

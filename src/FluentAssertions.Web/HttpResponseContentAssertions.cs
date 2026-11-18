@@ -60,7 +60,9 @@ public partial class HttpResponseMessageAssertions
     /// equivalency engine. Use <c>Satisfy&lt;T&gt;()</c> for custom assertions over a deserialized model. A body that
     /// cannot be deserialized is reported as a JSON parsing failure; differences found after successful deserialization
     /// are reported as equivalency differences. Equivalency options are passed to the installed assertion framework,
-    /// so its configuration affects the comparison.
+    /// so its configuration affects the comparison. JSON property-name matching follows the configured serializer,
+    /// while string values inside the model use the framework's equivalency defaults and are case-sensitive unless
+    /// the options say otherwise.
     /// </remarks>
     /// <param name="expectedModel">
     /// The expected model.
@@ -86,7 +88,9 @@ public partial class HttpResponseMessageAssertions
     /// equivalency engine. Use <c>Satisfy&lt;T&gt;()</c> for custom assertions over a deserialized model. A body that
     /// cannot be deserialized is reported as a JSON parsing failure; differences found after successful deserialization
     /// are reported as equivalency differences. Equivalency options are passed to the installed assertion framework,
-    /// so its configuration affects the comparison.
+    /// so its configuration affects the comparison. JSON property-name matching follows the configured serializer,
+    /// while string values inside the model use the framework's equivalency defaults and are case-sensitive unless
+    /// the options say otherwise.
     /// </remarks>
     /// <param name="expectedModel">
     /// The expected model.
@@ -167,6 +171,10 @@ public partial class HttpResponseMessageAssertions
     /// <summary>
     /// Asserts that HTTP response has content that matches a wildcard pattern.
     /// </summary>
+    /// <remarks>
+    /// The pattern is an anchored, case-sensitive text match. Casing is not normalized by this library; use the
+    /// assertion framework's pattern options or a different assertion when case-insensitive matching is intended.
+    /// </remarks>
     /// <param name="expectedWildcardText">
     /// The wildcard pattern with which the subject is matched, where * and ? have special meanings.
     /// <remarks>

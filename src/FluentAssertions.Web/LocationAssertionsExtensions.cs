@@ -26,6 +26,7 @@ public static class LocationAssertionsExtensions
     /// <summary>
     /// Asserts that an HTTP response has a Location header.
     /// </summary>
+    /// <remarks>The HTTP field name is matched case-insensitively, as required by HTTP.</remarks>
     /// <param name="because">
     /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
     /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.

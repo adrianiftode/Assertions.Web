@@ -23,6 +23,10 @@ namespace FluentAssertions.Web;
 /// <see cref="LocationAssertions.HaveLocation"/> is not reachable from this group. To assert a location, start a new
 /// <c>response.Should()</c> call with a status assertion that returns <see cref="LocationAssertions"/>.
 /// </para>
+/// <para>
+/// Validation field names and the JSON <c>errors</c> property are matched case-insensitively, while wildcard error
+/// messages are case-sensitive text patterns.
+/// </para>
 /// </remarks>
 /// <seealso cref="HttpResponseMessageAssertions.Be400BadRequest"/>
 /// <seealso cref="HeadersAssertions"/>

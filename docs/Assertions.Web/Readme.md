@@ -73,6 +73,35 @@ response.Should().HaveHeader("X-Allow-Raw").And.BeValue("GET, POST");
 
 Use `BeValues` when a header legitimately carries several values, `BeValue` when exactly one is expected, and `Match` when any matching value is enough.
 
+## Case-sensitivity map
+
+There is no library-wide case switch. Each assertion follows the semantics of the thing it compares:
+
+| Target | Contract | FluentAssertions / AwesomeAssertions | Shouldly |
+| --- | --- | --- | --- |
+| Header field name | Case-insensitive in **every** assertion, including `HaveHeader`, `NotHaveHeader`, `BeValue`, `BeValues`, `BeEmpty`, `NotBeEmpty`, `Match` and the `Location` variants. | `OrdinalIgnoreCase` lookup | `OrdinalIgnoreCase` lookup |
+| One complete raw header value (`BeValue` / `ShouldHaveHeaderWithValue`) | Exactly one value, compared whole. Value casing is ignored for compatibility; whitespace is preserved and commas are not split. | Framework string `BeEquivalentTo` | `StringComparison.OrdinalIgnoreCase` |
+| Header value collection (`BeValues` / `ShouldHaveHeaderWithValues`) | The complete exposed collection, in any order. Value elements are compared case-sensitively. | Framework collection equivalency defaults | `ShouldBe(..., ignoreOrder: true)` |
+| Wildcard patterns (`Match`, `ShouldHaveHeaderMatching`, `MatchInContent`, `ShouldMatchInContent`, error-message patterns) | Anchored, case-sensitive text patterns. `*` matches any run and `?` matches one character. | Framework `Match` | Shared `WildcardMatch` (also culture-invariant) |
+| Validation field names and JSON `errors` property | Case-insensitive, because these locate JSON members rather than compare field values. | `OrdinalIgnoreCase` JSON helpers | Same shared helpers |
+| Deserialized property names | Controlled by the configured serializer, not by the assertion framework. | `System.Text.Json` uses `PropertyNameCaseInsensitive = true`; Newtonsoft matches case-insensitively by default. | Same shared serializer contract |
+| Deserialized model string values | Framework equivalency defaults, case-sensitive unless the caller supplies options. | FluentAssertions / AwesomeAssertions equivalency | Shouldly equivalency |
+| Status codes and `Satisfy` callbacks | Status codes have no casing. `Satisfy` bodies are arbitrary C#, so callback comparisons are caller-defined. | — | — |
+
+HTTP field **names** are case-insensitive, so mixed-case lookups are intentional. Field **values** are not universally case-insensitive: `Allow` method tokens and opaque values such as ETags can be case-sensitive. The single-value APIs retain their historical ignore-case behavior for compatibility, so they are not field-specific semantic comparisons. Use `BeValues` for exposed token collections and `Satisfy(...)` for field-specific raw-value rules.
+
+```csharp
+response.Headers.TryAddWithoutValidation("x-trace-id", "mixed-Case");
+response.Should().HaveHeader("X-TRACE-ID").And.BeValue("Mixed-case"); // name and value casing are ignored
+
+response.Content.Headers.TryAddWithoutValidation("Allow", new[] { "GET", "POST" });
+response.Should().HaveHeader("allow").And.BeValues(new[] { "GET", "POST" }); // name casing is ignored, token casing is not
+
+response.Should().HaveHeader("content-type").And.Match("application/json*"); // wildcard casing must match
+```
+
+Shouldly uses the same contract through `ShouldHaveHeaderWithValue`, `ShouldHaveHeaderWithValues` and `ShouldHaveHeaderMatching`; only the method names change.
+
 ## How the fluent API is composed
 
 The FluentAssertions and AwesomeAssertions flavours share one fluent API. Every chain starts from the general response assertion returned by `response.Should()`. In `FluentAssertions.Web.v8` and `AwesomeAssertions.Web`, `Should()` returns `HttpResponseMessageAssertions` directly; in `FluentAssertions.Web` (FluentAssertions < 8) the same methods are extension methods over FluentAssertions' own response assertion type.
