@@ -12,6 +12,8 @@ It provides assertions specific to HTTP responses and outputs rich error message
 
 For a complete, copy-pasteable integration test that combines the status code, a response header, the typed body and the Location header, see the repository readme's [End-to-end example](https://github.com/adrianiftode/Assertions.Web/blob/master/readme.md#end-to-end-example).
 
+For developers or AI agents that want to add the library to a project and have tests written against it, see the repository readme's [Prompt for AI agents and rapid test authoring](https://github.com/adrianiftode/Assertions.Web/blob/master/readme.md#prompt-for-ai-agents-and-rapid-test-authoring).
+
 ## Assertions at a glance
 
 FluentAssertions and AwesomeAssertions syntax:
