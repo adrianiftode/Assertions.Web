@@ -1338,8 +1338,8 @@ Content-Length: 50
 | --- | --- |
 | **BeEmpty()** | Asserts that an existing HTTP header in an HTTP response has no values. |
 | **NotBeEmpty()** | Asserts that an existing HTTP header in an HTTP response has any values. |
-| **BeValue()** |Asserts that an existing HTTP header in an HTTP response has an expected value. |
-| **BeValues()** | Asserts that an existing HTTP header in an HTTP response has an expected list of header values. |
+| **BeValue()** | Asserts that an existing HTTP header in an HTTP response has exactly one value, equal to the expected value. |
+| **BeValues()** | Asserts that an existing HTTP header in an HTTP response has the complete expected collection of values, in any order. |
 | **Match()** | Asserts that an existing HTTP header in an HTTP response contains at least a value that matches a wildcard pattern. |
 
 ```csharp
@@ -1348,6 +1348,15 @@ response.Should().HaveHeader("X-Correlation-ID").And.BeValue("5f1615eb-549e-4afa
 response.Should().HaveHeader("Set-Cookie").And.BeValues(new[] { "a=1", "b=2" });
 response.Should().HaveHeader("X-Correlation-ID").And.Match("*-*", "it should look like a Guid");
 ```
+
+Header values are used exactly as `HttpHeaders` exposes them; no assertion splits comma-separated text. For example, .NET exposes `Allow: GET, POST` as two values when the header is added through the content-header API:
+
+```csharp
+response.Content.Headers.TryAddWithoutValidation("Allow", new[] { "GET", "POST" });
+response.Should().HaveHeader("Allow").And.BeValues(new[] { "GET", "POST" });
+```
+
+If the header is added as one raw string (`"GET, POST"`), it is one value and must be asserted with `BeValue("GET, POST")` or `BeValues(new[] { "GET, POST" })`. See [Single-value and multi-value headers](docs/Assertions.Web/Readme.md#single-value-and-multi-value-headers) for the full comparison table, including the Shouldly equivalents.
 
 `BeEmpty()` in this table asserts that the header selected by `HaveHeader` has no values. To assert that the response content is empty, use a fresh `response.Should().BeEmpty()` chain.
 
@@ -1599,8 +1608,8 @@ response.ShouldSatisfy([
 
 |  *Header value assertions.* | |
 | --- | --- |
-| **ShouldHaveHeaderWithValue()** | Asserts that an existing HTTP header in an HTTP response has exactly one value equivalent to the expected one. |
-| **ShouldHaveHeaderWithValues()** | Asserts that an existing HTTP header in an HTTP response has an expected list of header values. |
+| **ShouldHaveHeaderWithValue()** | Asserts that an existing HTTP header in an HTTP response has exactly one value, equal to the expected value. |
+| **ShouldHaveHeaderWithValues()** | Asserts that an existing HTTP header in an HTTP response has the complete expected collection of values, in any order. |
 | **ShouldHaveHeaderMatching()** | Asserts that an existing HTTP header in an HTTP response contains at least a value that matches a wildcard pattern. |
 | **ShouldHaveEmptyHeader()** | Asserts that an existing HTTP header in an HTTP response has no values. |
 | **ShouldHaveNonEmptyHeader()** | Asserts that an existing HTTP header in an HTTP response has any values. |
@@ -1613,6 +1622,13 @@ response.ShouldHaveHeaderWithValues("Set-Cookie", new[] { "a=1", "b=2" });
 response.ShouldHaveHeaderMatching("X-Correlation-ID", "*-*", "it should look like a Guid");
 response.ShouldHaveEmptyHeader("x-optional");
 response.ShouldHaveNonEmptyHeader("x-vendor");
+```
+
+The Shouldly equivalents follow the same value model as the fluent assertions, including `Allow`:
+
+```csharp
+response.Content.Headers.TryAddWithoutValidation("Allow", new[] { "GET", "POST" });
+response.ShouldHaveHeaderWithValues("Allow", new[] { "GET", "POST" });
 ```
 
 |  *Bad Request error assertions.* | |

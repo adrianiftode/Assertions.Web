@@ -59,6 +59,11 @@ public static class HeadersShouldlyExtensions
     /// Asserts that an existing HTTP header has exactly one value equivalent to the expected one.
     /// The comparison ignores the value's case, but not its surrounding whitespace.
     /// </summary>
+    /// <remarks>
+    /// The whole value is compared; the assertion does not split values on commas. A header exposing
+    /// <c>GET, POST</c> as one value matches <c>ShouldHaveHeaderWithValue("Allow", "GET, POST")</c>, not
+    /// <c>ShouldHaveHeaderWithValue("Allow", "GET")</c>.
+    /// </remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="header">The HTTP header name to be asserted.</param>
     /// <param name="value">The expected header value.</param>
@@ -79,6 +84,10 @@ public static class HeadersShouldlyExtensions
     /// the header itself is looked up case-sensitively here; <see cref="ShouldHaveHeader"/> and the
     /// other assertions are case-insensitive on the header name.
     /// </summary>
+    /// <remarks>
+    /// The values are those exposed by <see cref="System.Net.Http.Headers.HttpHeaders"/>. The assertion does not
+    /// split them on commas. Use <see cref="ShouldHaveEmptyHeader"/> for a header with no values.
+    /// </remarks>
     /// <param name="actual">The HTTP response under test.</param>
     /// <param name="header">The HTTP header name to be asserted.</param>
     /// <param name="expectedValues">The expected values with which the header values list is compared.</param>

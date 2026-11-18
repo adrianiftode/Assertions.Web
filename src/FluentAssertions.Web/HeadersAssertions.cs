@@ -181,6 +181,13 @@ public class HeadersAssertions : HttpResponseMessageAssertions
     /// <summary>
     /// Asserts that an existing HTTP header in an HTTP response has an expected list of header values.
     /// </summary>
+    /// <remarks>
+    /// The complete collection of values exposed by <see cref="System.Net.Http.Headers.HttpHeaders"/> is compared
+    /// with <paramref name="expectedValues"/>, and the order of the values is ignored. The assertion does not split
+    /// values on commas: if the header exposes <c>GET, POST</c> as one value, expect one <c>GET, POST</c> element;
+    /// if it exposes <c>GET</c> and <c>POST</c> as two values, expect two elements. Use <see cref="BeEmpty"/> for a
+    /// header with no values.
+    /// </remarks>
     /// <param name="expectedValues">
     /// The expected values with which the HTTP headers values list is compared.
     /// </param>
@@ -232,6 +239,12 @@ public class HeadersAssertions : HttpResponseMessageAssertions
     /// <summary>
     /// Asserts that an existing HTTP header in an HTTP response has an expected value.
     /// </summary>
+    /// <remarks>
+    /// The header must have exactly one non-empty value, and that whole value is compared with
+    /// <paramref name="expectedValue"/>. A header with multiple values fails even when one of them matches. The
+    /// assertion does not split values on commas: a header exposing <c>GET, POST</c> as one value matches
+    /// <c>BeValue("GET, POST")</c>, not <c>BeValue("GET")</c>.
+    /// </remarks>
     /// <param name="expectedValue">
     /// The expected value with which the HTTP header value list is compared.
     /// </param>

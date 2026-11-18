@@ -37,6 +37,40 @@ response.ShouldHaveHeader("X-Correlation-ID");
 response.ShouldMatchInContent("*\"author\"*");
 ```
 
+## Single-value and multi-value headers
+
+`HttpHeaders` exposes each header as a collection of string values. The assertions use that collection exactly as .NET exposes it; they never split values on commas.
+
+| FluentAssertions / AwesomeAssertions | Shouldly | Meaning |
+| --- | --- | --- |
+| `HaveHeader("Allow").And.BeValue("GET")` | `ShouldHaveHeaderWithValue("Allow", "GET")` | The header has **exactly one** value and that whole value is the expected one. Multiple values fail even if one matches. |
+| `HaveHeader("Allow").And.BeValues(new[] { "GET", "POST" })` | `ShouldHaveHeaderWithValues("Allow", new[] { "GET", "POST" })` | The header's **complete value collection** is compared as a set; order is ignored. |
+| `HaveHeader("Allow").And.Match("GET*")` | `ShouldHaveHeaderMatching("Allow", "GET*")` | **At least one** value matches the wildcard. |
+| `HaveHeader("Allow").And.BeEmpty()` | `ShouldHaveEmptyHeader("Allow")` | The header has no values. |
+
+A realistic `Allow` header shows why the distinction matters. When the header is added through the typed or validated content-header API, .NET exposes `Allow: GET, POST` as two values:
+
+```csharp
+response.Content.Headers.TryAddWithoutValidation("Allow", new[] { "GET", "POST" });
+
+// FluentAssertions / AwesomeAssertions
+response.Should().HaveHeader("Allow").And.BeValues(new[] { "GET", "POST" });
+
+// Shouldly
+response.ShouldHaveHeaderWithValues("Allow", new[] { "GET", "POST" });
+```
+
+If the same text is added as a single raw value, .NET exposes one value and no assertion splits it:
+
+```csharp
+response.Headers.TryAddWithoutValidation("X-Allow-Raw", "GET, POST");
+
+// Assert the one value that is actually present.
+response.Should().HaveHeader("X-Allow-Raw").And.BeValue("GET, POST");
+```
+
+Use `BeValues` when a header legitimately carries several values, `BeValue` when exactly one is expected, and `Match` when any matching value is enough.
+
 ## How the fluent API is composed
 
 The FluentAssertions and AwesomeAssertions flavours share one fluent API. Every chain starts from the general response assertion returned by `response.Should()`. In `FluentAssertions.Web.v8` and `AwesomeAssertions.Web`, `Should()` returns `HttpResponseMessageAssertions` directly; in `FluentAssertions.Web` (FluentAssertions < 8) the same methods are extension methods over FluentAssertions' own response assertion type.
