@@ -21,7 +21,9 @@ public static class SatisfyModelAssertionsExtensions
     /// An assertion regarding the given model.
     /// </param>
     /// <remarks>
-    /// Use this assertion for custom assertions over the deserialized <typeparamref name="TModel"/>, not for whole-object
+    /// The delegate body is ordinary C#: branch, loop, call helpers and use any framework assertion; async overloads
+    /// also support <c>await</c>. Use this assertion for custom assertions over the deserialized
+    /// <typeparamref name="TModel"/>, not for whole-object
     /// equivalency; use <c>BeAs&lt;T&gt;()</c> when the complete expected body is known. The response is deserialized into
     /// <typeparamref name="TModel"/> before the supplied assertion runs, and a deserialization failure is reported as a
     /// JSON parsing failure before any inner assertion is evaluated. An unexpected exception thrown by the assertion is
@@ -55,7 +57,9 @@ public static class SatisfyModelAssertionsExtensions
     /// A proposed model structure that will help to compose the assertions. This is used to defined the type of the asserted model and it doesn't have to contain other values than the default one.
     /// </param>
     /// <remarks>
-    /// Use this assertion for custom assertions over the deserialized <typeparamref name="TModel"/>, not for whole-object
+    /// The delegate body is ordinary C#: branch, loop, call helpers and use any framework assertion; async overloads
+    /// also support <c>await</c>. Use this assertion for custom assertions over the deserialized
+    /// <typeparamref name="TModel"/>, not for whole-object
     /// equivalency; use <c>BeAs&lt;T&gt;()</c> when the complete expected body is known. The response is deserialized into
     /// <typeparamref name="TModel"/> before the supplied assertion runs, and a deserialization failure is reported as a
     /// JSON parsing failure before any inner assertion is evaluated. An unexpected exception thrown by the assertion is
@@ -93,7 +97,9 @@ public static class SatisfyModelAssertionsExtensions
     /// An assertion regarding the given model.
     /// </param>
     /// <remarks>
-    /// Use this assertion for custom assertions over the deserialized <typeparamref name="TModel"/>, not for whole-object
+    /// The delegate body is ordinary C#: branch, loop, call helpers and use any framework assertion; async overloads
+    /// also support <c>await</c>. Use this assertion for custom assertions over the deserialized
+    /// <typeparamref name="TModel"/>, not for whole-object
     /// equivalency; use <c>BeAs&lt;T&gt;()</c> when the complete expected body is known. The response is deserialized into
     /// <typeparamref name="TModel"/> before the supplied assertion runs, and a deserialization failure is reported as a
     /// JSON parsing failure before any inner assertion is evaluated. An unexpected exception thrown by the assertion is
@@ -127,7 +133,9 @@ public static class SatisfyModelAssertionsExtensions
     /// A proposed model structure that will help to compose the assertions. This is used to defined the type of the asserted model and it doesn't have to contain other values than the default one.
     /// </param>
     /// <remarks>
-    /// Use this assertion for custom assertions over the deserialized <typeparamref name="TModel"/>, not for whole-object
+    /// The delegate body is ordinary C#: branch, loop, call helpers and use any framework assertion; async overloads
+    /// also support <c>await</c>. Use this assertion for custom assertions over the deserialized
+    /// <typeparamref name="TModel"/>, not for whole-object
     /// equivalency; use <c>BeAs&lt;T&gt;()</c> when the complete expected body is known. The response is deserialized into
     /// <typeparamref name="TModel"/> before the supplied assertion runs, and a deserialization failure is reported as a
     /// JSON parsing failure before any inner assertion is evaluated. An unexpected exception thrown by the assertion is

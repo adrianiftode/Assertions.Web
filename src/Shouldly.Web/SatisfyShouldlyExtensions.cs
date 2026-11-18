@@ -22,7 +22,8 @@ namespace Shouldly;
 /// These assertions do not check the status code. Assert the status separately when it matters.
 /// </para>
 /// <para>
-/// The model overloads deserialize the body into <c>TModel</c> before running the supplied conditions; use
+/// Condition delegates are ordinary C#: branch, loop, call helpers and use any Shouldly assertion; async overloads
+/// also support <c>await</c>. The model overloads deserialize the body into <c>TModel</c> before running them; use
 /// <c>ShouldBeAs&lt;T&gt;()</c> for whole-object equivalency instead. A deserialization failure uses the
 /// <c>should be as</c> layout, while failed model conditions use <c>should satisfy all the conditions specified</c>.
 /// Unexpected exceptions thrown by a condition are captured with their exception text. The optional
