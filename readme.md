@@ -173,13 +173,15 @@ public async Task Post_ReturnsCreated_WithHeader_Location_AndTypedBody()
 
     // Assert
     response.Should().Be201Created()
-        .And.HaveHeader("X-Correlation-ID").And.Match("*-*")
         .And.HaveLocation().And.Match("*/api/Comments/*")
+        .And.HaveHeader("X-Correlation-ID").And.Match("*-*")
         .And.BeAs(new { Author = "John", Content = "Hey, you..." });
 }
 ```
 
-For `AwesomeAssertions.Web`, change only the using directive to `using AwesomeAssertions;`. The assertion statements are identical. `FluentAssertions.Web.v8` uses the same code and namespace as `FluentAssertions.Web`; it targets FluentAssertions >= 8.0.0.
+`HaveLocation()` must come before switching to another header: it is declared on the `LocationAssertions` group, and `HaveHeader("X-Correlation-ID")` moves the chain to `HeadersAssertions`. See [How the fluent API is composed](docs/Assertions.Web/Readme.md#how-the-fluent-api-is-composed) for the full transition map.
+
+For `AwesomeAssertions.Web`, change only the using directive to `using AwesomeAssertions;`; the assertion statements above are identical. `FluentAssertions.Web.v8` uses the same code and namespace as `FluentAssertions.Web`; it targets FluentAssertions >= 8.0.0. In FluentAssertions < 8 the built-in `response.Should()` also offers a `HaveLocation()` extension directly, but the chained form shown here works in all three fluent flavours.
 
 ### End-to-end assertion example: Shouldly.Web
 
@@ -1347,6 +1349,8 @@ response.Should().HaveHeader("Set-Cookie").And.BeValues(new[] { "a=1", "b=2" });
 response.Should().HaveHeader("X-Correlation-ID").And.Match("*-*", "it should look like a Guid");
 ```
 
+`BeEmpty()` in this table asserts that the header selected by `HaveHeader` has no values. To assert that the response content is empty, use a fresh `response.Should().BeEmpty()` chain.
+
 <details>
 <summary><code>dotnet test</code> output for <code>And.BeValue("other-vendor")</code> when it fails</summary>
 
@@ -1432,6 +1436,8 @@ Content-Length: 30
 |  *HaveLocation* Header related assertions. | |
 | --- | --- |
 | Should().Be201Created().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 201 status code has a location header. |
+| Should().Be202Accepted().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 202 status code has a location header. |
+| Should().Be204NoContent().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 204 status code has a location header. |
 | Should().Be300Ambiguous().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 300 status code has a location header. |
 | Should().Be300MultipleChoices().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 300 status code has a location header. |
 | Should().Be301Moved().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 301 status code has a location header. |
@@ -1440,18 +1446,21 @@ Content-Length: 30
 | Should().Be302Redirect().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 302 status code has a location header. |
 | Should().Be303RedirectMethod().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 303 status code has a location header. |
 | Should().Be303SeeOther().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 303 status code has a location header. |
-| Should().Be304NotModified().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 304 status code has a location header. |
 | Should().Be305UseProxy().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 305 status code has a location header. |
 | Should().Be307RedirectKeepVerb().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 307 status code has a location header. |
 | Should().Be307TemporaryRedirect().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 307 status code has a location header. |
 | Should().Be308PermanentRedirect().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 308 status code has a location header. |
 | Should().Be3XXRedirection().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP redirection response has a location header. |
+| Should().Be409Conflict().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 409 status code has a location header. |
+| Should().Be410Gone().And.**HaveLocation()**.And.BeValue() |  Asserts that an HTTP response with 410 status code has a location header. |
 
 ```csharp
 response.Should().Be201Created()
     .And.HaveLocation()
     .And.Match("*/api/Comments/1");
 ```
+
+These are the only status assertions that return `LocationAssertions`. `Be304NotModified()` returns the general group, so use `HaveHeader("Location")` to inspect a `Location` header on a 304 response. After `HaveLocation()` the chain is on `HeadersAssertions`; start a new `response.Should()` chain with a location-bearing status if another `HaveLocation()` call is needed.
 
 <details>
 <summary><code>dotnet test</code> output for <code>Be201Created()</code> when the response is a 400 instead</summary>

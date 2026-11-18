@@ -50,23 +50,28 @@ HttpResponseMessageAssertions        general response assertions
 └── BadRequestAssertions             validation errors of a Bad Request response
 ```
 
-Because each specialized group derives from `HttpResponseMessageAssertions`, a specialized assertion never hides the general ones: after `.And` you can still assert the status, the body or `Satisfy`. A group only adds the methods for its own concern.
+Because each specialized group derives from `HttpResponseMessageAssertions`, general assertions remain reachable from `.And`. A specialized group can declare a method with the same name as a general one, and that method wins. For example, `HeadersAssertions.BeEmpty()` checks the values of the selected header, while `response.Should().BeEmpty()` checks response content. Start a new `response.Should()` chain to call the general version.
 
-Every fluent assertion returns `AndConstraint<T>`, and `.And` yields `T`. The return type of a method — not its name — therefore determines which methods are available after `.And`. If a method is not offered after `.And`, the current group does not declare it; call an assertion that returns the group that does, or start a new `response.Should()` chain.
+Every fluent assertion returns `AndConstraint<T>`, and `.And` yields `T`. The return type of a method — not its name — determines which methods are available after `.And`. If a method is not offered after `.And`, the current group does not declare it; call an assertion that returns the group that does, or start a new `response.Should()` chain.
 
 ### Transitions between assertion groups
 
 | Assertion | Returns, so `.And` exposes | What can follow |
 | --- | --- | --- |
-| `response.Should()` | `HttpResponseMessageAssertions` | any general or specialized assertion |
-| `Be200Ok()`, `Be404NotFound()`, `Be5XXServerError()`, ... | `AndConstraint<HttpResponseMessageAssertions>` | status, content and `Satisfy` assertions |
-| `Be201Created()`, `Be202Accepted()`, `Be204NoContent()`, `Be3XXRedirection()`, `Be409Conflict()`, `Be410Gone()`, ... | `AndConstraint<LocationAssertions>` | Location header assertions (`HaveLocation`, `BeValue`, `BeValues`, `Match`, ...) and the general assertions |
-| `Be400BadRequest()` | `AndConstraint<BadRequestAssertions>` | validation assertions (`HaveError`, `OnlyHaveError`, `NotHaveError`, `HaveErrorMessage`) and the general assertions |
-| `HaveHeader("X-Correlation-ID")` | `AndConstraint<HeadersAssertions>` | value assertions on that header (`BeValue`, `BeValues`, `BeEmpty`, `NotBeEmpty`, `Match`) and the general assertions |
+| `response.Should()` in v8/AAV | `HttpResponseMessageAssertions` | status, content, `Satisfy`, `HaveHeader`, `NotHaveHeader` and `NotHaveLocation`; group-specific methods need an entry assertion |
+| `response.Should()` in FA 6/7 | FluentAssertions' built-in response assertion | the extension equivalents of the general and specialized entry assertions; after the first custom assertion the custom groups below apply |
+| General status assertions | `AndConstraint<HttpResponseMessageAssertions>` | status, content and `Satisfy` assertions |
+| Location-bearing status assertions | `AndConstraint<LocationAssertions>` | `HaveLocation`, header-value methods targeting `Location`, and the general assertions |
+| `Be400BadRequest()` | `AndConstraint<BadRequestAssertions>` | validation assertions and the general assertions |
+| `HaveHeader(name)` from any group | `AndConstraint<HeadersAssertions>` | value assertions on that header and the general assertions |
 | `HaveLocation()` on a `LocationAssertions` group | `AndConstraint<HeadersAssertions>` | value assertions on the `Location` header and the general assertions |
-| `HaveError(...)`, `OnlyHaveError(...)`, `NotHaveError(...)`, `HaveErrorMessage(...)` | `AndConstraint<BadRequestAssertions>` | the other validation assertions and the general assertions |
+| `Match`, `BeValue`, `BeValues`, `BeEmpty`, `NotBeEmpty` on a header group | `AndConstraint<HeadersAssertions>` | other header-value methods on the same header and the general assertions |
+| `HaveError`, `OnlyHaveError`, `NotHaveError`, `HaveErrorMessage` | `AndConstraint<BadRequestAssertions>` | other validation methods and the general assertions |
+| `NotHaveHeader`, `NotHaveLocation`, content and `Satisfy` methods | `AndConstraint<HttpResponseMessageAssertions>` | status, content and `Satisfy` assertions |
 
-`Be400BadRequest` is the only status assertion that returns `BadRequestAssertions`, and the status assertions listed above are the ones that return `LocationAssertions`. Every other status assertion returns the general `HttpResponseMessageAssertions`.
+`Be400BadRequest` is the only status assertion that returns `BadRequestAssertions`. The complete location-bearing set is `Be201Created`, `Be202Accepted`, `Be204NoContent`, `Be3XXRedirection`, `Be300MultipleChoices`, `Be300Ambiguous`, `Be301MovedPermanently`, `Be301Moved`, `Be302Found`, `Be302Redirect`, `Be303SeeOther`, `Be303RedirectMethod`, `Be305UseProxy`, `Be307TemporaryRedirect`, `Be307RedirectKeepVerb`, `Be308PermanentRedirect`, `Be409Conflict` and `Be410Gone`. Every other status assertion, including `Be304NotModified()`, returns the general group; use `HaveHeader("Location")` for a 304 response whose `Location` header must be inspected.
+
+Returning a specialized group does not assert its precondition. `Be201Created().And.HaveLocation()` is what asserts that the header is present. `HaveLocation()` itself returns `HeadersAssertions`, so a second `HaveLocation()` is not available until a new chain reaches `LocationAssertions` again. The same rule applies when a validation chain needs the `Location` group or when a header chain needs a status that returns it.
 
 ### Examples
 
@@ -110,6 +115,23 @@ response.Should()
 ```
 
 Each `HaveHeader(name)` sets the header under test for the following header assertions, so consecutive `HaveHeader` calls switch the header being asserted. Because a chain stays in the returned group, starting a new `response.Should()` is the clearest way to move to an unrelated concern; it is a stylistic choice rather than a technical requirement for the general assertions, which every specialized group inherits.
+
+#### Common combinations
+
+These combinations were checked against the public signatures in every fluent flavour. Shouldly uses the same assertions as independent calls, as shown in [The Shouldly style](#the-shouldly-style-no-groups-no-chain).
+
+| Goal | FluentAssertions / AwesomeAssertions |
+| --- | --- |
+| Status and body | `response.Should().Be200Ok().And.BeAs(model);` |
+| Created status, `Location` presence and value | `response.Should().Be201Created().And.HaveLocation().And.Match("*/api/comments/*");` |
+| Created status, `Location` value and body | `response.Should().Be201Created().And.HaveLocation().And.BeValue(url).And.BeAs(model);` |
+| Two different headers | `response.Should().HaveHeader("A").And.Match("a*").And.HaveHeader("B").And.Match("b*");` |
+| Validation errors and an unrelated header | Assert the errors in one chain, then `response.Should().HaveHeader("X-Correlation-ID").And.Match("*-*");` |
+| A 304 response with a `Location` header | `response.Should().Be304NotModified().And.HaveHeader("Location").And.NotBeEmpty();` |
+
+A new chain is required when the next assertion only exists on a group the current chain cannot reach: `HaveLocation` after a header or validation group, or a second `HaveLocation` after the first one has returned `HeadersAssertions`. General methods such as `BeAs` remain available from every group, so no restart is needed for them.
+
+No return type was changed as part of this review. Returning a broader group would be a source and binary breaking change, and moving group-specific entry points onto the base type would weaken the preconditions that the current groups express. The FA 6/7 extensions can still reach `HaveLocation` and the validation methods directly from the initial `response.Should()`; always call `Be400BadRequest()` before validation assertions so the same test works unchanged in v8 and AwesomeAssertions.
 
 ### The Shouldly style: no groups, no chain
 

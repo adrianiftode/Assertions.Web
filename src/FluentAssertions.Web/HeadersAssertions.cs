@@ -16,7 +16,12 @@ namespace FluentAssertions.Web;
 /// </para>
 /// <para>
 /// The group derives from <see cref="HttpResponseMessageAssertions"/>, so status, content and general assertions
-/// remain available from <c>And</c>. Call <see cref="HttpResponseMessageAssertions.HaveHeader"/> again (on the response or from <c>And</c>) to
+/// remain available from <c>And</c>. A method declared here can hide a general method with the same name:
+/// <see cref="BeEmpty"/> asserts that this header has no values, whereas a fresh
+/// <c>response.Should().BeEmpty()</c> asserts that the response content is empty.
+/// </para>
+/// <para>
+/// Call <see cref="HttpResponseMessageAssertions.HaveHeader"/> again (on the response or from <c>And</c>) to
 /// switch to another header. <see cref="HttpResponseMessageAssertions.NotHaveHeader"/> and <see cref="HttpResponseMessageAssertions.NotHaveLocation"/> return
 /// <see cref="HttpResponseMessageAssertions"/> rather than this group.
 /// </para>

@@ -194,7 +194,11 @@ object; class name = `<Area>AssertionsExtensions`; XML docs duplicated from the 
 
 ### 4.3 Chaining
 
-Return type encodes **what the caller may chain next** — this is a deliberate design, not decoration:
+Return type encodes **what the caller may chain next** — this is a deliberate design, not decoration. Changing an
+existing return type is a public API change: it can break source and binary compatibility, so document the current
+transition and chain restart instead unless a breaking change is explicitly approved. Every new specialized entry
+point must also be documented in the shipped XML docs and the shared [transition
+map](docs/Assertions.Web/Readme.md#transitions-between-assertion-groups).
 
 * `Be400BadRequest()` → `AndConstraint<BadRequestAssertions>`, unlocking `.And.HaveError(...)`.
 * `Be201Created()`, `Be3XXRedirection()`, `Be30xRedirect…` → `AndConstraint<LocationAssertions>`, unlocking

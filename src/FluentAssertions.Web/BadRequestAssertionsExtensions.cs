@@ -7,9 +7,11 @@ namespace FluentAssertions;
 /// </summary>
 /// <remarks>
 /// <para>
-/// In FluentAssertions versions before 8, these extensions provide the bad-request validation assertions after
-/// <c>response.Should().Be400BadRequest()</c>. The status assertion must run first; these methods do not assert the
-/// status code themselves.
+/// In FluentAssertions versions before 8, these extensions are also callable directly on the built-in response
+/// assertion returned by <c>response.Should()</c>. They only inspect the response body and do not assert the status
+/// code, so call <c>Be400BadRequest()</c> first whenever the status matters. In FluentAssertions 8 and
+/// AwesomeAssertions the equivalent instance methods are declared on <see cref="BadRequestAssertions"/>, where the
+/// status-first chain is enforced by the returned type.
 /// </para>
 /// <para>
 /// Each method returns <see cref="BadRequestAssertions"/>, so validation, status, content and header assertions can
