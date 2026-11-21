@@ -1764,6 +1764,23 @@ Content-Length: 19
 | **Should().Be503ServiceUnavailable()** | Asserts that an HTTP response has the HTTP status 503 Service Unavailable |
 | **Should().Be504GatewayTimeout()** | Asserts that an HTTP response has the HTTP status 504 Gateway Timeout |
 | **Should().Be505HttpVersionNotSupported()** | Asserts that an HTTP response has the HTTP status 505 Http Version Not Supported |
+| **Should().Be102Processing()** | Asserts that an HTTP response has the HTTP status 102 Processing |
+| **Should().Be103EarlyHints()** | Asserts that an HTTP response has the HTTP status 103 Early Hints |
+| **Should().Be207MultiStatus()** | Asserts that an HTTP response has the HTTP status 207 Multi-Status |
+| **Should().Be208AlreadyReported()** | Asserts that an HTTP response has the HTTP status 208 Already Reported |
+| **Should().Be226IMUsed()** | Asserts that an HTTP response has the HTTP status 226 IM Used |
+| **Should().Be421MisdirectedRequest()** | Asserts that an HTTP response has the HTTP status 421 Misdirected Request |
+| **Should().Be423Locked()** | Asserts that an HTTP response has the HTTP status 423 Locked |
+| **Should().Be424FailedDependency()** | Asserts that an HTTP response has the HTTP status 424 Failed Dependency |
+| **Should().Be425TooEarly()** | Asserts that an HTTP response has the HTTP status 425 Too Early |
+| **Should().Be428PreconditionRequired()** | Asserts that an HTTP response has the HTTP status 428 Precondition Required |
+| **Should().Be431RequestHeaderFieldsTooLarge()** | Asserts that an HTTP response has the HTTP status 431 Request Header Fields Too Large |
+| **Should().Be451UnavailableForLegalReasons()** | Asserts that an HTTP response has the HTTP status 451 Unavailable For Legal Reasons |
+| **Should().Be506VariantAlsoNegotiates()** | Asserts that an HTTP response has the HTTP status 506 Variant Also Negotiates |
+| **Should().Be507InsufficientStorage()** | Asserts that an HTTP response has the HTTP status 507 Insufficient Storage |
+| **Should().Be508LoopDetected()** | Asserts that an HTTP response has the HTTP status 508 Loop Detected |
+| **Should().Be510NotExtended()** | Asserts that an HTTP response has the HTTP status 510 Not Extended |
+| **Should().Be511NetworkAuthenticationRequired()** | Asserts that an HTTP response has the HTTP status 511 Network Authentication Required |
 
 ```csharp
 response.Should().Be2XXSuccessful();
@@ -1915,6 +1932,23 @@ response.ShouldNotHaveLocation();
 | **ShouldBe503ServiceUnavailable()** | Asserts that an HTTP response has the HTTP status 503 Service Unavailable |
 | **ShouldBe504GatewayTimeout()** | Asserts that an HTTP response has the HTTP status 504 Gateway Timeout |
 | **ShouldBe505HttpVersionNotSupported()** | Asserts that an HTTP response has the HTTP status 505 Http Version Not Supported |
+| **ShouldBe102Processing()** | Asserts that an HTTP response has the HTTP status 102 Processing |
+| **ShouldBe103EarlyHints()** | Asserts that an HTTP response has the HTTP status 103 Early Hints |
+| **ShouldBe207MultiStatus()** | Asserts that an HTTP response has the HTTP status 207 Multi-Status |
+| **ShouldBe208AlreadyReported()** | Asserts that an HTTP response has the HTTP status 208 Already Reported |
+| **ShouldBe226IMUsed()** | Asserts that an HTTP response has the HTTP status 226 IM Used |
+| **ShouldBe421MisdirectedRequest()** | Asserts that an HTTP response has the HTTP status 421 Misdirected Request |
+| **ShouldBe423Locked()** | Asserts that an HTTP response has the HTTP status 423 Locked |
+| **ShouldBe424FailedDependency()** | Asserts that an HTTP response has the HTTP status 424 Failed Dependency |
+| **ShouldBe425TooEarly()** | Asserts that an HTTP response has the HTTP status 425 Too Early |
+| **ShouldBe428PreconditionRequired()** | Asserts that an HTTP response has the HTTP status 428 Precondition Required |
+| **ShouldBe431RequestHeaderFieldsTooLarge()** | Asserts that an HTTP response has the HTTP status 431 Request Header Fields Too Large |
+| **ShouldBe451UnavailableForLegalReasons()** | Asserts that an HTTP response has the HTTP status 451 Unavailable For Legal Reasons |
+| **ShouldBe506VariantAlsoNegotiates()** | Asserts that an HTTP response has the HTTP status 506 Variant Also Negotiates |
+| **ShouldBe507InsufficientStorage()** | Asserts that an HTTP response has the HTTP status 507 Insufficient Storage |
+| **ShouldBe508LoopDetected()** | Asserts that an HTTP response has the HTTP status 508 Loop Detected |
+| **ShouldBe510NotExtended()** | Asserts that an HTTP response has the HTTP status 510 Not Extended |
+| **ShouldBe511NetworkAuthenticationRequired()** | Asserts that an HTTP response has the HTTP status 511 Network Authentication Required |
 
 ```csharp
 response.ShouldBe2XXSuccessful();

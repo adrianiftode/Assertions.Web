@@ -677,4 +677,191 @@ public static class HttpStatusCodeShouldlyExtensions
         [CallerArgumentExpression(nameof(actual))] string? actualExpression = null)
         => StatusCodeAssertion.Assert(actual, StatusCodeExpectation.Exactly(505, "HttpStatusCode.HttpVersionNotSupported"),
             customMessage, actualExpression);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 102 Processing
+    /// </summary>
+    /// <param name="actual">The HTTP response under test.</param>
+    /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
+    /// <param name="actualExpression">Captured by the compiler; do not pass it.</param>
+    public static void ShouldBe102Processing(this HttpResponseMessage? actual, string? customMessage = null,
+        [CallerArgumentExpression(nameof(actual))] string? actualExpression = null)
+        => StatusCodeAssertion.Assert(actual, StatusCodeExpectation.Exactly(102, "HttpStatusCode.Processing"),
+            customMessage, actualExpression);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 103 Early Hints
+    /// </summary>
+    /// <param name="actual">The HTTP response under test.</param>
+    /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
+    /// <param name="actualExpression">Captured by the compiler; do not pass it.</param>
+    public static void ShouldBe103EarlyHints(this HttpResponseMessage? actual, string? customMessage = null,
+        [CallerArgumentExpression(nameof(actual))] string? actualExpression = null)
+        => StatusCodeAssertion.Assert(actual, StatusCodeExpectation.Exactly(103, "HttpStatusCode.EarlyHints"),
+            customMessage, actualExpression);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 207 Multi-Status
+    /// </summary>
+    /// <param name="actual">The HTTP response under test.</param>
+    /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
+    /// <param name="actualExpression">Captured by the compiler; do not pass it.</param>
+    public static void ShouldBe207MultiStatus(this HttpResponseMessage? actual, string? customMessage = null,
+        [CallerArgumentExpression(nameof(actual))] string? actualExpression = null)
+        => StatusCodeAssertion.Assert(actual, StatusCodeExpectation.Exactly(207, "HttpStatusCode.MultiStatus"),
+            customMessage, actualExpression);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 208 Already Reported
+    /// </summary>
+    /// <param name="actual">The HTTP response under test.</param>
+    /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
+    /// <param name="actualExpression">Captured by the compiler; do not pass it.</param>
+    public static void ShouldBe208AlreadyReported(this HttpResponseMessage? actual, string? customMessage = null,
+        [CallerArgumentExpression(nameof(actual))] string? actualExpression = null)
+        => StatusCodeAssertion.Assert(actual, StatusCodeExpectation.Exactly(208, "HttpStatusCode.AlreadyReported"),
+            customMessage, actualExpression);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 226 IM Used
+    /// </summary>
+    /// <param name="actual">The HTTP response under test.</param>
+    /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
+    /// <param name="actualExpression">Captured by the compiler; do not pass it.</param>
+    public static void ShouldBe226IMUsed(this HttpResponseMessage? actual, string? customMessage = null,
+        [CallerArgumentExpression(nameof(actual))] string? actualExpression = null)
+        => StatusCodeAssertion.Assert(actual, StatusCodeExpectation.Exactly(226, "HttpStatusCode.IMUsed"),
+            customMessage, actualExpression);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 421 Misdirected Request
+    /// </summary>
+    /// <param name="actual">The HTTP response under test.</param>
+    /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
+    /// <param name="actualExpression">Captured by the compiler; do not pass it.</param>
+    public static void ShouldBe421MisdirectedRequest(this HttpResponseMessage? actual, string? customMessage = null,
+        [CallerArgumentExpression(nameof(actual))] string? actualExpression = null)
+        => StatusCodeAssertion.Assert(actual, StatusCodeExpectation.Exactly(421, "HttpStatusCode.MisdirectedRequest"),
+            customMessage, actualExpression);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 423 Locked
+    /// </summary>
+    /// <param name="actual">The HTTP response under test.</param>
+    /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
+    /// <param name="actualExpression">Captured by the compiler; do not pass it.</param>
+    public static void ShouldBe423Locked(this HttpResponseMessage? actual, string? customMessage = null,
+        [CallerArgumentExpression(nameof(actual))] string? actualExpression = null)
+        => StatusCodeAssertion.Assert(actual, StatusCodeExpectation.Exactly(423, "HttpStatusCode.Locked"),
+            customMessage, actualExpression);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 424 Failed Dependency
+    /// </summary>
+    /// <param name="actual">The HTTP response under test.</param>
+    /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
+    /// <param name="actualExpression">Captured by the compiler; do not pass it.</param>
+    public static void ShouldBe424FailedDependency(this HttpResponseMessage? actual, string? customMessage = null,
+        [CallerArgumentExpression(nameof(actual))] string? actualExpression = null)
+        => StatusCodeAssertion.Assert(actual, StatusCodeExpectation.Exactly(424, "HttpStatusCode.FailedDependency"),
+            customMessage, actualExpression);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 425 Too Early
+    /// </summary>
+    /// <param name="actual">The HTTP response under test.</param>
+    /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
+    /// <param name="actualExpression">Captured by the compiler; do not pass it.</param>
+    public static void ShouldBe425TooEarly(this HttpResponseMessage? actual, string? customMessage = null,
+        [CallerArgumentExpression(nameof(actual))] string? actualExpression = null)
+        => StatusCodeAssertion.Assert(actual, StatusCodeExpectation.Exactly(425, "HttpStatusCode.TooEarly"),
+            customMessage, actualExpression);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 428 Precondition Required
+    /// </summary>
+    /// <param name="actual">The HTTP response under test.</param>
+    /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
+    /// <param name="actualExpression">Captured by the compiler; do not pass it.</param>
+    public static void ShouldBe428PreconditionRequired(this HttpResponseMessage? actual, string? customMessage = null,
+        [CallerArgumentExpression(nameof(actual))] string? actualExpression = null)
+        => StatusCodeAssertion.Assert(actual, StatusCodeExpectation.Exactly(428, "HttpStatusCode.PreconditionRequired"),
+            customMessage, actualExpression);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 431 Request Header Fields Too Large
+    /// </summary>
+    /// <param name="actual">The HTTP response under test.</param>
+    /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
+    /// <param name="actualExpression">Captured by the compiler; do not pass it.</param>
+    public static void ShouldBe431RequestHeaderFieldsTooLarge(this HttpResponseMessage? actual, string? customMessage = null,
+        [CallerArgumentExpression(nameof(actual))] string? actualExpression = null)
+        => StatusCodeAssertion.Assert(actual, StatusCodeExpectation.Exactly(431, "HttpStatusCode.RequestHeaderFieldsTooLarge"),
+            customMessage, actualExpression);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 451 Unavailable For Legal Reasons
+    /// </summary>
+    /// <param name="actual">The HTTP response under test.</param>
+    /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
+    /// <param name="actualExpression">Captured by the compiler; do not pass it.</param>
+    public static void ShouldBe451UnavailableForLegalReasons(this HttpResponseMessage? actual, string? customMessage = null,
+        [CallerArgumentExpression(nameof(actual))] string? actualExpression = null)
+        => StatusCodeAssertion.Assert(actual, StatusCodeExpectation.Exactly(451, "HttpStatusCode.UnavailableForLegalReasons"),
+            customMessage, actualExpression);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 506 Variant Also Negotiates
+    /// </summary>
+    /// <param name="actual">The HTTP response under test.</param>
+    /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
+    /// <param name="actualExpression">Captured by the compiler; do not pass it.</param>
+    public static void ShouldBe506VariantAlsoNegotiates(this HttpResponseMessage? actual, string? customMessage = null,
+        [CallerArgumentExpression(nameof(actual))] string? actualExpression = null)
+        => StatusCodeAssertion.Assert(actual, StatusCodeExpectation.Exactly(506, "HttpStatusCode.VariantAlsoNegotiates"),
+            customMessage, actualExpression);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 507 Insufficient Storage
+    /// </summary>
+    /// <param name="actual">The HTTP response under test.</param>
+    /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
+    /// <param name="actualExpression">Captured by the compiler; do not pass it.</param>
+    public static void ShouldBe507InsufficientStorage(this HttpResponseMessage? actual, string? customMessage = null,
+        [CallerArgumentExpression(nameof(actual))] string? actualExpression = null)
+        => StatusCodeAssertion.Assert(actual, StatusCodeExpectation.Exactly(507, "HttpStatusCode.InsufficientStorage"),
+            customMessage, actualExpression);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 508 Loop Detected
+    /// </summary>
+    /// <param name="actual">The HTTP response under test.</param>
+    /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
+    /// <param name="actualExpression">Captured by the compiler; do not pass it.</param>
+    public static void ShouldBe508LoopDetected(this HttpResponseMessage? actual, string? customMessage = null,
+        [CallerArgumentExpression(nameof(actual))] string? actualExpression = null)
+        => StatusCodeAssertion.Assert(actual, StatusCodeExpectation.Exactly(508, "HttpStatusCode.LoopDetected"),
+            customMessage, actualExpression);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 510 Not Extended
+    /// </summary>
+    /// <param name="actual">The HTTP response under test.</param>
+    /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
+    /// <param name="actualExpression">Captured by the compiler; do not pass it.</param>
+    public static void ShouldBe510NotExtended(this HttpResponseMessage? actual, string? customMessage = null,
+        [CallerArgumentExpression(nameof(actual))] string? actualExpression = null)
+        => StatusCodeAssertion.Assert(actual, StatusCodeExpectation.Exactly(510, "HttpStatusCode.NotExtended"),
+            customMessage, actualExpression);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 511 Network Authentication Required
+    /// </summary>
+    /// <param name="actual">The HTTP response under test.</param>
+    /// <param name="customMessage">Extra text shown under <c>Additional Info</c> when the assertion fails.</param>
+    /// <param name="actualExpression">Captured by the compiler; do not pass it.</param>
+    public static void ShouldBe511NetworkAuthenticationRequired(this HttpResponseMessage? actual, string? customMessage = null,
+        [CallerArgumentExpression(nameof(actual))] string? actualExpression = null)
+        => StatusCodeAssertion.Assert(actual, StatusCodeExpectation.Exactly(511, "HttpStatusCode.NetworkAuthenticationRequired"),
+            customMessage, actualExpression);
 }

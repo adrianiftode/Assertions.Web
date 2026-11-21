@@ -1123,5 +1123,311 @@ public static class HttpStatusCodeAssertionsExtensions
         string because = "", params object[] becauseArgs)
         => new HttpResponseMessageAssertions(parent.Subject).Be505HttpVersionNotSupported(because, becauseArgs);
     #endregion
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 102 Processing
+    /// </summary>
+    /// <param name="because">
+    /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
+    /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.
+    /// </param>
+    /// <param name="becauseArgs">
+    /// Zero or more objects to format using the placeholders in <see paramref="because" />.
+    /// </param>
+    [CustomAssertion]
+    public static AndConstraint<HttpResponseMessageAssertions> Be102Processing(
+#pragma warning disable 1573
+        this Primitives.HttpResponseMessageAssertions<Primitives.HttpResponseMessageAssertions> parent,
+#pragma warning restore 1573,
+        string because = "", params object[] becauseArgs)
+        => new HttpResponseMessageAssertions(parent.Subject).Be102Processing(because, becauseArgs);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 103 Early Hints
+    /// </summary>
+    /// <param name="because">
+    /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
+    /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.
+    /// </param>
+    /// <param name="becauseArgs">
+    /// Zero or more objects to format using the placeholders in <see paramref="because" />.
+    /// </param>
+    [CustomAssertion]
+    public static AndConstraint<HttpResponseMessageAssertions> Be103EarlyHints(
+#pragma warning disable 1573
+        this Primitives.HttpResponseMessageAssertions<Primitives.HttpResponseMessageAssertions> parent,
+#pragma warning restore 1573,
+        string because = "", params object[] becauseArgs)
+        => new HttpResponseMessageAssertions(parent.Subject).Be103EarlyHints(because, becauseArgs);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 207 Multi-Status
+    /// </summary>
+    /// <param name="because">
+    /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
+    /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.
+    /// </param>
+    /// <param name="becauseArgs">
+    /// Zero or more objects to format using the placeholders in <see paramref="because" />.
+    /// </param>
+    [CustomAssertion]
+    public static AndConstraint<HttpResponseMessageAssertions> Be207MultiStatus(
+#pragma warning disable 1573
+        this Primitives.HttpResponseMessageAssertions<Primitives.HttpResponseMessageAssertions> parent,
+#pragma warning restore 1573,
+        string because = "", params object[] becauseArgs)
+        => new HttpResponseMessageAssertions(parent.Subject).Be207MultiStatus(because, becauseArgs);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 208 Already Reported
+    /// </summary>
+    /// <param name="because">
+    /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
+    /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.
+    /// </param>
+    /// <param name="becauseArgs">
+    /// Zero or more objects to format using the placeholders in <see paramref="because" />.
+    /// </param>
+    [CustomAssertion]
+    public static AndConstraint<HttpResponseMessageAssertions> Be208AlreadyReported(
+#pragma warning disable 1573
+        this Primitives.HttpResponseMessageAssertions<Primitives.HttpResponseMessageAssertions> parent,
+#pragma warning restore 1573,
+        string because = "", params object[] becauseArgs)
+        => new HttpResponseMessageAssertions(parent.Subject).Be208AlreadyReported(because, becauseArgs);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 226 IM Used
+    /// </summary>
+    /// <param name="because">
+    /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
+    /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.
+    /// </param>
+    /// <param name="becauseArgs">
+    /// Zero or more objects to format using the placeholders in <see paramref="because" />.
+    /// </param>
+    [CustomAssertion]
+    public static AndConstraint<HttpResponseMessageAssertions> Be226IMUsed(
+#pragma warning disable 1573
+        this Primitives.HttpResponseMessageAssertions<Primitives.HttpResponseMessageAssertions> parent,
+#pragma warning restore 1573,
+        string because = "", params object[] becauseArgs)
+        => new HttpResponseMessageAssertions(parent.Subject).Be226IMUsed(because, becauseArgs);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 421 Misdirected Request
+    /// </summary>
+    /// <param name="because">
+    /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
+    /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.
+    /// </param>
+    /// <param name="becauseArgs">
+    /// Zero or more objects to format using the placeholders in <see paramref="because" />.
+    /// </param>
+    [CustomAssertion]
+    public static AndConstraint<HttpResponseMessageAssertions> Be421MisdirectedRequest(
+#pragma warning disable 1573
+        this Primitives.HttpResponseMessageAssertions<Primitives.HttpResponseMessageAssertions> parent,
+#pragma warning restore 1573,
+        string because = "", params object[] becauseArgs)
+        => new HttpResponseMessageAssertions(parent.Subject).Be421MisdirectedRequest(because, becauseArgs);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 423 Locked
+    /// </summary>
+    /// <param name="because">
+    /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
+    /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.
+    /// </param>
+    /// <param name="becauseArgs">
+    /// Zero or more objects to format using the placeholders in <see paramref="because" />.
+    /// </param>
+    [CustomAssertion]
+    public static AndConstraint<HttpResponseMessageAssertions> Be423Locked(
+#pragma warning disable 1573
+        this Primitives.HttpResponseMessageAssertions<Primitives.HttpResponseMessageAssertions> parent,
+#pragma warning restore 1573,
+        string because = "", params object[] becauseArgs)
+        => new HttpResponseMessageAssertions(parent.Subject).Be423Locked(because, becauseArgs);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 424 Failed Dependency
+    /// </summary>
+    /// <param name="because">
+    /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
+    /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.
+    /// </param>
+    /// <param name="becauseArgs">
+    /// Zero or more objects to format using the placeholders in <see paramref="because" />.
+    /// </param>
+    [CustomAssertion]
+    public static AndConstraint<HttpResponseMessageAssertions> Be424FailedDependency(
+#pragma warning disable 1573
+        this Primitives.HttpResponseMessageAssertions<Primitives.HttpResponseMessageAssertions> parent,
+#pragma warning restore 1573,
+        string because = "", params object[] becauseArgs)
+        => new HttpResponseMessageAssertions(parent.Subject).Be424FailedDependency(because, becauseArgs);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 425 Too Early
+    /// </summary>
+    /// <param name="because">
+    /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
+    /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.
+    /// </param>
+    /// <param name="becauseArgs">
+    /// Zero or more objects to format using the placeholders in <see paramref="because" />.
+    /// </param>
+    [CustomAssertion]
+    public static AndConstraint<HttpResponseMessageAssertions> Be425TooEarly(
+#pragma warning disable 1573
+        this Primitives.HttpResponseMessageAssertions<Primitives.HttpResponseMessageAssertions> parent,
+#pragma warning restore 1573,
+        string because = "", params object[] becauseArgs)
+        => new HttpResponseMessageAssertions(parent.Subject).Be425TooEarly(because, becauseArgs);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 428 Precondition Required
+    /// </summary>
+    /// <param name="because">
+    /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
+    /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.
+    /// </param>
+    /// <param name="becauseArgs">
+    /// Zero or more objects to format using the placeholders in <see paramref="because" />.
+    /// </param>
+    [CustomAssertion]
+    public static AndConstraint<HttpResponseMessageAssertions> Be428PreconditionRequired(
+#pragma warning disable 1573
+        this Primitives.HttpResponseMessageAssertions<Primitives.HttpResponseMessageAssertions> parent,
+#pragma warning restore 1573,
+        string because = "", params object[] becauseArgs)
+        => new HttpResponseMessageAssertions(parent.Subject).Be428PreconditionRequired(because, becauseArgs);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 431 Request Header Fields Too Large
+    /// </summary>
+    /// <param name="because">
+    /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
+    /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.
+    /// </param>
+    /// <param name="becauseArgs">
+    /// Zero or more objects to format using the placeholders in <see paramref="because" />.
+    /// </param>
+    [CustomAssertion]
+    public static AndConstraint<HttpResponseMessageAssertions> Be431RequestHeaderFieldsTooLarge(
+#pragma warning disable 1573
+        this Primitives.HttpResponseMessageAssertions<Primitives.HttpResponseMessageAssertions> parent,
+#pragma warning restore 1573,
+        string because = "", params object[] becauseArgs)
+        => new HttpResponseMessageAssertions(parent.Subject).Be431RequestHeaderFieldsTooLarge(because, becauseArgs);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 451 Unavailable For Legal Reasons
+    /// </summary>
+    /// <param name="because">
+    /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
+    /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.
+    /// </param>
+    /// <param name="becauseArgs">
+    /// Zero or more objects to format using the placeholders in <see paramref="because" />.
+    /// </param>
+    [CustomAssertion]
+    public static AndConstraint<HttpResponseMessageAssertions> Be451UnavailableForLegalReasons(
+#pragma warning disable 1573
+        this Primitives.HttpResponseMessageAssertions<Primitives.HttpResponseMessageAssertions> parent,
+#pragma warning restore 1573,
+        string because = "", params object[] becauseArgs)
+        => new HttpResponseMessageAssertions(parent.Subject).Be451UnavailableForLegalReasons(because, becauseArgs);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 506 Variant Also Negotiates
+    /// </summary>
+    /// <param name="because">
+    /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
+    /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.
+    /// </param>
+    /// <param name="becauseArgs">
+    /// Zero or more objects to format using the placeholders in <see paramref="because" />.
+    /// </param>
+    [CustomAssertion]
+    public static AndConstraint<HttpResponseMessageAssertions> Be506VariantAlsoNegotiates(
+#pragma warning disable 1573
+        this Primitives.HttpResponseMessageAssertions<Primitives.HttpResponseMessageAssertions> parent,
+#pragma warning restore 1573,
+        string because = "", params object[] becauseArgs)
+        => new HttpResponseMessageAssertions(parent.Subject).Be506VariantAlsoNegotiates(because, becauseArgs);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 507 Insufficient Storage
+    /// </summary>
+    /// <param name="because">
+    /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
+    /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.
+    /// </param>
+    /// <param name="becauseArgs">
+    /// Zero or more objects to format using the placeholders in <see paramref="because" />.
+    /// </param>
+    [CustomAssertion]
+    public static AndConstraint<HttpResponseMessageAssertions> Be507InsufficientStorage(
+#pragma warning disable 1573
+        this Primitives.HttpResponseMessageAssertions<Primitives.HttpResponseMessageAssertions> parent,
+#pragma warning restore 1573,
+        string because = "", params object[] becauseArgs)
+        => new HttpResponseMessageAssertions(parent.Subject).Be507InsufficientStorage(because, becauseArgs);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 508 Loop Detected
+    /// </summary>
+    /// <param name="because">
+    /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
+    /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.
+    /// </param>
+    /// <param name="becauseArgs">
+    /// Zero or more objects to format using the placeholders in <see paramref="because" />.
+    /// </param>
+    [CustomAssertion]
+    public static AndConstraint<HttpResponseMessageAssertions> Be508LoopDetected(
+#pragma warning disable 1573
+        this Primitives.HttpResponseMessageAssertions<Primitives.HttpResponseMessageAssertions> parent,
+#pragma warning restore 1573,
+        string because = "", params object[] becauseArgs)
+        => new HttpResponseMessageAssertions(parent.Subject).Be508LoopDetected(because, becauseArgs);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 510 Not Extended
+    /// </summary>
+    /// <param name="because">
+    /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
+    /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.
+    /// </param>
+    /// <param name="becauseArgs">
+    /// Zero or more objects to format using the placeholders in <see paramref="because" />.
+    /// </param>
+    [CustomAssertion]
+    public static AndConstraint<HttpResponseMessageAssertions> Be510NotExtended(
+#pragma warning disable 1573
+        this Primitives.HttpResponseMessageAssertions<Primitives.HttpResponseMessageAssertions> parent,
+#pragma warning restore 1573,
+        string because = "", params object[] becauseArgs)
+        => new HttpResponseMessageAssertions(parent.Subject).Be510NotExtended(because, becauseArgs);
+
+    /// <summary>
+    /// Asserts that an HTTP response has the HTTP status 511 Network Authentication Required
+    /// </summary>
+    /// <param name="because">
+    /// A formatted phrase as is supported by <see cref="string.Format(string,object[])" /> explaining why the assertion
+    /// is needed. If the phrase does not start with the word <i>because</i>, it is prepended automatically.
+    /// </param>
+    /// <param name="becauseArgs">
+    /// Zero or more objects to format using the placeholders in <see paramref="because" />.
+    /// </param>
+    [CustomAssertion]
+    public static AndConstraint<HttpResponseMessageAssertions> Be511NetworkAuthenticationRequired(
+#pragma warning disable 1573
+        this Primitives.HttpResponseMessageAssertions<Primitives.HttpResponseMessageAssertions> parent,
+#pragma warning restore 1573,
+        string because = "", params object[] becauseArgs)
+        => new HttpResponseMessageAssertions(parent.Subject).Be511NetworkAuthenticationRequired(because, becauseArgs);
 }
 #endif
