@@ -73,6 +73,32 @@ response.Should().HaveHeader("X-Allow-Raw").And.BeValue("GET, POST");
 
 Use `BeValues` when a header legitimately carries several values, `BeValue` when exactly one is expected, and `Match` when any matching value is enough.
 
+## Asserting media types
+
+There is no dedicated Content-Type assertion. Media types are asserted with the generic header API, using a wildcard that starts with the media type and ends with `*` so that the `; charset=...` parameter is accepted:
+
+| Response | FluentAssertions / AwesomeAssertions | Shouldly |
+| --- | --- | --- |
+| JSON | `response.Should().HaveHeader("Content-Type").And.Match("application/json*");` | `response.ShouldHaveHeaderMatching("Content-Type", "application/json*");` |
+| ProblemDetails (RFC 9457 / 7807) | `response.Should().HaveHeader("Content-Type").And.Match("application/problem+json*");` | `response.ShouldHaveHeaderMatching("Content-Type", "application/problem+json*");` |
+| Vendor `+json` (for example `application/vnd.api+json`) | `response.Should().HaveHeader("Content-Type").And.Match("application/vnd.api+json*");` | `response.ShouldHaveHeaderMatching("Content-Type", "application/vnd.api+json*");` |
+
+A complete example for a ProblemDetails endpoint, starting from a fresh chain for each concern:
+
+```csharp
+response.Should().Be400BadRequest();
+response.Should().HaveHeader("Content-Type").And.Match("application/problem+json*");
+```
+
+Keep these rules in mind when choosing a pattern:
+
+- **The trailing `*` is required.** Matching is anchored, so `application/json` alone fails for the real header value `application/json; charset=utf-8`.
+- **`*` is broader than the media type.** `application/json*` also matches `application/json-patch+json` and `application/jsonl`. Include the full subtype (`application/problem+json*`) when the exact type matters, rather than relying on a short prefix.
+- **Matching is case-sensitive.** `Application/JSON*` does not match `application/json; charset=utf-8`. Media types are case-insensitive by specification, so write them in lower case as servers normally send them.
+- **Charset is not asserted.** The wildcard accepts any parameters. To require a specific charset, match the whole value, for example `Match("application/json; charset=utf-8")`.
+
+For a value that must be checked exactly, use `BeValue` instead: `response.Should().HaveHeader("Content-Type").And.BeValue("application/json; charset=utf-8");`. This compares the whole header value, ignoring value casing as described in the case-sensitivity map below.
+
 ## Case-sensitivity map
 
 There is no library-wide case switch. Each assertion follows the semantics of the thing it compares:
@@ -100,7 +126,7 @@ response.Should().HaveHeader("allow").And.BeValues(new[] { "GET", "POST" }); // 
 response.Should().HaveHeader("content-type").And.Match("application/json*"); // wildcard casing must match
 ```
 
-> .NET classifies `Allow` as a content header and rejects it on `HttpResponseHeaders`, even though HTTP defines it as response metadata. The shared lookup spans response and content headers, so the example above is the supported way to model it; the `Content-Type` assertion exercises the content-header path explicitly.
+> .NET classifies `Allow` as a content header and rejects it on `HttpResponseHeaders`, even though HTTP defines it as response metadata. The shared lookup spans response and content headers, so the example above is the supported way to model it; the media-type examples in "Asserting media types" exercise the content-header path explicitly.
 
 Shouldly uses the same contract through `ShouldHaveHeaderWithValue`, `ShouldHaveHeaderWithValues` and `ShouldHaveHeaderMatching`; only the method names change.
 
