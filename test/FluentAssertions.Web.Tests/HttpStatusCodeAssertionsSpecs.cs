@@ -4441,4 +4441,1296 @@ public class HttpStatusCodeAssertionsSpecs
 #endif
     }
     #endregion 
+
+    #region 102 Processing
+    [Fact]
+    public void When_asserting_102_Processing_response_to_be_102Processing_it_should_succeed()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage((HttpStatusCode)102);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe102Processing();
+
+        // Assert
+        act.ShouldNotThrow();
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be102Processing();
+
+        // Assert
+        act.Should().NotThrow();
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_other_than_102_Processing_response_to_be_102Processing_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage(HttpStatusCode.OK);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe102Processing("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject.StatusCode",
+            "should be", "HttpStatusCode.Processing", "but was", "HttpStatusCode.OK",
+            "Additional Info:", "because we want to test the failure message",
+            "The HTTP response was:");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be102Processing("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("*HttpStatusCode.Processing*because we want to test the failure message, but found HttpStatusCode.OK {value: 200}*");
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_null_HttpResponse_to_102_Processing_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        HttpResponseMessage? subject = null;
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe102Processing("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject", "should not be null", "Additional Info:", "because we want to test the failure message");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be102Processing("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("Expected a * to assert because we want to test the failure message, but found <null>.");
+#endif
+    }
+    #endregion
+
+    #region 103 Early Hints
+    [Fact]
+    public void When_asserting_103_Early_Hints_response_to_be_103EarlyHints_it_should_succeed()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage((HttpStatusCode)103);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe103EarlyHints();
+
+        // Assert
+        act.ShouldNotThrow();
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be103EarlyHints();
+
+        // Assert
+        act.Should().NotThrow();
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_other_than_103_Early_Hints_response_to_be_103EarlyHints_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage(HttpStatusCode.OK);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe103EarlyHints("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject.StatusCode",
+            "should be", "HttpStatusCode.EarlyHints", "but was", "HttpStatusCode.OK",
+            "Additional Info:", "because we want to test the failure message",
+            "The HTTP response was:");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be103EarlyHints("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("*HttpStatusCode.EarlyHints*because we want to test the failure message, but found HttpStatusCode.OK {value: 200}*");
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_null_HttpResponse_to_103_Early_Hints_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        HttpResponseMessage? subject = null;
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe103EarlyHints("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject", "should not be null", "Additional Info:", "because we want to test the failure message");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be103EarlyHints("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("Expected a * to assert because we want to test the failure message, but found <null>.");
+#endif
+    }
+    #endregion
+
+    #region 207 Multi-Status
+    [Fact]
+    public void When_asserting_207_Multi_Status_response_to_be_207MultiStatus_it_should_succeed()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage((HttpStatusCode)207);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe207MultiStatus();
+
+        // Assert
+        act.ShouldNotThrow();
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be207MultiStatus();
+
+        // Assert
+        act.Should().NotThrow();
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_other_than_207_Multi_Status_response_to_be_207MultiStatus_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage(HttpStatusCode.OK);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe207MultiStatus("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject.StatusCode",
+            "should be", "HttpStatusCode.MultiStatus", "but was", "HttpStatusCode.OK",
+            "Additional Info:", "because we want to test the failure message",
+            "The HTTP response was:");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be207MultiStatus("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("*HttpStatusCode.MultiStatus*because we want to test the failure message, but found HttpStatusCode.OK {value: 200}*");
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_null_HttpResponse_to_207_Multi_Status_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        HttpResponseMessage? subject = null;
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe207MultiStatus("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject", "should not be null", "Additional Info:", "because we want to test the failure message");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be207MultiStatus("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("Expected a * to assert because we want to test the failure message, but found <null>.");
+#endif
+    }
+    #endregion
+
+    #region 208 Already Reported
+    [Fact]
+    public void When_asserting_208_Already_Reported_response_to_be_208AlreadyReported_it_should_succeed()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage((HttpStatusCode)208);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe208AlreadyReported();
+
+        // Assert
+        act.ShouldNotThrow();
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be208AlreadyReported();
+
+        // Assert
+        act.Should().NotThrow();
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_other_than_208_Already_Reported_response_to_be_208AlreadyReported_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage(HttpStatusCode.OK);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe208AlreadyReported("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject.StatusCode",
+            "should be", "HttpStatusCode.AlreadyReported", "but was", "HttpStatusCode.OK",
+            "Additional Info:", "because we want to test the failure message",
+            "The HTTP response was:");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be208AlreadyReported("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("*HttpStatusCode.AlreadyReported*because we want to test the failure message, but found HttpStatusCode.OK {value: 200}*");
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_null_HttpResponse_to_208_Already_Reported_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        HttpResponseMessage? subject = null;
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe208AlreadyReported("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject", "should not be null", "Additional Info:", "because we want to test the failure message");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be208AlreadyReported("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("Expected a * to assert because we want to test the failure message, but found <null>.");
+#endif
+    }
+    #endregion
+
+    #region 226 IM Used
+    [Fact]
+    public void When_asserting_226_IM_Used_response_to_be_226IMUsed_it_should_succeed()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage((HttpStatusCode)226);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe226IMUsed();
+
+        // Assert
+        act.ShouldNotThrow();
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be226IMUsed();
+
+        // Assert
+        act.Should().NotThrow();
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_other_than_226_IM_Used_response_to_be_226IMUsed_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage(HttpStatusCode.OK);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe226IMUsed("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject.StatusCode",
+            "should be", "HttpStatusCode.IMUsed", "but was", "HttpStatusCode.OK",
+            "Additional Info:", "because we want to test the failure message",
+            "The HTTP response was:");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be226IMUsed("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("*HttpStatusCode.IMUsed*because we want to test the failure message, but found HttpStatusCode.OK {value: 200}*");
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_null_HttpResponse_to_226_IM_Used_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        HttpResponseMessage? subject = null;
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe226IMUsed("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject", "should not be null", "Additional Info:", "because we want to test the failure message");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be226IMUsed("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("Expected a * to assert because we want to test the failure message, but found <null>.");
+#endif
+    }
+    #endregion
+
+    #region 421 Misdirected Request
+    [Fact]
+    public void When_asserting_421_Misdirected_Request_response_to_be_421MisdirectedRequest_it_should_succeed()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage((HttpStatusCode)421);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe421MisdirectedRequest();
+
+        // Assert
+        act.ShouldNotThrow();
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be421MisdirectedRequest();
+
+        // Assert
+        act.Should().NotThrow();
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_other_than_421_Misdirected_Request_response_to_be_421MisdirectedRequest_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage(HttpStatusCode.OK);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe421MisdirectedRequest("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject.StatusCode",
+            "should be", "HttpStatusCode.MisdirectedRequest", "but was", "HttpStatusCode.OK",
+            "Additional Info:", "because we want to test the failure message",
+            "The HTTP response was:");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be421MisdirectedRequest("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("*HttpStatusCode.MisdirectedRequest*because we want to test the failure message, but found HttpStatusCode.OK {value: 200}*");
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_null_HttpResponse_to_421_Misdirected_Request_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        HttpResponseMessage? subject = null;
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe421MisdirectedRequest("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject", "should not be null", "Additional Info:", "because we want to test the failure message");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be421MisdirectedRequest("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("Expected a * to assert because we want to test the failure message, but found <null>.");
+#endif
+    }
+    #endregion
+
+    #region 423 Locked
+    [Fact]
+    public void When_asserting_423_Locked_response_to_be_423Locked_it_should_succeed()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage((HttpStatusCode)423);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe423Locked();
+
+        // Assert
+        act.ShouldNotThrow();
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be423Locked();
+
+        // Assert
+        act.Should().NotThrow();
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_other_than_423_Locked_response_to_be_423Locked_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage(HttpStatusCode.OK);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe423Locked("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject.StatusCode",
+            "should be", "HttpStatusCode.Locked", "but was", "HttpStatusCode.OK",
+            "Additional Info:", "because we want to test the failure message",
+            "The HTTP response was:");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be423Locked("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("*HttpStatusCode.Locked*because we want to test the failure message, but found HttpStatusCode.OK {value: 200}*");
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_null_HttpResponse_to_423_Locked_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        HttpResponseMessage? subject = null;
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe423Locked("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject", "should not be null", "Additional Info:", "because we want to test the failure message");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be423Locked("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("Expected a * to assert because we want to test the failure message, but found <null>.");
+#endif
+    }
+    #endregion
+
+    #region 424 Failed Dependency
+    [Fact]
+    public void When_asserting_424_Failed_Dependency_response_to_be_424FailedDependency_it_should_succeed()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage((HttpStatusCode)424);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe424FailedDependency();
+
+        // Assert
+        act.ShouldNotThrow();
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be424FailedDependency();
+
+        // Assert
+        act.Should().NotThrow();
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_other_than_424_Failed_Dependency_response_to_be_424FailedDependency_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage(HttpStatusCode.OK);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe424FailedDependency("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject.StatusCode",
+            "should be", "HttpStatusCode.FailedDependency", "but was", "HttpStatusCode.OK",
+            "Additional Info:", "because we want to test the failure message",
+            "The HTTP response was:");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be424FailedDependency("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("*HttpStatusCode.FailedDependency*because we want to test the failure message, but found HttpStatusCode.OK {value: 200}*");
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_null_HttpResponse_to_424_Failed_Dependency_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        HttpResponseMessage? subject = null;
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe424FailedDependency("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject", "should not be null", "Additional Info:", "because we want to test the failure message");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be424FailedDependency("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("Expected a * to assert because we want to test the failure message, but found <null>.");
+#endif
+    }
+    #endregion
+
+    #region 425 Too Early
+    [Fact]
+    public void When_asserting_425_Too_Early_response_to_be_425TooEarly_it_should_succeed()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage((HttpStatusCode)425);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe425TooEarly();
+
+        // Assert
+        act.ShouldNotThrow();
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be425TooEarly();
+
+        // Assert
+        act.Should().NotThrow();
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_other_than_425_Too_Early_response_to_be_425TooEarly_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage(HttpStatusCode.OK);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe425TooEarly("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject.StatusCode",
+            "should be", "HttpStatusCode.TooEarly", "but was", "HttpStatusCode.OK",
+            "Additional Info:", "because we want to test the failure message",
+            "The HTTP response was:");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be425TooEarly("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("*HttpStatusCode.TooEarly*because we want to test the failure message, but found HttpStatusCode.OK {value: 200}*");
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_null_HttpResponse_to_425_Too_Early_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        HttpResponseMessage? subject = null;
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe425TooEarly("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject", "should not be null", "Additional Info:", "because we want to test the failure message");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be425TooEarly("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("Expected a * to assert because we want to test the failure message, but found <null>.");
+#endif
+    }
+    #endregion
+
+    #region 428 Precondition Required
+    [Fact]
+    public void When_asserting_428_Precondition_Required_response_to_be_428PreconditionRequired_it_should_succeed()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage((HttpStatusCode)428);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe428PreconditionRequired();
+
+        // Assert
+        act.ShouldNotThrow();
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be428PreconditionRequired();
+
+        // Assert
+        act.Should().NotThrow();
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_other_than_428_Precondition_Required_response_to_be_428PreconditionRequired_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage(HttpStatusCode.OK);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe428PreconditionRequired("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject.StatusCode",
+            "should be", "HttpStatusCode.PreconditionRequired", "but was", "HttpStatusCode.OK",
+            "Additional Info:", "because we want to test the failure message",
+            "The HTTP response was:");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be428PreconditionRequired("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("*HttpStatusCode.PreconditionRequired*because we want to test the failure message, but found HttpStatusCode.OK {value: 200}*");
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_null_HttpResponse_to_428_Precondition_Required_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        HttpResponseMessage? subject = null;
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe428PreconditionRequired("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject", "should not be null", "Additional Info:", "because we want to test the failure message");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be428PreconditionRequired("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("Expected a * to assert because we want to test the failure message, but found <null>.");
+#endif
+    }
+    #endregion
+
+    #region 431 Request Header Fields Too Large
+    [Fact]
+    public void When_asserting_431_Request_Header_Fields_Too_Large_response_to_be_431RequestHeaderFieldsTooLarge_it_should_succeed()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage((HttpStatusCode)431);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe431RequestHeaderFieldsTooLarge();
+
+        // Assert
+        act.ShouldNotThrow();
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be431RequestHeaderFieldsTooLarge();
+
+        // Assert
+        act.Should().NotThrow();
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_other_than_431_Request_Header_Fields_Too_Large_response_to_be_431RequestHeaderFieldsTooLarge_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage(HttpStatusCode.OK);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe431RequestHeaderFieldsTooLarge("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject.StatusCode",
+            "should be", "HttpStatusCode.RequestHeaderFieldsTooLarge", "but was", "HttpStatusCode.OK",
+            "Additional Info:", "because we want to test the failure message",
+            "The HTTP response was:");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be431RequestHeaderFieldsTooLarge("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("*HttpStatusCode.RequestHeaderFieldsTooLarge*because we want to test the failure message, but found HttpStatusCode.OK {value: 200}*");
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_null_HttpResponse_to_431_Request_Header_Fields_Too_Large_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        HttpResponseMessage? subject = null;
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe431RequestHeaderFieldsTooLarge("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject", "should not be null", "Additional Info:", "because we want to test the failure message");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be431RequestHeaderFieldsTooLarge("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("Expected a * to assert because we want to test the failure message, but found <null>.");
+#endif
+    }
+    #endregion
+
+    #region 451 Unavailable For Legal Reasons
+    [Fact]
+    public void When_asserting_451_Unavailable_For_Legal_Reasons_response_to_be_451UnavailableForLegalReasons_it_should_succeed()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage((HttpStatusCode)451);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe451UnavailableForLegalReasons();
+
+        // Assert
+        act.ShouldNotThrow();
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be451UnavailableForLegalReasons();
+
+        // Assert
+        act.Should().NotThrow();
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_other_than_451_Unavailable_For_Legal_Reasons_response_to_be_451UnavailableForLegalReasons_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage(HttpStatusCode.OK);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe451UnavailableForLegalReasons("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject.StatusCode",
+            "should be", "HttpStatusCode.UnavailableForLegalReasons", "but was", "HttpStatusCode.OK",
+            "Additional Info:", "because we want to test the failure message",
+            "The HTTP response was:");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be451UnavailableForLegalReasons("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("*HttpStatusCode.UnavailableForLegalReasons*because we want to test the failure message, but found HttpStatusCode.OK {value: 200}*");
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_null_HttpResponse_to_451_Unavailable_For_Legal_Reasons_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        HttpResponseMessage? subject = null;
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe451UnavailableForLegalReasons("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject", "should not be null", "Additional Info:", "because we want to test the failure message");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be451UnavailableForLegalReasons("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("Expected a * to assert because we want to test the failure message, but found <null>.");
+#endif
+    }
+    #endregion
+
+    #region 506 Variant Also Negotiates
+    [Fact]
+    public void When_asserting_506_Variant_Also_Negotiates_response_to_be_506VariantAlsoNegotiates_it_should_succeed()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage((HttpStatusCode)506);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe506VariantAlsoNegotiates();
+
+        // Assert
+        act.ShouldNotThrow();
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be506VariantAlsoNegotiates();
+
+        // Assert
+        act.Should().NotThrow();
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_other_than_506_Variant_Also_Negotiates_response_to_be_506VariantAlsoNegotiates_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage(HttpStatusCode.OK);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe506VariantAlsoNegotiates("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject.StatusCode",
+            "should be", "HttpStatusCode.VariantAlsoNegotiates", "but was", "HttpStatusCode.OK",
+            "Additional Info:", "because we want to test the failure message",
+            "The HTTP response was:");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be506VariantAlsoNegotiates("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("*HttpStatusCode.VariantAlsoNegotiates*because we want to test the failure message, but found HttpStatusCode.OK {value: 200}*");
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_null_HttpResponse_to_506_Variant_Also_Negotiates_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        HttpResponseMessage? subject = null;
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe506VariantAlsoNegotiates("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject", "should not be null", "Additional Info:", "because we want to test the failure message");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be506VariantAlsoNegotiates("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("Expected a * to assert because we want to test the failure message, but found <null>.");
+#endif
+    }
+    #endregion
+
+    #region 507 Insufficient Storage
+    [Fact]
+    public void When_asserting_507_Insufficient_Storage_response_to_be_507InsufficientStorage_it_should_succeed()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage((HttpStatusCode)507);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe507InsufficientStorage();
+
+        // Assert
+        act.ShouldNotThrow();
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be507InsufficientStorage();
+
+        // Assert
+        act.Should().NotThrow();
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_other_than_507_Insufficient_Storage_response_to_be_507InsufficientStorage_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage(HttpStatusCode.OK);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe507InsufficientStorage("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject.StatusCode",
+            "should be", "HttpStatusCode.InsufficientStorage", "but was", "HttpStatusCode.OK",
+            "Additional Info:", "because we want to test the failure message",
+            "The HTTP response was:");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be507InsufficientStorage("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("*HttpStatusCode.InsufficientStorage*because we want to test the failure message, but found HttpStatusCode.OK {value: 200}*");
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_null_HttpResponse_to_507_Insufficient_Storage_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        HttpResponseMessage? subject = null;
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe507InsufficientStorage("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject", "should not be null", "Additional Info:", "because we want to test the failure message");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be507InsufficientStorage("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("Expected a * to assert because we want to test the failure message, but found <null>.");
+#endif
+    }
+    #endregion
+
+    #region 508 Loop Detected
+    [Fact]
+    public void When_asserting_508_Loop_Detected_response_to_be_508LoopDetected_it_should_succeed()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage((HttpStatusCode)508);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe508LoopDetected();
+
+        // Assert
+        act.ShouldNotThrow();
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be508LoopDetected();
+
+        // Assert
+        act.Should().NotThrow();
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_other_than_508_Loop_Detected_response_to_be_508LoopDetected_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage(HttpStatusCode.OK);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe508LoopDetected("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject.StatusCode",
+            "should be", "HttpStatusCode.LoopDetected", "but was", "HttpStatusCode.OK",
+            "Additional Info:", "because we want to test the failure message",
+            "The HTTP response was:");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be508LoopDetected("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("*HttpStatusCode.LoopDetected*because we want to test the failure message, but found HttpStatusCode.OK {value: 200}*");
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_null_HttpResponse_to_508_Loop_Detected_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        HttpResponseMessage? subject = null;
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe508LoopDetected("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject", "should not be null", "Additional Info:", "because we want to test the failure message");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be508LoopDetected("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("Expected a * to assert because we want to test the failure message, but found <null>.");
+#endif
+    }
+    #endregion
+
+    #region 510 Not Extended
+    [Fact]
+    public void When_asserting_510_Not_Extended_response_to_be_510NotExtended_it_should_succeed()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage((HttpStatusCode)510);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe510NotExtended();
+
+        // Assert
+        act.ShouldNotThrow();
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be510NotExtended();
+
+        // Assert
+        act.Should().NotThrow();
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_other_than_510_Not_Extended_response_to_be_510NotExtended_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage(HttpStatusCode.OK);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe510NotExtended("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject.StatusCode",
+            "should be", "HttpStatusCode.NotExtended", "but was", "HttpStatusCode.OK",
+            "Additional Info:", "because we want to test the failure message",
+            "The HTTP response was:");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be510NotExtended("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("*HttpStatusCode.NotExtended*because we want to test the failure message, but found HttpStatusCode.OK {value: 200}*");
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_null_HttpResponse_to_510_Not_Extended_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        HttpResponseMessage? subject = null;
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe510NotExtended("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject", "should not be null", "Additional Info:", "because we want to test the failure message");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be510NotExtended("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("Expected a * to assert because we want to test the failure message, but found <null>.");
+#endif
+    }
+    #endregion
+
+    #region 511 Network Authentication Required
+    [Fact]
+    public void When_asserting_511_Network_Authentication_Required_response_to_be_511NetworkAuthenticationRequired_it_should_succeed()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage((HttpStatusCode)511);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe511NetworkAuthenticationRequired();
+
+        // Assert
+        act.ShouldNotThrow();
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be511NetworkAuthenticationRequired();
+
+        // Assert
+        act.Should().NotThrow();
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_other_than_511_Network_Authentication_Required_response_to_be_511NetworkAuthenticationRequired_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        using var subject = new HttpResponseMessage(HttpStatusCode.OK);
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe511NetworkAuthenticationRequired("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject.StatusCode",
+            "should be", "HttpStatusCode.NetworkAuthenticationRequired", "but was", "HttpStatusCode.OK",
+            "Additional Info:", "because we want to test the failure message",
+            "The HTTP response was:");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be511NetworkAuthenticationRequired("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("*HttpStatusCode.NetworkAuthenticationRequired*because we want to test the failure message, but found HttpStatusCode.OK {value: 200}*");
+#endif
+    }
+
+    [Fact]
+    public void When_asserting_null_HttpResponse_to_511_Network_Authentication_Required_it_should_throw_with_descriptive_message()
+    {
+        // Arrange
+        HttpResponseMessage? subject = null;
+
+#if SH
+        // Act
+        Action act = () =>
+            subject.ShouldBe511NetworkAuthenticationRequired("because we want to test the failure message");
+
+        // Assert
+        act.ShouldFailWith("subject", "should not be null", "Additional Info:", "because we want to test the failure message");
+#else
+        // Act
+        Action act = () =>
+            subject.Should().Be511NetworkAuthenticationRequired("because we want to test the failure {0}", "message");
+
+        // Assert
+        act.Should().Throw<XunitException>()
+            .WithMessage("Expected a * to assert because we want to test the failure message, but found <null>.");
+#endif
+    }
+    #endregion
 }
